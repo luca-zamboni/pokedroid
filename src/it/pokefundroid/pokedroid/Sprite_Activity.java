@@ -10,6 +10,7 @@ import org.andengine.entity.scene.background.Background;
 import org.andengine.entity.scene.background.SpriteBackground;
 import org.andengine.entity.sprite.AnimatedSprite;
 import org.andengine.entity.sprite.Sprite;
+import org.andengine.extension.augmentedreality.BaseAugmentedRealityGameActivity;
 import org.andengine.opengl.texture.TextureOptions;
 import org.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlas;
 import org.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlasTextureRegionFactory;
@@ -32,7 +33,8 @@ public class Sprite_Activity extends BaseGameActivity {
 
 	private BitmapTextureAtlas memArea;
 	private TextureRegion img;
-	private Sprite sprBanana;
+	private TiledTextureRegion lol;
+	private AnimatedSprite sprBanana;
 
 	private static int SPR_COLUMN = 14;
 	private static int SPR_ROWS = 100;
@@ -57,9 +59,9 @@ public class Sprite_Activity extends BaseGameActivity {
 			OnCreateResourcesCallback pOnCreateResourcesCallback)
 			throws Exception {
 		BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/");
-		memArea = new BitmapTextureAtlas(getTextureManager(), 1024, 65536, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
-		img = BitmapTextureAtlasTextureRegionFactory.createFromAsset(memArea, this, "sprite_pokemon.png", SPR_COLUMN, SPR_ROWS);
-		//this.mEngine.getTextureManager().loadTexture(memArea);
+		memArea = new BitmapTextureAtlas(getTextureManager(), 65536, 65536, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
+		lol = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(memArea, this, "sprite_pokemon.png", 0,0,SPR_COLUMN,SPR_ROWS); 
+		memArea.load();
 		pOnCreateResourcesCallback.onCreateResourcesFinished();
 	}
 
@@ -67,6 +69,7 @@ public class Sprite_Activity extends BaseGameActivity {
 	public void onCreateScene(OnCreateSceneCallback pOnCreateSceneCallback)
 			throws Exception {
 		this.m_Scene = new Scene();
+		//this.m_Scene.getBackground().setColor(Color.TRANSPARENT);
 		this.m_Scene.setBackground(new Background(Color.BLUE));
 		pOnCreateSceneCallback.onCreateSceneFinished(m_Scene);
 	}
@@ -74,8 +77,8 @@ public class Sprite_Activity extends BaseGameActivity {
 	@Override
 	public void onPopulateScene(Scene pScene,
 			OnPopulateSceneCallback pOnPopulateSceneCallback) throws Exception {
-		// TODO Auto-generated method stub
-		sprBanana = new Sprite(0, 0, img, this.getVertexBufferObjectManager());
+		sprBanana = new AnimatedSprite(12,12 , lol, this.getVertexBufferObjectManager());
+		sprBanana.animate(new long[]{100,100,100},0,3, true);
 		this.m_Scene.attachChild(sprBanana);
 		pOnPopulateSceneCallback.onPopulateSceneFinished();
 	}
