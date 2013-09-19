@@ -11,11 +11,10 @@ public class Utilities {
 	public final int VERYRARE = 4;
 	private final static int[] CHANCE = {19, 22, 28, 56, 150};
 	
-	private static boolean findByRarity(int rarity) {
+	public static boolean findByRarity(int rarity) {
 		boolean found = false;
 		Random random = new Random(System.currentTimeMillis());
 		found = (random.nextInt(CHANCE[rarity])==0);
 		return found;
 	}
-
 }
