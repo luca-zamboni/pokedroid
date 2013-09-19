@@ -1,6 +1,6 @@
 package it.pokefundroid.pokedroid;
 
-import it.pokefundroid.pokedroid.utils.Utilities;
+import it.pokefundroid.pokedroid.utils.FindingUtilities;
 import android.app.Activity;
 import android.content.Context;
 import android.location.Location;
@@ -21,7 +21,12 @@ public class Splash_activity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.splash_activity);
+        final int[] pokemon = new int[151];
         
+        for(int i = 0; i < 151; i++) {
+        	pokemon[i]=i;
+        }
+       
         LocationManager locationManager = (LocationManager) 
         		getSystemService(Context.LOCATION_SERVICE);
         LocationListener locationListener = new LocationListener() {
@@ -41,10 +46,12 @@ public class Splash_activity extends Activity {
 			@Override
 			public void onLocationChanged(Location location) {
 				
-				setText(location.getLatitude() + " " + location.getLongitude());
-				if(Utilities.findByRarity(0)){
+				int condition = FindingUtilities.findInGroup(pokemon);
+				setText(location.getLatitude() + " " + location.getLongitude() + " " + condition+" "+FindingUtilities.getRarityFromId(condition));
+				if(condition >= 0){
 					ratata++;
-					Toast.makeText(getApplicationContext(), "Hai trovato "+ratata+" ratata", 2000).show();
+					Toast.makeText(Splash_activity.this, "Hai trovato "+ratata+" pokemon, id: " 
+					+condition+1, 1000).show();
 				}
 			}
 		};
