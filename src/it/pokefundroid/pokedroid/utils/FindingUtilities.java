@@ -73,7 +73,7 @@ public class FindingUtilities {
 		// quadrati di 0,001 gradi, circa 111 metri all'equatore
 		boolean ret = false;
 		latitude *= 10 ^ 3;
-		longitude *= 10 ^ 3;
+		longitude *= 10 ^ 3;.
 		long lat = (long) latitude;
 		long lon = (long) longitude;
 		if (((lat*lon)-(151*lat)) != selectionSeed || ((lat*lon)-(270*lon)) != setSeed) {
