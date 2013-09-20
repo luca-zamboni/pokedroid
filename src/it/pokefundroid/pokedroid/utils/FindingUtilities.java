@@ -1,47 +1,88 @@
 package it.pokefundroid.pokedroid.utils;
 
+import it.pokefundroid.pokedroid.Pokemon;
+
 import java.util.Random;
 
 import android.util.Log;
 
-public class FindingUtilities {
+public class FindingUtilities { 
+
+	private final static int[] CHANCE = { 950, 800, 200, 30, 1, 0 }; 
+	// possibilita' su 1000 elementi di essere selezionati nel set;
 	
-	public final int VERYCOMMON = 0;
-	public final int COMMON = 1;
-	public final int SUBRARE = 2;
-	public final int RARE = 3;
-	public final int VERYRAsRE = 4;
-	private final static int[] CHANCE = {15, 18, 24, 50, 140}; // originals 19, 22, 28, 56, 150
-	
+	private final static int[] FINDINGCHANCE = {12, 16, 22, 40, 125};
+	//original 18, 22, 27, 55, 150
+
+	public static int[] currentPkmnSet = null;
+
 	/**
-	 * metodo che dato un array di interi estrae un elemento fra questi, ne ricava la rarita' e avvia la procedura
-	 * per vedere se il 'ritrovamento' del pkmn ha avuto successo
-	 * */
-	public static int findInGroup(int[] group) {
-		int retval = -1;
+	 * selectionRandom usato per scorrere tra tutti i pokemon, setRandom usato
+	 * per decidere se il pokemon verra' inserito
+	 */
+	private static Random selectionRandom = null;
+	private static Random setRandom = null;
+
+	/**
+	 * tengo i seed in memoria
+	 */
+	public static long selectionSeed = 0;
+	public static long setSeed = 0;
+
+	/**
+	 * metodo che dato un array di interi estrae un elemento fra questi, ne
+	 * ricava la rarita' e avvia la procedura per vedere se il 'ritrovamento'
+	 * del pkmn ha avuto successo
+	 */
+	public static int findInPosition(double latitude, double longitude) {
 		Random random = new Random(System.currentTimeMillis());
-		int selection = random.nextInt(group.length);
-		if (findByRarity(getRarityFromId(selection))) {
-			retval = selection;
+		int ret = -1;
+		boolean changed = generateRandoms(latitude, longitude);
+		if (changed || currentPkmnSet == null) {
+			generateSet();
 		}
-		return retval;
+		int tmp = random.nextInt(3);
+		if (random.nextInt(FINDINGCHANCE[Pokemon.getRarityFromId(currentPkmnSet[tmp])])==1) {
+			ret = currentPkmnSet[tmp];
+		}
+		return ret;
 	}
-	
+
 	/**
-	 * data la rarity del pokemon usando uno pseudorandom calcola se in quel passo ha trovato un pokemon con quella rarita'*/
-	public static boolean findByRarity(int rarity) {
+	 * data la rarity del pokemon usando uno pseudorandom calcola se in quel
+	 * passo ha trovato un pokemon con quella rarita'
+	 */
+	private static boolean selectByRarity(int rarity) {
 		boolean found = false;
 		Random random = new Random(System.currentTimeMillis());
-		found = (random.nextInt(CHANCE[rarity])==0);
+		found = (random.nextInt(1000) < CHANCE[rarity]);
 		return found;
 	}
-	
-	/**
-	 * metodo per ricavarsi dall'id del pokemon la sua rarita'
-	 * da associare a un array/classe/db/qualcosa per ricavarsi da li la rarita'
-	 * possibilit' di cambiare il db ogni tanto per cambiare le rarita' dei pokemon
-	 * */
-	public static int getRarityFromId(int id) {
-		return (id % 3);
+
+	private static void generateSet() {
+		currentPkmnSet = new int[3];
+		for (int i = 0; i < 3;) {
+			int id = selectionRandom.nextInt(151);
+			id = Pokemon.IDS[id];
+			boolean b = selectByRarity(Pokemon.getRarityFromId(id));
+			if (b) currentPkmnSet[i++] = id;
+		}
+	}
+
+	private static boolean generateRandoms(double latitude, double longitude) {
+		// quadrati di 0,001 gradi, circa 111 metri all'equatore
+		boolean ret = false;
+		latitude *= 10 ^ 3;
+		longitude *= 10 ^ 3;
+		long lat = (long) latitude;
+		long lon = (long) longitude;
+		if (((lat*lon)-(151*lat)) != selectionSeed || ((lat*lon)-(270*lon)) != setSeed) {
+			selectionSeed = (lat*lon)-(151*lat);
+			setSeed = (lat*lon)-(270*lon);
+			ret = true;
+		}
+		selectionRandom = new Random(selectionSeed);
+		setRandom = new Random(setSeed);
+		return ret;
 	}
 }

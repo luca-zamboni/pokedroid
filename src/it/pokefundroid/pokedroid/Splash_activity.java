@@ -7,7 +7,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.view.Menu;
+import android.view.Menu; 
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,13 +45,22 @@ public class Splash_activity extends Activity {
 			
 			@Override
 			public void onLocationChanged(Location location) {
+				double latitude = location.getLatitude();
+				double longitude = location.getLongitude();
 				
-				int condition = FindingUtilities.findInGroup(pokemon);
-				setText(location.getLatitude() + " " + location.getLongitude() + " " + condition+" "+FindingUtilities.getRarityFromId(condition));
+				int condition = FindingUtilities.findInPosition(latitude, longitude);
+				
+				String str = location.getLatitude() + " " + location.getLongitude() + " " 
+						+ condition+" "+Pokemon.getRarityFromId(Math.abs(condition))+ "\n";
+				for (int i = 0; i<FindingUtilities.currentPkmnSet.length; i++)
+					str = str + " " + FindingUtilities.currentPkmnSet[i];
+				str = str + "\n" + FindingUtilities.selectionSeed + "\n" + FindingUtilities.setSeed;
+				
+				setText(str);
 				if(condition >= 0){
 					ratata++;
 					Toast.makeText(Splash_activity.this, "Hai trovato "+ratata+" pokemon, id: " 
-					+condition+1, 1000).show();
+					+condition, 1000).show();
 				}
 			}
 		};
