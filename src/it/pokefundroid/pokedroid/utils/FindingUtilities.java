@@ -10,7 +10,7 @@ public class FindingUtilities {
 	public final int COMMON = 1;
 	public final int SUBRARE = 2;
 	public final int RARE = 3;
-	public final int VERYRARE = 4;
+	public final int VERYRAsRE = 4;
 	private final static int[] CHANCE = {15, 18, 24, 50, 140}; // originals 19, 22, 28, 56, 150
 	
 	/**

@@ -13,7 +13,7 @@ import org.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlas;
 import org.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlasTextureRegionFactory;
 import org.andengine.opengl.texture.region.TiledTextureRegion;
 import org.andengine.ui.activity.BaseGameActivity;
-import org.andengine.util.color.Color;
+import org.andengine.util.color.Color; 
 
 import android.hardware.SensorEventListener;
 
