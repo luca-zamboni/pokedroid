@@ -26,8 +26,8 @@ public class FindingUtilities {
 	/**
 	 * tengo i seed in memoria
 	 */
-	private static long selectionSeed = 0;
-	private static long setSeed = 0;
+	public static long selectionSeed = 0;
+	public static long setSeed = 0;
 
 	/**
 	 * metodo che dato un array di interi estrae un elemento fra questi, ne
@@ -71,21 +71,18 @@ public class FindingUtilities {
 
 	private static boolean generateRandoms(double latitude, double longitude) {
 		// quadrati di 0,001 gradi, circa 111 metri all'equatore
-
+		boolean ret = false;
 		latitude *= 10 ^ 3;
 		longitude *= 10 ^ 3;
 		long lat = (long) latitude;
 		long lon = (long) longitude;
-		lat *= 100;
-		lon *= 100;
-		if ((lat - lon) != selectionSeed || (lon - lat) != setSeed
-				|| selectionRandom == null || setRandom == null) {
-			selectionSeed = lat - lon;
-			setSeed = lon - lat;
-			selectionRandom = new Random(selectionSeed);
-			setRandom = new Random(setSeed);
-			return true;
+		if (((lat*lon)-(151*lat)) != selectionSeed || ((lat*lon)-(270*lon)) != setSeed) {
+			selectionSeed = (lat*lon)-(151*lat);
+			setSeed = (lat*lon)-(270*lon);
+			ret = true;
 		}
-		return false;
+		selectionRandom = new Random(selectionSeed);
+		setRandom = new Random(setSeed);
+		return ret;
 	}
 }

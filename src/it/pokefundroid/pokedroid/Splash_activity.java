@@ -54,6 +54,7 @@ public class Splash_activity extends Activity {
 						+ condition+" "+Pokemon.getRarityFromId(Math.abs(condition))+ "\n";
 				for (int i = 0; i<FindingUtilities.currentPkmnSet.length; i++)
 					str = str + " " + FindingUtilities.currentPkmnSet[i];
+				str = str + "\n" + FindingUtilities.selectionSeed + "\n" + FindingUtilities.setSeed;
 				
 				setText(str);
 				if(condition >= 0){
