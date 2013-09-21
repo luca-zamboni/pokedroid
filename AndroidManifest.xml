@@ -31,6 +31,10 @@
             android:name="it.pokefundroid.pokedroid.Menu_Activity"
             android:label="@string/title_activity_menu_" >
         </activity>
+        <activity
+            android:name="it.pokefundroid.pokedroid.View_team_activity"
+            android:label="@string/title_activity_view_team_activity" >
+        </activity>
     </application>
 
 </manifest>

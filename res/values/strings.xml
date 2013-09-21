@@ -3,12 +3,13 @@
 
     <string name="app_name">PokeDroid</string>
     <string name="action_settings">Settings</string>
-    
-    
+
     <!-- Activity menu -->
     <string name="title_activity_menu_">Menu</string>
     <string name="zaino">Zaino</string>
     <string name="pokemon">Pokemon</string>
     <string name="pcdibill">Pc di Bill</string>
+    <string name="title_activity_view_team_activity">View team</string>
+    <string name="hello_world">Hello world!</string>
 
 </resources>

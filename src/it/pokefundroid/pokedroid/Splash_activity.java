@@ -3,11 +3,12 @@ package it.pokefundroid.pokedroid;
 import it.pokefundroid.pokedroid.utils.FindingUtilities;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.view.Menu; 
+import android.view.Menu;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -67,8 +68,8 @@ public class Splash_activity extends Activity {
         locationManager.requestLocationUpdates(  
         LocationManager.GPS_PROVIDER, 5000, 10, locationListener);
         
-        //Intent newActivity = new Intent(Splash_activity.this, Sprite_Activity.class);
-        //startActivity(newActivity);
+        /*Intent newActivity = new Intent(Splash_activity.this, Menu_Activity.class);
+        startActivity(newActivity);*/
     }
 
 

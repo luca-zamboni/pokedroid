@@ -1,8 +1,15 @@
 package it.pokefundroid.pokedroid;
 
+import it.pokefundroid.pokedroid.utils.BaseAdapter;
+import android.content.Context;
+
 public class Pokemon {
 	
-	private int id;
+	public int id;
+	public String name;
+	public String type;
+	
+	public final static int NUMBER_POKEMON = 151; 
 	
 	//rarity
 	public final static int VERYCOMMON = 0;
@@ -31,7 +38,7 @@ public class Pokemon {
 	};
 	
 	//commento in fondo il numero delle evoluzioni/pokemon seguito dalla prima forma
-	private final static int[] RARITY = {
+	public final static int[] RARITY = {
 		SUBRARE, NONPRESENT, NONPRESENT, SUBRARE, NONPRESENT, NONPRESENT, SUBRARE, NONPRESENT, NONPRESENT,	//9starters
 		VERYCOMMON, COMMON, NONPRESENT, VERYCOMMON, COMMON, NONPRESENT, VERYCOMMON, SUBRARE, NONPRESENT, //3caterpie, 3weedle, 3pidgey
 		COMMON, NONPRESENT, COMMON, NONPRESENT, SUBRARE, NONPRESENT, SUBRARE, NONPRESENT, SUBRARE, NONPRESENT, // 2rattata, 2spearow, 2ekans, 2pikachu, 2sandshrew
@@ -52,12 +59,14 @@ public class Pokemon {
 		RARE, NONPRESENT, NONPRESENT, VERYRARE, VERYRARE //3dratini, mewtwo, mew
 	};
 	
-	public int getId() {
-		return this.id;
-	}
-	
-	public void setId(int id) {
-		this.id = id;
+	public static void fillDatabasePokemon(Context c){
+		BaseAdapter a = new BaseAdapter(c);
+		a.open();
+		/// qua bosognerebbe inserirli tutti
+		a.insertPokemonBase(1, "Bulbasaur", "erba", RARITY[0]);
+		a.insertPokemonBase(2, "Ivisaur", "erba", RARITY[1]);
+		a.insertPokemonBase(3, "Venosaur", "erba", RARITY[2]);
+		a.close();
 	}
 	
 	/**
@@ -67,7 +76,10 @@ public class Pokemon {
 	 * id-1 perche' i pokemon partono da 1 mentre l'array da 0
 	 * */
 	public static int getRarityFromId(int id) {
-		return (RARITY[id]);
+		return (RARITY[id-1]);
 	}
-
+	
+	
+	
+	
 }
