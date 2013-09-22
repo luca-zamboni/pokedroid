@@ -1,5 +1,6 @@
 package it.pokefundroid.pokedroid;
 
+import it.pokefundroid.pokedroid.models.Pokemon;
 import it.pokefundroid.pokedroid.utils.FindingUtilities;
 import android.app.Activity;
 import android.content.Context;

@@ -1,6 +1,6 @@
 package it.pokefundroid.pokedroid.utils;
 
-import it.pokefundroid.pokedroid.Pokemon;
+import it.pokefundroid.pokedroid.models.Pokemon;
 
 import java.util.Random;
 
