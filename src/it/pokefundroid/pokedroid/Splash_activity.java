@@ -25,6 +25,7 @@ public class Splash_activity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.splash_activity);
 
+		text = (TextView) findViewById(R.id.text);
 		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 		locationListener = new LocationListener() {
 
@@ -43,39 +44,39 @@ public class Splash_activity extends Activity {
 
 			@Override
 			public void onLocationChanged(Location location) {
-				double latitude = location.getLatitude();
-				double longitude = location.getLongitude();
-
-				int condition = FindingUtilities.findInPosition(latitude,
-						longitude);
-
-				String str = location.getLatitude() + " "
-						+ location.getLongitude() + " " + condition + " "
-						+ Pokemon.getRarityFromId(Math.abs(condition)) + "\n";
-				for (int i = 0; i < FindingUtilities.currentPkmnSet.length; i++)
-					str = str + " " + FindingUtilities.currentPkmnSet[i];
-				str = str + "\n" + FindingUtilities.selectionSeed + "\n"
-						+ FindingUtilities.setSeed;
-
-				setText(str);
-				if (condition >= 0) {
-					ratata++;
-					Toast.makeText(
-							Splash_activity.this,
-							"Hai trovato " + ratata + " pokemon, id: "
-									+ condition, 1000).show();
-				}
+				Intent newActivity = new Intent(Splash_activity.this,
+						Sprite_Activity.class);
+				newActivity
+						.putExtra(
+								"loc",
+								new double[] { location.getLatitude(),
+										location.getLongitude(),
+										location.getAltitude(),
+										location.getAccuracy() });
+				startActivity(newActivity);
+				locationManager.removeUpdates(locationListener);
+				setText("acc: " + location.getAccuracy() + " lat:"
+						+ location.getLatitude() + " lon:"
+						+ location.getLongitude());
 			}
 		};
 		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
-				5000, 10, locationListener);
+				1000, 10, locationListener);
 
-		//Intent newActivity = new Intent(Splash_activity.this,
-		//		Sprite_Activity.class);
-		// newActivity.putExtra("loc", new
-		// double[]{location.getLatitude(),location.getLongitude(),location.getAltitude()});
-		//startActivity(newActivity);
-		//Splash_activity.this.finish();
+		Location location = new Location("network");
+
+		location.setLatitude(45.4103907616809d);
+		location.setLongitude(10.985591523349285d);
+		location.setAccuracy(10.0f);
+		Intent newActivity = new Intent(Splash_activity.this,
+				Sprite_Activity.class);
+		newActivity.putExtra("loc",
+				new double[] { location.getLatitude(), location.getLongitude(),
+						location.getAltitude(), location.getAccuracy() });
+		startActivity(newActivity);
+		locationManager.removeUpdates(locationListener);
+		Splash_activity.this.finish();
+
 	}
 
 	@Override

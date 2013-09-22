@@ -1,4 +1,7 @@
 package it.pokefundroid.pokedroid;
+
+import it.pokefundroid.pokedroid.utils.FindingUtilities;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -11,7 +14,9 @@ import com.beyondar.android.world.objects.GeoObject;
 import com.beyondar.android.world.objects.BeyondarObject;
 
 import android.app.Activity;
+import android.location.Location;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.Window;
@@ -21,48 +26,88 @@ public class Sprite_Activity extends Activity implements OnARTouchListener {
 
 	private BeyondarGLSurfaceView mBeyondarGLSurfaceView;
 	private CameraView mCameraView;
+	private World mWorld;
+	private Location mWorldCenter; 
+	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_sprite);
-		
+
 		mBeyondarGLSurfaceView = (BeyondarGLSurfaceView) findViewById(R.id.customGLSurface);
 		mCameraView = (CameraView) findViewById(R.id.camera);
 
 		// We create the world and set it in to the view
-		World world = createWorld();
-		mBeyondarGLSurfaceView.setWorld(world);
+		mWorld = createWorld();
+		mBeyondarGLSurfaceView.setWorld(mWorld);
 		// set listener for the geoObjects
 		mBeyondarGLSurfaceView.setOnARTouchListener(this);
+		
 	}
 
 	private World createWorld() {
 		World w = new World(this);
+
+		double[] loc = getIntent().getExtras().getDoubleArray("loc");
+		mWorldCenter = new Location("gps");
+		mWorldCenter.setLatitude(loc[0]);
+		mWorldCenter.setLongitude(loc[1]);
+		mWorldCenter.setAltitude(loc[2]);
+		mWorldCenter.setAccuracy((float) loc[3]);
+		w.setLatitude(loc[0]);
+		w.setLongitude(loc[1]);
+		w.setAltitude(loc[2]); 
 		
-//		double[] loc = getIntent().getExtras().getDoubleArray("loc");
-//		w.setLatitude(loc[0]);
-//		w.setLongitude(loc[1]);
-//		w.setAltitude(loc[2]);
-//		
-//		go1.setLatitude(loc[0]);
-//		go1.setLongitude(loc[1]);
-//		go1.setAltitude(loc[2]);
-		w.setLongitude(1.925848038959814d);
-		w.setLatitude(41.26533734214473d);
+		fillPkmn(w, mWorldCenter.getLatitude(),mWorldCenter.getLongitude(),mWorldCenter.getAltitude(),mWorldCenter.getAccuracy());
 		
-		GeoObject go1 = new GeoObject(4l);
-		go1.setLongitude(1.925662767707665d);
-		go1.setLatitude(41.26518862002349d);
-		go1.setImageUri("assets://charmender.png");
-		go1.setName("Image from assets");
-		
-		w.addBeyondarObject(go1);
+		Log.i("pkmn", "you are in lat: " + loc[0] + " lon:" + loc[1]);
+
 		w.setDefaultBitmap(R.drawable.creature_6);
 
 		return w;
+	}
+
+	private void fillPkmn(World w, double... loc) {
+		
+		//TODO do it in proportion!
+		int many = (int) (Math.random() * 10*loc[3]);
+		
+		for (int i = 0; i < many; i++) {
+			Location tmp = FindingUtilities.getLocation(loc[0], loc[1], loc[3]);
+			tmp.setAltitude(loc[2]);
+//			DEBUG
+//			int id = FindingUtilities.findInPosition(tmp.getLatitude(),
+//					tmp.getLongitude());
+			int id = (int )(Math.random()*151);
+			if (id != -1) {
+				GeoObject go =new GeoObject(i);
+				fillObj(go,id,tmp);
+				w.addBeyondarObject(go);
+				Log.i("pkmn", "pokemon id: " + id + " lat:" + tmp.getLatitude()
+						+ " lon:" + tmp.getLongitude());
+			}
+			
+		}
+	}
+	
+	private void fillObj(GeoObject go1,int id,Location loc) {
+		go1.setLatitude(loc.getLatitude());
+		go1.setLongitude(loc.getLongitude());
+		go1.setAltitude(loc.getAltitude());
+		go1.setImageUri(getImagUri(id));
+		go1.setName(id+"");
+	}
+
+	private String getImagUri(int id){
+		if (id < 10)
+			return "assets://pkm/pkfrlg00" + id + ".png";
+		if (id < 100)
+			return "assets://pkm/pkfrlg0" + id + ".png";
+		else
+			return "assets://pkm/pkfrlg" + id + ".png";
 	}
 
 	@Override
@@ -114,8 +159,9 @@ public class Sprite_Activity extends Activity implements OnARTouchListener {
 		while (iterator.hasNext()) {
 			BeyondarObject geoObject = iterator.next();
 			textEvent = textEvent + " " + geoObject.getName();
-
 		}
+		Toast.makeText(Sprite_Activity.this, textEvent, Toast.LENGTH_SHORT)
+				.show();
 	}
 
 }
