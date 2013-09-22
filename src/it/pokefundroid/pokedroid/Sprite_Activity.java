@@ -1,85 +1,121 @@
 package it.pokefundroid.pokedroid;
+import java.util.ArrayList;
+import java.util.Iterator;
 
-import org.andengine.engine.camera.Camera;
-import org.andengine.engine.options.EngineOptions;
-import org.andengine.engine.options.ScreenOrientation;
-import org.andengine.engine.options.resolutionpolicy.RatioResolutionPolicy;
-import org.andengine.entity.scene.IOnSceneTouchListener;
-import org.andengine.entity.scene.Scene;
-import org.andengine.entity.scene.background.Background;
-import org.andengine.entity.scene.background.SpriteBackground;
-import org.andengine.entity.sprite.AnimatedSprite;
-import org.andengine.entity.sprite.Sprite;
-import org.andengine.extension.augmentedreality.BaseAugmentedRealityGameActivity;
-import org.andengine.opengl.texture.TextureOptions;
-import org.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlas;
-import org.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlasTextureRegionFactory;
-import org.andengine.opengl.texture.bitmap.BitmapTextureFormat;
-import org.andengine.opengl.texture.region.TextureRegion;
-import org.andengine.opengl.texture.region.TiledTextureRegion;
-import org.andengine.ui.activity.BaseGameActivity;
-import org.andengine.util.color.Color;
+import com.beyondar.android.opengl.util.FpsUpdatable;
+import com.beyondar.android.opengl.views.BeyondarGLSurfaceView;
+import com.beyondar.android.opengl.views.OnARTouchListener;
+import com.beyondar.android.views.CameraView;
+import com.beyondar.android.world.World;
+import com.beyondar.android.world.objects.GeoObject;
+import com.beyondar.android.world.objects.BeyondarObject;
 
-import android.hardware.SensorEventListener;
-import android.view.Display;
+import android.app.Activity;
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.MotionEvent;
+import android.view.Window;
+import android.widget.Toast;
 
-public class Sprite_Activity extends BaseGameActivity {
+public class Sprite_Activity extends Activity implements OnARTouchListener {
 
-	private static final int CAMERA_WIDTH = 800;
-	private static final int CAMERA_HEIGHT = 480;
-
-	private Camera m_Camera;
-	private Scene m_Scene;
-
-	private BitmapTextureAtlas memArea;
-	private TextureRegion img;
-	private TiledTextureRegion lol;
-	private AnimatedSprite sprBanana;
-
-	private static int SPR_COLUMN = 14;
-	private static int SPR_ROWS = 100;
+	private BeyondarGLSurfaceView mBeyondarGLSurfaceView;
+	private CameraView mCameraView;
 
 	@Override
-	public EngineOptions onCreateEngineOptions() {
-		m_Camera = new Camera(0, 0, CAMERA_WIDTH, CAMERA_HEIGHT);
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 		
-		final Display display = getWindowManager().getDefaultDisplay();
-		int width = display.getWidth();
-		int heigth = display.getHeight();
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
+		setContentView(R.layout.activity_sprite);
 		
-		EngineOptions en = new EngineOptions(true,
-				ScreenOrientation.PORTRAIT_FIXED, new RatioResolutionPolicy(
-						width, heigth), m_Camera);
+		mBeyondarGLSurfaceView = (BeyondarGLSurfaceView) findViewById(R.id.customGLSurface);
+		mCameraView = (CameraView) findViewById(R.id.camera);
 
-		return en;
+		// We create the world and set it in to the view
+		World world = createWorld();
+		mBeyondarGLSurfaceView.setWorld(world);
+		// set listener for the geoObjects
+		mBeyondarGLSurfaceView.setOnARTouchListener(this);
+	}
+
+	private World createWorld() {
+		World w = new World(this);
+		
+//		double[] loc = getIntent().getExtras().getDoubleArray("loc");
+//		w.setLatitude(loc[0]);
+//		w.setLongitude(loc[1]);
+//		w.setAltitude(loc[2]);
+//		
+//		go1.setLatitude(loc[0]);
+//		go1.setLongitude(loc[1]);
+//		go1.setAltitude(loc[2]);
+		w.setLongitude(1.925848038959814d);
+		w.setLatitude(41.26533734214473d);
+		
+		GeoObject go1 = new GeoObject(4l);
+		go1.setLongitude(1.925662767707665d);
+		go1.setLatitude(41.26518862002349d);
+		go1.setImageUri("assets://charmender.png");
+		go1.setName("Image from assets");
+		
+		w.addBeyondarObject(go1);
+		w.setDefaultBitmap(R.drawable.creature_6);
+
+		return w;
 	}
 
 	@Override
-	public void onCreateResources(
-			OnCreateResourcesCallback pOnCreateResourcesCallback)
-			throws Exception {
-		BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/");
-		memArea = new BitmapTextureAtlas(getTextureManager(), 65536, 65536, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
-		lol = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(memArea, this, "sprite_pokemon.png", 0,0,SPR_COLUMN,SPR_ROWS); 
-		memArea.load();
-		pOnCreateResourcesCallback.onCreateResourcesFinished();
+	protected void onResume() {
+		super.onResume();
+		mBeyondarGLSurfaceView.onResume();
 	}
 
 	@Override
-	public void onCreateScene(OnCreateSceneCallback pOnCreateSceneCallback)
-			throws Exception {
-		this.m_Scene = new Scene();
-		//this.m_Scene.getBackground().setColor(Color.TRANSPARENT);
-		this.m_Scene.setBackground(new Background(Color.BLUE));
-		pOnCreateSceneCallback.onCreateSceneFinished(m_Scene);
+	protected void onPause() {
+		super.onPause();
+		mBeyondarGLSurfaceView.onPause();
 	}
 
 	@Override
-	public void onPopulateScene(Scene pScene,
-			OnPopulateSceneCallback pOnPopulateSceneCallback) throws Exception {
-		sprBanana = new AnimatedSprite(12,12 , lol, this.getVertexBufferObjectManager());
-		sprBanana.animate(new long[]{100,100,100},0,3, true);
-		this.m_Scene.attachChild(sprBanana);
-		pOnPopulateSceneCallback.onPopulateSceneFinished();
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.sprite_, menu);
+		return true;
 	}
+
+	@Override
+	public void onTouchARView(MotionEvent event,
+			BeyondarGLSurfaceView beyondarView) {
+
+		float x = event.getX();
+		float y = event.getY();
+
+		ArrayList<BeyondarObject> geoObjects = new ArrayList<BeyondarObject>();
+
+		beyondarView.getARObjectOnScreenCoordinates(x, y, geoObjects);
+
+		String textEvent = "";
+
+		switch (event.getAction()) {
+		case MotionEvent.ACTION_DOWN:
+			textEvent = "Event type ACTION_DOWN: ";
+			break;
+		case MotionEvent.ACTION_UP:
+			textEvent = "Event type ACTION_UP: ";
+			break;
+		case MotionEvent.ACTION_MOVE:
+			textEvent = "Event type ACTION_MOVE: ";
+			break;
+		default:
+			break;
+		}
+
+		Iterator<BeyondarObject> iterator = geoObjects.iterator();
+		while (iterator.hasNext()) {
+			BeyondarObject geoObject = iterator.next();
+			textEvent = textEvent + " " + geoObject.getName();
+
+		}
+	}
+
 }
