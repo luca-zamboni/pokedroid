@@ -70,12 +70,12 @@ public class Splash_activity extends Activity {
 		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
 				5000, 10, locationListener);
 
-		Intent newActivity = new Intent(Splash_activity.this,
-				Sprite_Activity.class);
+		//Intent newActivity = new Intent(Splash_activity.this,
+		//		Sprite_Activity.class);
 		// newActivity.putExtra("loc", new
 		// double[]{location.getLatitude(),location.getLongitude(),location.getAltitude()});
-		startActivity(newActivity);
-		Splash_activity.this.finish();
+		//startActivity(newActivity);
+		//Splash_activity.this.finish();
 	}
 
 	@Override
