@@ -11,5 +11,6 @@
     <string name="pcdibill">Pc di Bill</string>
     <string name="title_activity_view_team_activity">View team</string>
     <string name="hello_world">Hello world!</string>
+    <string name="title_activity_sprite_">Sprite_Activity</string>
 
 </resources>
