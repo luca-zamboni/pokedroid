@@ -1,6 +1,10 @@
 package it.pokefundroid.pokedroid;
 
 import it.pokefundroid.pokedroid.utils.FindingUtilities;
+import it.pokefundroid.pokedroid.utils.LocationUtils;
+import it.pokefundroid.pokedroid.utils.LocationUtils.ErrorType;
+import it.pokefundroid.pokedroid.utils.LocationUtils.ILocation;
+import it.pokefundroid.pokedroid.utils.SharedPreferencesUtilities;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -14,7 +18,11 @@ import com.beyondar.android.world.objects.GeoObject;
 import com.beyondar.android.world.objects.BeyondarObject;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -22,13 +30,13 @@ import android.view.MotionEvent;
 import android.view.Window;
 import android.widget.Toast;
 
-public class Sprite_Activity extends Activity implements OnARTouchListener {
+public class Sprite_Activity extends Activity implements OnARTouchListener,ILocation {
 
 	private BeyondarGLSurfaceView mBeyondarGLSurfaceView;
 	private CameraView mCameraView;
 	private World mWorld;
 	private Location mWorldCenter; 
-	
+	private LocationUtils mLocationUtils;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -52,28 +60,35 @@ public class Sprite_Activity extends Activity implements OnARTouchListener {
 		World w = new World(this);
 
 		double[] loc = getIntent().getExtras().getDoubleArray("loc");
+		
 		mWorldCenter = new Location("gps");
 		mWorldCenter.setLatitude(loc[0]);
 		mWorldCenter.setLongitude(loc[1]);
-		mWorldCenter.setAltitude(loc[2]);
-		mWorldCenter.setAccuracy((float) loc[3]);
-		w.setLatitude(loc[0]);
-		w.setLongitude(loc[1]);
-		w.setAltitude(loc[2]); 
+		mWorldCenter.setAccuracy((float)loc[3]);
+		setWorldAltitude(loc[2]);
+	
+		w.setLocation(mWorldCenter);
 		
-		fillPkmn(w, mWorldCenter.getLatitude(),mWorldCenter.getLongitude(),mWorldCenter.getAltitude(),mWorldCenter.getAccuracy());
+		fillPkmn(w, mWorldCenter.getLatitude(),mWorldCenter.getLongitude(),
+				mWorldCenter.getAltitude(),mWorldCenter.getAccuracy());
 		
-		Log.i("pkmn", "you are in lat: " + loc[0] + " lon:" + loc[1]);
+		Log.i("pkmn", "you are in lat: " + loc[0] + " lon:" + loc[1]+" Alt:"+ loc[2]+ " teoalt: "
+		+ mWorldCenter.getAltitude()+"with an accuracy of: "+loc[3]);
 
 		w.setDefaultBitmap(R.drawable.creature_6);
 
 		return w;
 	}
 
+	private void setWorldAltitude(double d) {
+		double teoalt= d-SharedPreferencesUtilities.getUserHeight(this)*2;
+		mWorldCenter.setAltitude((teoalt>0)?teoalt:d);
+	}
+
 	private void fillPkmn(World w, double... loc) {
 		
 		//TODO do it in proportion!
-		int many = (int) (Math.random() * 10*loc[3]);
+		int many = (int) (Math.random() * 10 * loc[3]);
 		
 		for (int i = 0; i < many; i++) {
 			Location tmp = FindingUtilities.getLocation(loc[0], loc[1], loc[3]);
@@ -81,12 +96,12 @@ public class Sprite_Activity extends Activity implements OnARTouchListener {
 //			DEBUG
 //			int id = FindingUtilities.findInPosition(tmp.getLatitude(),
 //					tmp.getLongitude());
-			int id = (int )(Math.random()*151);
+			int id = (int )(Math.random()*151)+1;
 			if (id != -1) {
 				GeoObject go =new GeoObject(i);
 				fillObj(go,id,tmp);
 				w.addBeyondarObject(go);
-				Log.i("pkmn", "pokemon id: " + id + " lat:" + tmp.getLatitude()
+				Log.i("pkmn", "pokemon id: " + id + " in lat:" + tmp.getLatitude()
 						+ " lon:" + tmp.getLongitude());
 			}
 			
@@ -101,6 +116,7 @@ public class Sprite_Activity extends Activity implements OnARTouchListener {
 		go1.setName(id+"");
 	}
 
+
 	private String getImagUri(int id){
 		if (id < 10)
 			return "assets://pkm/pkfrlg00" + id + ".png";
@@ -113,12 +129,18 @@ public class Sprite_Activity extends Activity implements OnARTouchListener {
 	@Override
 	protected void onResume() {
 		super.onResume();
+		mLocationUtils = new LocationUtils(this, this);
+		
+		//This is needed here because
+		//if we put this in oncreate method this won't work
+		
 		mBeyondarGLSurfaceView.onResume();
 	}
 
 	@Override
 	protected void onPause() {
 		super.onPause();
+		mLocationUtils.close();
 		mBeyondarGLSurfaceView.onPause();
 	}
 
@@ -162,6 +184,29 @@ public class Sprite_Activity extends Activity implements OnARTouchListener {
 		}
 		Toast.makeText(Sprite_Activity.this, textEvent, Toast.LENGTH_SHORT)
 				.show();
+	}
+	
+	@Override
+	public void onLocationChaged(Location location) {
+		//TODO spawn new pokemon
+		mWorldCenter = location;
+		//DEBUG
+		//setWorldAltitude(location.getAltitude());
+		//mWorld.setLocation(mWorldCenter);
+		Toast.makeText(this, "alt: "+location.getAltitude()+" worldalt: "+mWorldCenter.getAltitude(),
+				Toast.LENGTH_SHORT).show();
+	}
+
+	@Override
+	public void onErrorOccured(ErrorType ex, String provider) {
+		// TODO aviare un activity di errore. oppure
+		//chiedere all'utente di attivare il gpx ecc.
+
+	}
+
+	@Override
+	public void onStatusChanged(String provider, boolean isActive) {
+		// TODO a seconda dello stato riavviare
 	}
 
 }
