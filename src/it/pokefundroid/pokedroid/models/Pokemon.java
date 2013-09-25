@@ -2,6 +2,7 @@ package it.pokefundroid.pokedroid.models;
 
 import it.pokefundroid.pokedroid.utils.BaseAdapter;
 import it.pokefundroid.pokedroid.utils.BaseHelper;
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 
@@ -64,12 +65,21 @@ public class Pokemon {
 	};
 	
 	public static void fillDatabasePokemon(Context c){
+		/// qua bosognerebbe inserirli tutti
+		insertBasePokemon(c,1, "Bulbasaur", "erba", RARITY[0]);
+		insertBasePokemon(c,2, "Ivisaur", "erba", RARITY[1]);
+		insertBasePokemon(c,3, "Venosaur", "erba", RARITY[2]);
+	}
+	
+	private static void insertBasePokemon(Context c,int id,String name,String type,int rarity){
 		BaseAdapter a = new BaseAdapter(c);
 		a.open();
-		/// qua bosognerebbe inserirli tutti
-		a.insertPokemonBase(1, "Bulbasaur", "erba", RARITY[0]);
-		a.insertPokemonBase(2, "Ivisaur", "erba", RARITY[1]);
-		a.insertPokemonBase(3, "Venosaur", "erba", RARITY[2]);
+		ContentValues pokemon = new ContentValues();
+		//pokemon.put( BaseHelper.ID, id );
+		pokemon.put( BaseHelper.NAME, name );
+		pokemon.put( BaseHelper.TYPE, type );
+		pokemon.put( BaseHelper.RARITY, rarity );
+		a.database.insert("pokemon", null, pokemon);
 		a.close();
 	}
 	
@@ -88,10 +98,14 @@ public class Pokemon {
 		this.context = context;
 		a = new BaseAdapter(this.context);
 		a.open();
-		Cursor c = a.getBasePokemonById(new String[] {BaseHelper.NAME, BaseHelper.TYPE}, id);
+		Cursor c = a.database.query(BaseHelper.TABLE_GENERAL_POKEMON,new String[] {
+				BaseHelper.NAME, 
+				BaseHelper.TYPE},
+				"id = " + id,
+				null,null,null,null);
 		c.moveToFirst();
-		this.name = c.getString(c.getColumnIndex(BaseHelper.NAME));
-		this.type = c.getString(c.getColumnIndex(BaseHelper.TYPE));
+		//this.name = c.getString(c.getColumnIndex(BaseHelper.NAME));
+		//this.type = c.getString(c.getColumnIndex(BaseHelper.TYPE));
 		a.close();
 	}
 	

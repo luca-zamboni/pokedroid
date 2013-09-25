@@ -6,6 +6,7 @@ import it.pokefundroid.pokedroid.utils.BaseHelper;
 
 import java.util.ArrayList;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 
@@ -27,11 +28,18 @@ public class PersonalPokemon extends Pokemon {
 		this.found_x = found_x;
 		this.found_y = found_y;
 		a = new BaseAdapter(context);
+		saveOnDatabase(context);
 	}
 	
-	public void saveOnDatabase(){
+	public void saveOnDatabase(Context c){
 		a.open();
-		a.insertPersonalPokemon(id, my_name, sex, found_x, found_y);
+		ContentValues pokemon = new ContentValues();
+		pokemon.put( BaseHelper.BASE_POKEMON_ID, id );
+		pokemon.put( BaseHelper.MY_NAME, my_name );
+		pokemon.put( BaseHelper.FOUND_Y, found_y );
+		pokemon.put( BaseHelper.FOUND_X, found_x );
+		pokemon.put( BaseHelper.SEX, sex );
+		a.database.insert(BaseHelper.TABLE_PERSONAL_POKEMON, null, pokemon);
 		a.close();
 	}
 	
@@ -43,12 +51,12 @@ public class PersonalPokemon extends Pokemon {
 		int found_y;
 		BaseAdapter a = new BaseAdapter(con);
 		a.open();
-		Cursor c = a.getAllPersonalPokemon(new String[] {BaseHelper.BASE_POKEMON_ID,
+		Cursor c = a.database.query(BaseHelper.TABLE_PERSONAL_POKEMON,new String[] {BaseHelper.BASE_POKEMON_ID,
 				BaseHelper.MY_NAME, 
 				BaseHelper.SEX, 
 				BaseHelper.FOUND_X, 
 				BaseHelper.FOUND_Y
-				});
+				},null,null,null,null,null);
 		c.moveToFirst();
 		ArrayList<PersonalPokemon> per = new ArrayList<PersonalPokemon>();
 		while(c.moveToNext()){
