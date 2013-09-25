@@ -1,13 +1,17 @@
 package it.pokefundroid.pokedroid.models;
 
 import it.pokefundroid.pokedroid.utils.BaseAdapter;
+import it.pokefundroid.pokedroid.utils.BaseHelper;
 import android.content.Context;
+import android.database.Cursor;
 
 public class Pokemon {
 	
-	public int id;
-	public String name;
-	public String type;
+	private int id;
+	private String name;
+	private String type;
+	private Context context;
+	private BaseAdapter a;
 	
 	public final static int NUMBER_POKEMON = 151; 
 	
@@ -79,7 +83,29 @@ public class Pokemon {
 		return (RARITY[id-1]);
 	}
 	
+	public Pokemon(int id,Context context){
+		this.id = id;
+		this.context = context;
+		a = new BaseAdapter(this.context);
+		a.open();
+		Cursor c = a.getBasePokemonById(new String[] {BaseHelper.NAME, BaseHelper.TYPE}, id);
+		c.moveToFirst();
+		this.name = c.getString(c.getColumnIndex(BaseHelper.NAME));
+		this.type = c.getString(c.getColumnIndex(BaseHelper.TYPE));
+		a.close();
+	}
 	
+	public String getName(){;
+		return name;
+	}
+	
+	public String getType(){
+		return type;
+	}
+	
+	public int getId(){
+		return id;
+	}
 	
 	
 }

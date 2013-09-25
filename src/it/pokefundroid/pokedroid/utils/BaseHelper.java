@@ -10,7 +10,9 @@ public class BaseHelper extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 1;
     
     /// questi solo key per i miei pokemon
+    public static final String TABLE_PERSONAL_POKEMON = "my_pokemon";
     public static final String MY_ID = "my_id";
+    public static final String BASE_POKEMON_ID = "id";
     public static final String NUMBER = "number";
     public static final String MY_NAME = "my_name";
     public static final String SEX = "sex";
@@ -18,6 +20,7 @@ public class BaseHelper extends SQLiteOpenHelper {
     public static final String FOUND_Y = "found_coordinate_y";
     
     /// key per i dati dei pokemon in generale
+    public static final String TABLE_GENERAL_POKEMON = "pokemon";
     public static final String ID = "id";
     public static final String NAME = "name";
     public static final String TYPE = "type";
@@ -26,7 +29,7 @@ public class BaseHelper extends SQLiteOpenHelper {
     
     private static final String CREATE_MY_POKEMON_TABLE = "create table if not exists my_pokemon  " +
     		"(my_id integer primary key autoincrement," +
-    		"number integer not null," +
+    		"id integer not null," +
     		"my_name text null," +
     		"sex integer not null," +
     		"found_coordinate_x integer null, " +

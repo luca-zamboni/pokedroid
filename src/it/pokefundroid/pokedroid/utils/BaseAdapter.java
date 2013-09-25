@@ -5,7 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
 public class BaseAdapter {
 	
@@ -37,13 +36,25 @@ public class BaseAdapter {
 		database.insert("pokemon", null, pokemon);
 	}
 	
-	public Cursor basePokemonById(String[] columns, int id ){
-		Cursor cursor = database.query("pokemon",columns,"id = " + id,null,null,null,null);
+	public void insertPersonalPokemon(int id,String my_name,int sex,int found_x,int found_y){
+		ContentValues pokemon = new ContentValues();
+		pokemon.put( BaseHelper.BASE_POKEMON_ID, id );
+		pokemon.put( BaseHelper.MY_NAME, my_name );
+		pokemon.put( BaseHelper.FOUND_Y, found_y );
+		pokemon.put( BaseHelper.FOUND_X, found_x );
+		pokemon.put( BaseHelper.SEX, sex );
+		
+		database.insert(BaseHelper.TABLE_PERSONAL_POKEMON, null, pokemon);
+	}
+	
+	public Cursor getBasePokemonById(String[] columns, int id ){
+		Cursor cursor = database.query(BaseHelper.TABLE_GENERAL_POKEMON,columns,"id = " + id,null,null,null,null);
 		return cursor;
 	}
 	
-	public void insertMyPokemon(){
-		
+	public Cursor getAllPersonalPokemon(String[] columns){
+		Cursor cursor = database.query(BaseHelper.TABLE_PERSONAL_POKEMON,columns,null,null,null,null,null);
+		return cursor;
 	}
 	
 
