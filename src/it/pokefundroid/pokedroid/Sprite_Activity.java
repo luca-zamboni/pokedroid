@@ -27,15 +27,17 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MotionEvent;
+import android.view.View;
 import android.view.Window;
 import android.widget.Toast;
 
-public class Sprite_Activity extends Activity implements OnARTouchListener,ILocation {
+public class Sprite_Activity extends Activity implements OnARTouchListener,
+		ILocation {
 
 	private BeyondarGLSurfaceView mBeyondarGLSurfaceView;
 	private CameraView mCameraView;
 	private World mWorld;
-	private Location mWorldCenter; 
+	private Location mWorldCenter;
 	private LocationUtils mLocationUtils;
 
 	@Override
@@ -46,78 +48,77 @@ public class Sprite_Activity extends Activity implements OnARTouchListener,ILoca
 		setContentView(R.layout.activity_sprite);
 
 		mBeyondarGLSurfaceView = (BeyondarGLSurfaceView) findViewById(R.id.customGLSurface);
-		//mCameraView = (CameraView) findViewById(R.id.camera);
+		mCameraView = (CameraView) findViewById(R.id.camera);
 
 		// We create the world and set it in to the view
-		mWorld = createWorld();
+		createWorld();
 		mBeyondarGLSurfaceView.setWorld(mWorld);
+		
+		
 		// set listener for the geoObjects
 		mBeyondarGLSurfaceView.setOnARTouchListener(this);
-		
+
 	}
 
-	private World createWorld() {
-		World w = new World(this);
+	private void createWorld() {
+		mWorld = new World(this);
 
 		double[] loc = getIntent().getExtras().getDoubleArray("loc");
-		
+
 		mWorldCenter = new Location("world");
 		mWorldCenter.setLatitude(loc[0]);
 		mWorldCenter.setLongitude(loc[1]);
-		mWorldCenter.setAccuracy((float)loc[3]);
+		mWorldCenter.setAccuracy((float) loc[3]);
 		setWorldAltitude(loc[2]);
-	
-		w.setLocation(mWorldCenter);
-		
-		fillPkmn(w, mWorldCenter.getLatitude(),mWorldCenter.getLongitude(),
-				mWorldCenter.getAltitude(),mWorldCenter.getAccuracy());
 
-		w.setDefaultBitmap(R.drawable.creature_6);
+		mWorld.setLocation(mWorldCenter);
 
-		return w;
+		fillPkmn(mWorld, mWorldCenter.getLatitude(),
+				mWorldCenter.getLongitude(), mWorldCenter.getAltitude(),
+				mWorldCenter.getAccuracy());
+
+		mWorld.setDefaultBitmap(R.drawable.creature_6);
+
 	}
 
 	private void setWorldAltitude(double d) {
-		//double teoalt= d-SharedPreferencesUtilities.getUserHeight(this)*2;
+		// double teoalt= d-SharedPreferencesUtilities.getUserHeight(this)*2;
 		double teoalt = d;
-		mWorldCenter.setAltitude((teoalt>0)?teoalt:d);
+		mWorldCenter.setAltitude((teoalt > 0) ? teoalt : d);
 	}
 
 	private void fillPkmn(World w, double... loc) {
-		
-		//TODO do it in proportion!
+
+		// TODO do it in proportion!
 		loc[3]=(loc[3]>10)?10:loc[3];
-		int many = (int) (Math.random() * 10*loc[3]);
-		
+		int many = (int) (Math.random() * 10 * loc[3]);
+
 		for (int i = 0; i < many; i++) {
-			
+
 			Location tmp = FindingUtilities.getLocation(loc[0], loc[1], loc[3]);
 			tmp.setAltitude(loc[2]);
-//			DEBUG
-//			int id = FindingUtilities.findInPosition(tmp.getLatitude(),
-//					tmp.getLongitude());
-			int id = (int )(Math.random()*151)+1;
+			// DEBUG
+			// int id = FindingUtilities.findInPosition(tmp.getLatitude(),
+			// tmp.getLongitude());
+			int id = (int) (Math.random() * 151) + 1;
 			if (id != -1) {
-				GeoObject go =new GeoObject(i);
-				fillObj(go,id,tmp);
+				GeoObject go = new GeoObject(i);
+				fillObj(go, id, tmp);
 				w.addBeyondarObject(go);
-				Log.i("pkmn", "pokemon id: " + id + " in lat:" + tmp.getLatitude()
-						+ " lon:" + tmp.getLongitude());
 			}
-			
+
 		}
 	}
-	
-	private void fillObj(GeoObject go1,int id,Location loc) {
+
+	private void fillObj(GeoObject go1, int id, Location loc) {
 		go1.setLatitude(loc.getLatitude());
 		go1.setLongitude(loc.getLongitude());
 		go1.setAltitude(loc.getAltitude());
 		go1.setImageUri(getImagUri(id));
-		go1.setName(id+"");
+		go1.setName(id + "");
 	}
 
-
-	private String getImagUri(int id){
+	private String getImagUri(int id) {
 		if (id < 10)
 			return "assets://pkm/pkfrlg00" + id + ".png";
 		if (id < 100)
@@ -130,14 +131,16 @@ public class Sprite_Activity extends Activity implements OnARTouchListener,ILoca
 	protected void onResume() {
 		super.onResume();
 		mBeyondarGLSurfaceView.onResume();
-		mLocationUtils = new LocationUtils(this, this);
+		
+		//This is needed, sometimes pokemons are behind the camera...
+		mCameraView.setVisibility(View.VISIBLE);
 	}
 
 	@Override
 	protected void onPause() {
-		super.onPause();		
+		super.onPause();
 		mBeyondarGLSurfaceView.onPause();
-		mLocationUtils.close();
+		// mLocationUtils.close();
 	}
 
 	@Override
@@ -149,7 +152,6 @@ public class Sprite_Activity extends Activity implements OnARTouchListener,ILoca
 	@Override
 	public void onTouchARView(MotionEvent event,
 			BeyondarGLSurfaceView beyondarView) {
-
 		float x = event.getX();
 		float y = event.getY();
 
@@ -181,22 +183,25 @@ public class Sprite_Activity extends Activity implements OnARTouchListener,ILoca
 		Toast.makeText(Sprite_Activity.this, textEvent, Toast.LENGTH_SHORT)
 				.show();
 	}
-	
+
 	@Override
 	public void onLocationChaged(Location location) {
-		//TODO spawn new pokemon
-		mWorldCenter = location;
-		//DEBUG
-		//setWorldAltitude(location.getAltitude());
-		//mWorld.setLocation(mWorldCenter);
-		Toast.makeText(this, "alt: "+location.getAltitude()+" worldalt: "+mWorldCenter.getAltitude(),
-				Toast.LENGTH_SHORT).show();
+		// TODO spawn new pokemon
+		// mWorldCenter = location;
+		// DEBUG
+		// setWorldAltitude(location.getAltitude());
+		// mWorld.setLocation(mWorldCenter);
+		Toast.makeText(
+				this,
+				"alt: " + location.getAltitude() + " worldalt: "
+						+ mWorldCenter.getAltitude(), Toast.LENGTH_SHORT)
+				.show();
 	}
 
 	@Override
 	public void onErrorOccured(ErrorType ex, String provider) {
 		// TODO aviare un activity di errore. oppure
-		//chiedere all'utente di attivare il gpx ecc.
+		// chiedere all'utente di attivare il gpx ecc.
 
 	}
 

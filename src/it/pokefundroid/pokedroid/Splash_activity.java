@@ -34,8 +34,8 @@ public class Splash_activity extends Activity implements ILocation {
 		
 		 mLocationUtils = new LocationUtils(this, this);
 		// DEBUG PURPOSE
-//		SharedPreferencesUtilities.setUserHeight(this, 1.75f);
-//		Location location = new Location("network");
+		SharedPreferencesUtilities.setUserHeight(this, 1.75f);
+		Location location = new Location("network");
 //		// MY house
 //		// location.setLatitude(45.4103907616809d);
 //		// location.setLongitude(10.985591523349285d);
@@ -85,12 +85,13 @@ public class Splash_activity extends Activity implements ILocation {
 	public void onErrorOccured(ErrorType ex, String provider) {
 		// TODO aviare un activity di errore. oppure
 		// chiedere all'utente di attivare il gpx ecc.
-
+		Toast.makeText(this, provider, Toast.LENGTH_SHORT).show();
 	}
 
 	@Override
 	public void onStatusChanged(String provider, boolean isActive) {
 		// TODO a seconda dello stato riavviare
+		Toast.makeText(this, provider+isActive, Toast.LENGTH_SHORT).show();
 	}
 
 }

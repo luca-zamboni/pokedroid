@@ -89,11 +89,11 @@ public class LocationUtils {
 	}
 
 	private void activateUpdates() {
-		 mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
-		 mTimeInterval, mMinDistance, mLocationListener);
-//		mLocationManager.requestLocationUpdates(
-//				LocationManager.NETWORK_PROVIDER, mTimeInterval, mMinDistance,
-//				mLocationListener);
+		// mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
+		// mTimeInterval, mMinDistance, mLocationListener);
+		mLocationManager.requestLocationUpdates(
+				LocationManager.NETWORK_PROVIDER, mTimeInterval, mMinDistance,
+				mLocationListener);
 	}
 
 	public void close() {
