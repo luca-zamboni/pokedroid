@@ -46,7 +46,7 @@ public class Sprite_Activity extends Activity implements OnARTouchListener,ILoca
 		setContentView(R.layout.activity_sprite);
 
 		mBeyondarGLSurfaceView = (BeyondarGLSurfaceView) findViewById(R.id.customGLSurface);
-		mCameraView = (CameraView) findViewById(R.id.camera);
+		//mCameraView = (CameraView) findViewById(R.id.camera);
 
 		// We create the world and set it in to the view
 		mWorld = createWorld();
@@ -61,7 +61,7 @@ public class Sprite_Activity extends Activity implements OnARTouchListener,ILoca
 
 		double[] loc = getIntent().getExtras().getDoubleArray("loc");
 		
-		mWorldCenter = new Location("gps");
+		mWorldCenter = new Location("world");
 		mWorldCenter.setLatitude(loc[0]);
 		mWorldCenter.setLongitude(loc[1]);
 		mWorldCenter.setAccuracy((float)loc[3]);
@@ -71,9 +71,6 @@ public class Sprite_Activity extends Activity implements OnARTouchListener,ILoca
 		
 		fillPkmn(w, mWorldCenter.getLatitude(),mWorldCenter.getLongitude(),
 				mWorldCenter.getAltitude(),mWorldCenter.getAccuracy());
-		
-		Log.i("pkmn", "you are in lat: " + loc[0] + " lon:" + loc[1]+" Alt:"+ loc[2]+ " teoalt: "
-		+ mWorldCenter.getAltitude()+"with an accuracy of: "+loc[3]);
 
 		w.setDefaultBitmap(R.drawable.creature_6);
 
@@ -81,16 +78,19 @@ public class Sprite_Activity extends Activity implements OnARTouchListener,ILoca
 	}
 
 	private void setWorldAltitude(double d) {
-		double teoalt= d-SharedPreferencesUtilities.getUserHeight(this)*2;
+		//double teoalt= d-SharedPreferencesUtilities.getUserHeight(this)*2;
+		double teoalt = d;
 		mWorldCenter.setAltitude((teoalt>0)?teoalt:d);
 	}
 
 	private void fillPkmn(World w, double... loc) {
 		
 		//TODO do it in proportion!
-		int many = (int) (Math.random() * 10 * loc[3]);
+		loc[3]=(loc[3]>10)?10:loc[3];
+		int many = (int) (Math.random() * 10*loc[3]);
 		
 		for (int i = 0; i < many; i++) {
+			
 			Location tmp = FindingUtilities.getLocation(loc[0], loc[1], loc[3]);
 			tmp.setAltitude(loc[2]);
 //			DEBUG
@@ -129,19 +129,15 @@ public class Sprite_Activity extends Activity implements OnARTouchListener,ILoca
 	@Override
 	protected void onResume() {
 		super.onResume();
-		mLocationUtils = new LocationUtils(this, this);
-		
-		//This is needed here because
-		//if we put this in oncreate method this won't work
-		
 		mBeyondarGLSurfaceView.onResume();
+		mLocationUtils = new LocationUtils(this, this);
 	}
 
 	@Override
 	protected void onPause() {
-		super.onPause();
-		mLocationUtils.close();
+		super.onPause();		
 		mBeyondarGLSurfaceView.onPause();
+		mLocationUtils.close();
 	}
 
 	@Override

@@ -42,6 +42,9 @@ public class Splash_activity extends Activity implements ILocation {
 //		// julia's place
 //		location.setLatitude(45.33497882075608d);
 //		location.setLongitude(11.242532143369317d);
+//		 //trento
+//		 location.setLatitude(46.04688826482743);
+//		 location.setLongitude(11.134816808626056);
 //		location.setAccuracy(10.0f);
 //		Intent newActivity = new Intent(Splash_activity.this,
 //				Sprite_Activity.class);
