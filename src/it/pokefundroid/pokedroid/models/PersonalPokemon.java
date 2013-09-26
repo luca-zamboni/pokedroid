@@ -1,14 +1,10 @@
 package it.pokefundroid.pokedroid.models;
 
 
-import it.pokefundroid.pokedroid.utils.BaseAdapter;
-import it.pokefundroid.pokedroid.utils.BaseHelper;
-
 import java.util.ArrayList;
 
-import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
+import android.widget.BaseAdapter;
 
 public class PersonalPokemon extends Pokemon {
 	
@@ -27,13 +23,6 @@ public class PersonalPokemon extends Pokemon {
 		this.sex = sex;
 		this.found_x = found_x;
 		this.found_y = found_y;
-		a = new BaseAdapter(context);
-		saveOnDatabase(context);
-	}
-	
-	public void saveOnDatabase(Context c){
-		a.open();
-		a.close();
 	}
 	
 	public static ArrayList<PersonalPokemon> getAllPersonaPokemon(Context con){

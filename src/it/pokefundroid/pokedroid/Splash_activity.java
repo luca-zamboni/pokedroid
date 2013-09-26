@@ -1,25 +1,23 @@
 package it.pokefundroid.pokedroid;
 
-import it.pokefundroid.pokedroid.models.Pokemon;
-import it.pokefundroid.pokedroid.utils.FindingUtilities;
+import it.pokefundroid.pokedroid.utils.LocationUtils;
+import it.pokefundroid.pokedroid.utils.LocationUtils.ErrorType;
+import it.pokefundroid.pokedroid.utils.LocationUtils.ILocation;
+import it.pokefundroid.pokedroid.utils.SharedPreferencesUtilities;
 import it.pokefundroid.pokedroid.utils.StaticClass;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.Menu;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class Splash_activity extends Activity {
+public class Splash_activity extends Activity implements ILocation {
 
 	public TextView text;
 	int ratata = 0;
-	private LocationManager locationManager;
-	private LocationListener locationListener;
+	private LocationUtils mLocationUtils;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -29,50 +27,30 @@ public class Splash_activity extends Activity {
 		// Connessionae database all' inizio del progrmma nn cancellare
 		StaticClass.openBatabaseConection(getApplicationContext());
 
-		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-		locationListener = new LocationListener() {
+		text = (TextView) findViewById(R.id.text);
 
-			@Override
-			public void onStatusChanged(String provider, int status,
-					Bundle extras) {
-			}
-
-			@Override
-			public void onProviderEnabled(String provider) {
-			}
-
-			@Override
-			public void onProviderDisabled(String provider) {
-			}
-
-			@Override
-			public void onLocationChanged(Location location) {
-				double latitude = location.getLatitude();
-				double longitude = location.getLongitude();
-
-				int condition = FindingUtilities.findInPosition(latitude,
-						longitude);
-
-				String str = location.getLatitude() + " "
-						+ location.getLongitude() + " " + condition + " "
-						+ Pokemon.getRarityFromId(Math.abs(condition)) + "\n";
-				for (int i = 0; i < FindingUtilities.currentPkmnSet.length; i++)
-					str = str + " " + FindingUtilities.currentPkmnSet[i];
-				str = str + "\n" + FindingUtilities.selectionSeed + "\n"
-						+ FindingUtilities.setSeed;
-
-				setText(str);
-				if (condition >= 0) {
-					ratata++;
-					Toast.makeText(
-							Splash_activity.this,
-							"Hai trovato " + ratata + " pokemon, id: "
-									+ condition, 1000).show();
-				}
-			}
-		};
-		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
-				5000, 10, locationListener);
+		
+		 mLocationUtils = new LocationUtils(this, this);
+		// DEBUG PURPOSE
+		SharedPreferencesUtilities.setUserHeight(this, 1.75f);
+		Location location = new Location("network");
+//		// MY house
+//		// location.setLatitude(45.4103907616809d);
+//		// location.setLongitude(10.985591523349285d);
+//		// julia's place
+//		location.setLatitude(45.33497882075608d);
+//		location.setLongitude(11.242532143369317d);
+//		 //trento
+//		 location.setLatitude(46.04688826482743);
+//		 location.setLongitude(11.134816808626056);
+//		location.setAccuracy(10.0f);
+//		Intent newActivity = new Intent(Splash_activity.this,
+//				Sprite_Activity.class);
+//		newActivity.putExtra("loc",
+//				new double[] { location.getLatitude(), location.getLongitude(),
+//						location.getAltitude(), location.getAccuracy() });
+//		startActivity(newActivity);
+//		// Splash_activity.this.finish();
 
 		startActivity(new Intent(Splash_activity.this,Menu_Activity.class));
 		//Intent newActivity = new Intent(Splash_activity.this,
@@ -93,6 +71,32 @@ public class Splash_activity extends Activity {
 	public void setText(String m) {
 		text = (TextView) findViewById(R.id.text);
 		text.setText(m);
+	}
+
+	@Override
+	public void onLocationChaged(Location location) {
+		Intent newActivity = new Intent(Splash_activity.this,
+				Sprite_Activity.class);
+		newActivity.putExtra("loc",
+				new double[] { location.getLatitude(), location.getLongitude(),
+						location.getAltitude(), location.getAccuracy() });
+		startActivity(newActivity);
+		mLocationUtils.close();
+		setText("acc: " + location.getAccuracy() + " lat:"
+				+ location.getLatitude() + " lon:" + location.getLongitude());
+	}
+
+	@Override
+	public void onErrorOccured(ErrorType ex, String provider) {
+		// TODO aviare un activity di errore. oppure
+		// chiedere all'utente di attivare il gpx ecc.
+		Toast.makeText(this, provider, Toast.LENGTH_SHORT).show();
+	}
+
+	@Override
+	public void onStatusChanged(String provider, boolean isActive) {
+		// TODO a seconda dello stato riavviare
+		Toast.makeText(this, provider+isActive, Toast.LENGTH_SHORT).show();
 	}
 
 }
