@@ -4,15 +4,13 @@ import it.pokefundroid.pokedroid.models.Pokemon;
 
 import java.util.Random;
 
-import android.util.Log;
+public class FindingUtilities {
 
-public class FindingUtilities { 
-
-	private final static int[] CHANCE = { 950, 800, 200, 30, 1, 0 }; 
+	private final static int[] CHANCE = { 950, 800, 200, 30, 1, 0 };
 	// possibilita' su 1000 elementi di essere selezionati nel set;
-	
-	private final static int[] FINDINGCHANCE = {12, 16, 22, 40, 125};
-	//original 18, 22, 27, 55, 150
+
+	private final static int[] FINDINGCHANCE = { 12, 16, 22, 40, 125 };
+	// original 18, 22, 27, 55, 150
 
 	public static int[] currentPkmnSet = null;
 
@@ -41,9 +39,16 @@ public class FindingUtilities {
 		if (changed || currentPkmnSet == null) {
 			generateSet();
 		}
-		int tmp = random.nextInt(3);
-		if (random.nextInt(FINDINGCHANCE[Pokemon.getRarityFromId(currentPkmnSet[tmp])])==1) {
-			ret = currentPkmnSet[tmp];
+		int total = FINDINGCHANCE[Pokemon.getRarityFromId(currentPkmnSet[0])]
+				+ FINDINGCHANCE[Pokemon.getRarityFromId(currentPkmnSet[1])]
+				+ FINDINGCHANCE[Pokemon.getRarityFromId(currentPkmnSet[2])];
+		int tmp = random.nextInt(total);
+		if (tmp < FINDINGCHANCE[Pokemon.getRarityFromId(currentPkmnSet[0])]) {
+			ret = currentPkmnSet[0];
+		} else if (tmp < (total - FINDINGCHANCE[Pokemon.getRarityFromId(currentPkmnSet[2])])) {
+			ret = currentPkmnSet[1];
+		} else {
+			ret = currentPkmnSet[2];
 		}
 		return ret;
 	}
@@ -65,7 +70,8 @@ public class FindingUtilities {
 			int id = selectionRandom.nextInt(151);
 			id = Pokemon.IDS[id];
 			boolean b = selectByRarity(Pokemon.getRarityFromId(id));
-			if (b) currentPkmnSet[i++] = id;
+			if (b)
+				currentPkmnSet[i++] = id;
 		}
 	}
 
@@ -76,9 +82,10 @@ public class FindingUtilities {
 		longitude *= 10 ^ 3;
 		long lat = (long) latitude;
 		long lon = (long) longitude;
-		if (((lat*lon)-(151*lat)) != selectionSeed || ((lat*lon)-(270*lon)) != setSeed) {
-			selectionSeed = (lat*lon)-(151*lat);
-			setSeed = (lat*lon)-(270*lon);
+		if (((lat * lon) - (151 * lat)) != selectionSeed
+				|| ((lat * lon) - (270 * lon)) != setSeed) {
+			selectionSeed = (lat * lon) - (151 * lat);
+			setSeed = (lat * lon) - (270 * lon);
 			ret = true;
 		}
 		selectionRandom = new Random(selectionSeed);
