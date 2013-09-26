@@ -70,13 +70,14 @@ public class Splash_activity extends Activity implements ILocation {
 
 	@Override
 	public void onLocationChaged(Location location) {
+		mLocationUtils.close();
 		Intent newActivity = new Intent(Splash_activity.this,
 				Sprite_Activity.class);
 		newActivity.putExtra("loc",
 				new double[] { location.getLatitude(), location.getLongitude(),
 						location.getAltitude(), location.getAccuracy() });
 		startActivity(newActivity);
-		mLocationUtils.close();
+		this.finish();
 		setText("acc: " + location.getAccuracy() + " lat:"
 				+ location.getLatitude() + " lon:" + location.getLongitude());
 	}

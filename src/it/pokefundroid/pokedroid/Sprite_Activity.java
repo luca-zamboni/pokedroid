@@ -89,8 +89,7 @@ public class Sprite_Activity extends Activity implements OnARTouchListener,
 	private void fillPkmn(World w, double... loc) {
 
 		// TODO do it in proportion!
-		loc[3] = (loc[3] > 10) ? 10 : loc[3];
-		int many = (int) (Math.random() * 3 ) + 1;
+		int many = FindingUtilities.generateHowManyPokemonInRange(loc[3]);
 
 		for (int i = 0; i < many; i++) {
 
@@ -131,14 +130,14 @@ public class Sprite_Activity extends Activity implements OnARTouchListener,
 		mBeyondarGLSurfaceView.onResume();
 		// This is needed, sometimes pokemons are behind the camera...
 		mCameraView.setVisibility(View.VISIBLE);
-		mLocationUtils = new  LocationUtils(this, this);
+		//mLocationUtils = new  LocationUtils(this, this);
 	}
 
 	@Override
 	protected void onPause() {
 		super.onPause();
 		mBeyondarGLSurfaceView.onPause();
-		mLocationUtils.close();
+		//mLocationUtils.close();
 	}
 
 	@Override
@@ -185,13 +184,14 @@ public class Sprite_Activity extends Activity implements OnARTouchListener,
 	@Override
 	public void onLocationChaged(Location location) {
 		// TODO spawn new pokemon
-		mWorldCenter = location;
-		setWorldAltitude(location.getAltitude());
-		mWorld.setLocation(mWorldCenter);
+		//mWorldCenter = location;
+		//setWorldAltitude(location.getAltitude());
+		//mWorld.setLocation(mWorldCenter);
 		Toast.makeText(
 				this,
-				"alt: " + location.getAltitude() + " worldalt: "
-						+ mWorldCenter.getAltitude(), Toast.LENGTH_SHORT)
+				"lat: " + location.getLatitude() + " oldlat: "
+						+ mWorldCenter.getLatitude() + "long: " + location.getLongitude() + " oldlong: "
+								+ mWorldCenter.getLongitude(), Toast.LENGTH_SHORT)
 				.show();
 	}
 
