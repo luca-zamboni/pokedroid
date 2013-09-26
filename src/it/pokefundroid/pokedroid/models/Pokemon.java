@@ -1,8 +1,7 @@
 package it.pokefundroid.pokedroid.models;
 
-import it.pokefundroid.pokedroid.utils.BaseAdapter;
 import it.pokefundroid.pokedroid.utils.BaseHelper;
-import android.content.ContentValues;
+import it.pokefundroid.pokedroid.utils.StaticClass;
 import android.content.Context;
 import android.database.Cursor;
 
@@ -12,7 +11,7 @@ public class Pokemon {
 	private String name;
 	private String type;
 	private Context context;
-	private BaseAdapter a;
+	private BaseHelper a;
 	
 	public final static int NUMBER_POKEMON = 151; 
 	
@@ -63,26 +62,6 @@ public class Pokemon {
 		RARE, NONPRESENT, RARE, SUBRARE, VERYRARE, VERYRARE, VERYRARE, //2kabuto, 1aerodactyl, 1snorlax, 3 legendary birds
 		RARE, NONPRESENT, NONPRESENT, VERYRARE, VERYRARE //3dratini, mewtwo, mew
 	};
-	
-	public static void fillDatabasePokemon(Context c){
-		/// qua bosognerebbe inserirli tutti
-		insertBasePokemon(c,1, "Bulbasaur", "erba", RARITY[0]);
-		insertBasePokemon(c,2, "Ivisaur", "erba", RARITY[1]);
-		insertBasePokemon(c,3, "Venosaur", "erba", RARITY[2]);
-	}
-	
-	private static void insertBasePokemon(Context c,int id,String name,String type,int rarity){
-		BaseAdapter a = new BaseAdapter(c);
-		a.open();
-		ContentValues pokemon = new ContentValues();
-		//pokemon.put( BaseHelper.ID, id );
-		pokemon.put( BaseHelper.NAME, name );
-		pokemon.put( BaseHelper.TYPE, type );
-		pokemon.put( BaseHelper.RARITY, rarity );
-		a.database.insert("pokemon", null, pokemon);
-		a.close();
-	}
-	
 	/**
 	 * metodo per ricavarsi dall'id del pokemon la sua rarita'
 	 * da associare a un array/classe/db/qualcosa per ricavarsi da li la rarita'
@@ -96,16 +75,12 @@ public class Pokemon {
 	public Pokemon(int id,Context context){
 		this.id = id;
 		this.context = context;
-		a = new BaseAdapter(this.context);
-		a.open();
-		Cursor c = a.database.query(BaseHelper.TABLE_GENERAL_POKEMON,new String[] {
-				BaseHelper.NAME, 
-				BaseHelper.TYPE},
-				"id = " + id,
-				null,null,null,null);
+		Cursor c = StaticClass.dbpoke.query("pokemon_species",new String[] {
+				"identifier"},
+				"id = " + id);
 		c.moveToFirst();
-		//this.name = c.getString(c.getColumnIndex(BaseHelper.NAME));
-		//this.type = c.getString(c.getColumnIndex(BaseHelper.TYPE));
+		this.name = c.getString(c.getColumnIndex("identifier"));
+		this.type = "N.D.";
 		a.close();
 	}
 	

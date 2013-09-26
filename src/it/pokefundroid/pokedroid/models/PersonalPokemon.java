@@ -33,18 +33,11 @@ public class PersonalPokemon extends Pokemon {
 	
 	public void saveOnDatabase(Context c){
 		a.open();
-		ContentValues pokemon = new ContentValues();
-		pokemon.put( BaseHelper.BASE_POKEMON_ID, id );
-		pokemon.put( BaseHelper.MY_NAME, my_name );
-		pokemon.put( BaseHelper.FOUND_Y, found_y );
-		pokemon.put( BaseHelper.FOUND_X, found_x );
-		pokemon.put( BaseHelper.SEX, sex );
-		a.database.insert(BaseHelper.TABLE_PERSONAL_POKEMON, null, pokemon);
 		a.close();
 	}
 	
 	public static ArrayList<PersonalPokemon> getAllPersonaPokemon(Context con){
-		int id;
+		/*int id;
 		String my_name;
 		int sex;
 		int found_x;
@@ -68,7 +61,8 @@ public class PersonalPokemon extends Pokemon {
 			per.add(new PersonalPokemon(con, id, my_name, sex, found_x, found_y));
 		}
 		a.close();
-		return per;
+		return per;*/
+		return null;
 	}
 	
 }
