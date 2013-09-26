@@ -91,16 +91,14 @@ public class Sprite_Activity extends Activity implements OnARTouchListener,
 
 		// TODO do it in proportion!
 		loc[3]=(loc[3]>10)?10:loc[3];
-		int many = (int) (Math.random() * 10 * loc[3]);
+		int many = (int) (Math.random() * 3 * loc[3])+1;
 
 		for (int i = 0; i < many; i++) {
 
 			Location tmp = FindingUtilities.getLocation(loc[0], loc[1], loc[3]);
 			tmp.setAltitude(loc[2]);
 			// DEBUG
-			// int id = FindingUtilities.findInPosition(tmp.getLatitude(),
-			// tmp.getLongitude());
-			int id = (int) (Math.random() * 151) + 1;
+			int id = FindingUtilities.findInPosition(tmp.getLatitude(),tmp.getLongitude());
 			if (id != -1) {
 				GeoObject go = new GeoObject(i);
 				fillObj(go, id, tmp);

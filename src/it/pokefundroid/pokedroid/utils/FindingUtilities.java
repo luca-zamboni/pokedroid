@@ -4,6 +4,8 @@ import it.pokefundroid.pokedroid.models.Pokemon;
 
 import java.util.Random;
 
+import android.location.Location;
+
 public class FindingUtilities {
 
 	private final static int[] CHANCE = { 950, 800, 200, 30, 1, 0 };
