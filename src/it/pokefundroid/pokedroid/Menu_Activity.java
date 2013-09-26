@@ -1,13 +1,12 @@
 package it.pokefundroid.pokedroid;
 
-import it.pokefundroid.pokedroid.utils.BaseAdapter;
-import it.pokefundroid.pokedroid.utils.BaseHelper;
 import android.app.Activity;
-import android.database.Cursor;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.Toast;
 
 public class Menu_Activity extends Activity {
 	
@@ -19,6 +18,14 @@ public class Menu_Activity extends Activity {
 		setContentView(R.layout.activity_menu);
 		
 		view_pokemon = (Button) findViewById(R.id.button_pokemon);
+		
+		view_pokemon.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				startActivity(new Intent(getApplicationContext(),View_team_activity.class));
+			}
+		});
 		
 		
 		// righe per  bombo x provare 

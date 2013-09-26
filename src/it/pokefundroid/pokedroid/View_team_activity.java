@@ -1,14 +1,10 @@
 package it.pokefundroid.pokedroid;
 
-import it.pokefundroid.pokedroid.models.PersonalPokemon;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-
+import it.pokefundroid.pokedroid.models.Pokemon;
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
-import android.widget.TextView;
 
 public class View_team_activity extends Activity {
 
@@ -16,8 +12,10 @@ public class View_team_activity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_view_team_activity);
-		setTitle("La tua scuadra");
-		ArrayList<PersonalPokemon> personals = PersonalPokemon.getAllPersonaPokemon(getApplicationContext());
+		setTitle("La tua sjuadra");
+		Pokemon e = new Pokemon(54, getApplicationContext());
+		Log.e("",e.getName());
+		/*ArrayList<PersonalPokemon> personals = PersonalPokemon.getAllPersonaPokemon(getApplicationContext());
 		Iterator<PersonalPokemon> i = personals.iterator();
 		//LinearLayout l = (LinearLayout) findViewById(R.id.layout_scuadra);
 		int y = 0;

@@ -2,6 +2,7 @@ package it.pokefundroid.pokedroid;
 
 import it.pokefundroid.pokedroid.models.Pokemon;
 import it.pokefundroid.pokedroid.utils.FindingUtilities;
+import it.pokefundroid.pokedroid.utils.StaticClass;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -24,6 +25,9 @@ public class Splash_activity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.splash_activity);
+		
+		// Connessionae database all' inizio del progrmma nn cancellare
+		StaticClass.openBatabaseConection(getApplicationContext());
 
 		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 		locationListener = new LocationListener() {
@@ -70,6 +74,7 @@ public class Splash_activity extends Activity {
 		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
 				5000, 10, locationListener);
 
+		startActivity(new Intent(Splash_activity.this,Menu_Activity.class));
 		//Intent newActivity = new Intent(Splash_activity.this,
 		//		Sprite_Activity.class);
 		// newActivity.putExtra("loc", new
