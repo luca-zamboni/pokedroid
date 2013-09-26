@@ -7,6 +7,7 @@
     <uses-sdk
         android:minSdkVersion="8"
         android:targetSdkVersion="17" />
+    <uses-permission android:name="android.permission.CAMERA"/>
 
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -38,7 +39,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="it.pokefundroid.pokedroid.Sprite_Activity" >
+        <activity android:name="it.pokefundroid.pokedroid.Sprite_Activity"
+            android:configChanges="orientation|screenSize" >
+            
         </activity>
         <activity
             android:name="it.pokefundroid.pokedroid.Menu_Activity"

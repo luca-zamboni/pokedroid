@@ -1,16 +1,17 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <com.beyondar.android.opengl.views.BeyondarGLSurfaceView
-      android:id="@+id/customGLSurface"
-        android:layout_width="match_parent" 
-        android:layout_height="match_parent" /> 
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
 
     <com.beyondar.android.views.CameraView
         android:id="@+id/camera"
-        android:layout_width="match_parent" 
-         android:layout_height="match_parent" /> 
-</FrameLayout>
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="invisible" />
 
+    <com.beyondar.android.opengl.views.BeyondarGLSurfaceView
+        android:id="@+id/customGLSurface"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</FrameLayout>

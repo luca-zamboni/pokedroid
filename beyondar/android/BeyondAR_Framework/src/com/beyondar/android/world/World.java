@@ -220,7 +220,7 @@ public class World {
 		setLongitude(location.getLongitude());
 		// We do not set the altitude because it is a big source of issues, the
 		// accuracy is too bad
-		// setAltitude(location.getAltitude());
+		//setAltitude(location.getAltitude());
 	}
 
 	public synchronized void setDefaultBitmap(int defaultBitmap) {
