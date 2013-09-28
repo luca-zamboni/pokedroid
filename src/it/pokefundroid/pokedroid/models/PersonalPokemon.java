@@ -4,20 +4,17 @@ package it.pokefundroid.pokedroid.models;
 import java.util.ArrayList;
 
 import android.content.Context;
-import android.widget.BaseAdapter;
 
 public class PersonalPokemon extends Pokemon {
-	
-	private int id;
+
 	public String my_name;
+	private int id;
 	public int sex;
 	public int found_x;
 	public int found_y;
 	
-	private BaseAdapter a;
-	
-	public PersonalPokemon(Context context,int id,String my_name, int sex, int found_x, int found_y) {
-		super(id,context);
+	public PersonalPokemon(int id,String my_name, int sex, int found_x, int found_y) {
+		super(id);
 		this.id = id;
 		this.my_name = my_name;
 		this.sex = sex;

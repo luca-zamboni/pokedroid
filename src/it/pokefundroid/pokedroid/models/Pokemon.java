@@ -2,7 +2,6 @@ package it.pokefundroid.pokedroid.models;
 
 import it.pokefundroid.pokedroid.utils.BaseHelper;
 import it.pokefundroid.pokedroid.utils.StaticClass;
-import android.content.Context;
 import android.database.Cursor;
 
 public class Pokemon {
@@ -10,7 +9,6 @@ public class Pokemon {
 	private int id;
 	private String name;
 	private String type;
-	private Context context;
 	private BaseHelper a;
 	
 	public final static int NUMBER_POKEMON = 151; 
@@ -72,10 +70,9 @@ public class Pokemon {
 		return (RARITY[id-1]);
 	}
 	
-	public Pokemon(int id,Context context){
+	public Pokemon(int id){
 		this.id = id;
-		this.context = context;
-		Cursor c = StaticClass.dbpoke.query("pokemon_species",new String[] {
+		Cursor c = StaticClass.query("pokemon_species",new String[] {
 				"identifier"},
 				"id = " + id);
 		c.moveToFirst();

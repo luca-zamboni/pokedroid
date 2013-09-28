@@ -13,7 +13,7 @@ public class View_team_activity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_view_team_activity);
 		setTitle("La tua sjuadra");
-		Pokemon e = new Pokemon(54, getApplicationContext());
+		Pokemon e = new Pokemon(54);
 		Log.e("",e.getName());
 		/*ArrayList<PersonalPokemon> personals = PersonalPokemon.getAllPersonaPokemon(getApplicationContext());
 		Iterator<PersonalPokemon> i = personals.iterator();

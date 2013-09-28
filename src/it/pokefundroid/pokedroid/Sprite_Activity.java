@@ -92,7 +92,7 @@ public class Sprite_Activity extends Activity implements OnARTouchListener,
 		loc[3] = (loc[3] > 10) ? 10 : loc[3];
 		int many = (int) (Math.random() * 3 ) + 1;
 
-		for (int i = 0; i < many; i++) {
+		for (int i = 0; i < many; i++) { 
 
 			Location tmp = FindingUtilities.getLocation(loc[0], loc[1], loc[3]);
 			tmp.setAltitude(loc[2]);

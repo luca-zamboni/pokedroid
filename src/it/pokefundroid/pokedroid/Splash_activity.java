@@ -34,25 +34,25 @@ public class Splash_activity extends Activity implements ILocation {
 		// DEBUG PURPOSE
 		SharedPreferencesUtilities.setUserHeight(this, 1.75f);
 		Location location = new Location("network");
-//		// MY house
-//		// location.setLatitude(45.4103907616809d);
-//		// location.setLongitude(10.985591523349285d);
-//		// julia's place
-//		location.setLatitude(45.33497882075608d);
-//		location.setLongitude(11.242532143369317d);
-//		 //trento
-//		 location.setLatitude(46.04688826482743);
-//		 location.setLongitude(11.134816808626056);
-//		location.setAccuracy(10.0f);
-//		Intent newActivity = new Intent(Splash_activity.this,
-//				Sprite_Activity.class);
-//		newActivity.putExtra("loc",
-//				new double[] { location.getLatitude(), location.getLongitude(),
-//						location.getAltitude(), location.getAccuracy() });
-//		startActivity(newActivity);
+		// MY house
+		// location.setLatitude(45.4103907616809d);
+		// location.setLongitude(10.985591523349285d);
+		// julia's place
+		location.setLatitude(45.33497882075608d);
+		location.setLongitude(11.242532143369317d);
+		 //trento
+		 location.setLatitude(46.04688826482743);
+		 location.setLongitude(11.134816808626056);
+		location.setAccuracy(10.0f);
+		Intent newActivity = new Intent(Splash_activity.this,
+				Sprite_Activity.class);
+		newActivity.putExtra("loc",
+				new double[] { location.getLatitude(), location.getLongitude(),
+						location.getAltitude(), location.getAccuracy() });
+		startActivity(newActivity);
 //		// Splash_activity.this.finish();
 
-		startActivity(new Intent(Splash_activity.this,Menu_Activity.class));
+		//startActivity(new Intent(Splash_activity.this,Menu_Activity.class));
 		//Intent newActivity = new Intent(Splash_activity.this,
 		//		Sprite_Activity.class);
 		// newActivity.putExtra("loc", new
