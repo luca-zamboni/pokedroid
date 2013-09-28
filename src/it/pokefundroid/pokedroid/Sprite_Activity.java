@@ -53,7 +53,8 @@ public class Sprite_Activity extends Activity implements OnARTouchListener,
 		// We create the world and set it in to the view
 		createWorld();
 		mBeyondarGLSurfaceView.setWorld(mWorld);
-
+		
+		
 		// set listener for the geoObjects
 		mBeyondarGLSurfaceView.setOnARTouchListener(this);
 
@@ -88,16 +89,12 @@ public class Sprite_Activity extends Activity implements OnARTouchListener,
 
 	private void fillPkmn(World w, double... loc) {
 
-		// TODO do it in proportion!
 		int many = FindingUtilities.generateHowManyPokemonInRange(loc[3]);
 
 		for (int i = 0; i < many; i++) {
-
 			Location tmp = FindingUtilities.getLocation(loc[0], loc[1], loc[3]);
 			tmp.setAltitude(loc[2]);
-			// DEBUG
-			int id = FindingUtilities.findInPosition(tmp.getLatitude(),
-					tmp.getLongitude());
+			int id = FindingUtilities.findInPosition(tmp.getLatitude(),tmp.getLongitude());
 			if (id != -1) {
 				GeoObject go = new GeoObject(i);
 				fillObj(go, id, tmp);
@@ -128,16 +125,16 @@ public class Sprite_Activity extends Activity implements OnARTouchListener,
 	protected void onResume() {
 		super.onResume();
 		mBeyondarGLSurfaceView.onResume();
-		// This is needed, sometimes pokemons are behind the camera...
+		
+		//This is needed, sometimes pokemons are behind the camera...
 		mCameraView.setVisibility(View.VISIBLE);
-		//mLocationUtils = new  LocationUtils(this, this);
 	}
 
 	@Override
 	protected void onPause() {
 		super.onPause();
 		mBeyondarGLSurfaceView.onPause();
-		//mLocationUtils.close();
+		// mLocationUtils.close();
 	}
 
 	@Override
@@ -177,21 +174,21 @@ public class Sprite_Activity extends Activity implements OnARTouchListener,
 			BeyondarObject geoObject = iterator.next();
 			textEvent = textEvent + " " + geoObject.getName();
 		}
-//		Toast.makeText(Sprite_Activity.this, textEvent, Toast.LENGTH_SHORT)
-//				.show();
+		Toast.makeText(Sprite_Activity.this, textEvent, Toast.LENGTH_SHORT)
+				.show();
 	}
 
 	@Override
 	public void onLocationChaged(Location location) {
 		// TODO spawn new pokemon
-		//mWorldCenter = location;
-		//setWorldAltitude(location.getAltitude());
-		//mWorld.setLocation(mWorldCenter);
+		// mWorldCenter = location;
+		// DEBUG
+		// setWorldAltitude(location.getAltitude());
+		// mWorld.setLocation(mWorldCenter);
 		Toast.makeText(
 				this,
-				"lat: " + location.getLatitude() + " oldlat: "
-						+ mWorldCenter.getLatitude() + "long: " + location.getLongitude() + " oldlong: "
-								+ mWorldCenter.getLongitude(), Toast.LENGTH_SHORT)
+				"alt: " + location.getAltitude() + " worldalt: "
+						+ mWorldCenter.getAltitude(), Toast.LENGTH_SHORT)
 				.show();
 	}
 

@@ -3,6 +3,7 @@ package it.pokefundroid.pokedroid;
 import it.pokefundroid.pokedroid.models.Pokemon;
 import it.pokefundroid.pokedroid.utils.FindingUtilities;
 import it.pokefundroid.pokedroid.utils.LocationUtils;
+import it.pokefundroid.pokedroid.utils.LocationUtils.LocationType;
 import it.pokefundroid.pokedroid.utils.SharedPreferencesUtilities;
 import it.pokefundroid.pokedroid.utils.LocationUtils.ErrorType;
 import it.pokefundroid.pokedroid.utils.LocationUtils.ILocation;
@@ -32,7 +33,7 @@ public class Splash_activity extends Activity implements ILocation {
 		text = (TextView) findViewById(R.id.text);
 
 		
-		 mLocationUtils = new LocationUtils(this, this);
+		 mLocationUtils = new LocationUtils(this, this,LocationType.NETWORK);
 		// DEBUG PURPOSE
 		SharedPreferencesUtilities.setUserHeight(this, 1.75f);
 		Location location = new Location("network");
