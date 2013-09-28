@@ -1,9 +1,11 @@
 package it.pokefundroid.pokedroid;
 
+import it.pokefundroid.pokedroid.models.Pokemon;
 import it.pokefundroid.pokedroid.utils.FindingUtilities;
 import it.pokefundroid.pokedroid.utils.LocationUtils;
 import it.pokefundroid.pokedroid.utils.LocationUtils.ErrorType;
 import it.pokefundroid.pokedroid.utils.LocationUtils.ILocation;
+import it.pokefundroid.pokedroid.utils.LocationUtils.LocationType;
 import it.pokefundroid.pokedroid.utils.SharedPreferencesUtilities;
 
 import java.util.ArrayList;
@@ -34,6 +36,8 @@ import android.widget.Toast;
 public class Sprite_Activity extends Activity implements OnARTouchListener,
 		ILocation {
 
+	private static final int FIGHT_PROXIMITY = 2;
+	
 	private BeyondarGLSurfaceView mBeyondarGLSurfaceView;
 	private CameraView mCameraView;
 	private World mWorld;
@@ -58,6 +62,28 @@ public class Sprite_Activity extends Activity implements OnARTouchListener,
 		mBeyondarGLSurfaceView.setOnARTouchListener(this);
 
 	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		mBeyondarGLSurfaceView.onResume();
+		mLocationUtils = new LocationUtils(this, this, LocationType.NETWORK);
+		// This is needed, sometimes pokemons are behind the camera...
+		mCameraView.setVisibility(View.VISIBLE);
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		mBeyondarGLSurfaceView.onPause();
+		mLocationUtils.close();
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.sprite_, menu);
+		return true;
+	}
 
 	private void createWorld() {
 		mWorld = new World(this);
@@ -79,24 +105,15 @@ public class Sprite_Activity extends Activity implements OnARTouchListener,
 		mWorld.setDefaultBitmap(R.drawable.creature_6);
 
 	}
-
-	private void setWorldAltitude(double d) {
-		// double teoalt= d-SharedPreferencesUtilities.getUserHeight(this)*2;
-		double teoalt = d;
-		mWorldCenter.setAltitude((teoalt > 0) ? teoalt : d);
-	}
-
+	
 	private void fillPkmn(World w, double... loc) {
 
-		// TODO do it in proportion!
-		loc[3] = (loc[3] > 10) ? 10 : loc[3];
-		int many = (int) (Math.random() * 3 ) + 1;
+		int many = FindingUtilities.generateHowManyPokemonInRange(loc[3]);
 
 		for (int i = 0; i < many; i++) { 
 
 			Location tmp = FindingUtilities.getLocation(loc[0], loc[1], loc[3]);
 			tmp.setAltitude(loc[2]);
-			// DEBUG
 			int id = FindingUtilities.findInPosition(tmp.getLatitude(),
 					tmp.getLongitude());
 			if (id != -1) {
@@ -108,12 +125,20 @@ public class Sprite_Activity extends Activity implements OnARTouchListener,
 		}
 	}
 
+	private void setWorldAltitude(double d) {
+		// DEBUG
+		// double teoalt= d-SharedPreferencesUtilities.getUserHeight(this)*2;
+		double teoalt = d;
+		mWorldCenter.setAltitude((teoalt > 0) ? teoalt : d);
+	}
+
+
 	private void fillObj(GeoObject go1, int id, Location loc) {
 		go1.setLatitude(loc.getLatitude());
 		go1.setLongitude(loc.getLongitude());
 		go1.setAltitude(loc.getAltitude());
 		go1.setImageUri(getImagUri(id));
-		go1.setName(id + "");
+		go1.setName(id+"");
 	}
 
 	private String getImagUri(int id) {
@@ -123,28 +148,6 @@ public class Sprite_Activity extends Activity implements OnARTouchListener,
 			return "assets://pkm/pkfrlg0" + id + ".png";
 		else
 			return "assets://pkm/pkfrlg" + id + ".png";
-	}
-
-	@Override
-	protected void onResume() {
-		super.onResume();
-		mBeyondarGLSurfaceView.onResume();
-		// This is needed, sometimes pokemons are behind the camera...
-		mCameraView.setVisibility(View.VISIBLE);
-		mLocationUtils = new  LocationUtils(this, this);
-	}
-
-	@Override
-	protected void onPause() {
-		super.onPause();
-		mBeyondarGLSurfaceView.onPause();
-		mLocationUtils.close();
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.sprite_, menu);
-		return true;
 	}
 
 	@Override
@@ -159,40 +162,40 @@ public class Sprite_Activity extends Activity implements OnARTouchListener,
 
 		String textEvent = "";
 
-		switch (event.getAction()) {
-		case MotionEvent.ACTION_DOWN:
-			textEvent = "Event type ACTION_DOWN: ";
-			break;
-		case MotionEvent.ACTION_UP:
-			textEvent = "Event type ACTION_UP: ";
-			break;
-		case MotionEvent.ACTION_MOVE:
-			textEvent = "Event type ACTION_MOVE: ";
-			break;
-		default:
-			break;
-		}
+//		switch (event.getAction()) {
+//		case MotionEvent.ACTION_DOWN:
+//			break;
+//		case MotionEvent.ACTION_UP:
+//			textEvent = "Event type ACTION_UP: ";
+//			break;
+//		case MotionEvent.ACTION_MOVE:
+//			break;
+//		default:
+//			break;
+//		}
 
 		Iterator<BeyondarObject> iterator = geoObjects.iterator();
 		while (iterator.hasNext()) {
-			BeyondarObject geoObject = iterator.next();
+			GeoObject geoObject = (GeoObject) iterator.next();
 			textEvent = textEvent + " " + geoObject.getName();
+			float[] results = new float[2];
+			Location.distanceBetween(mWorldCenter.getLatitude(), mWorldCenter.getLongitude(),
+					geoObject.getLatitude(), geoObject.getLongitude(), results);
+			if(results[0]<=FIGHT_PROXIMITY){
+				textEvent+= ": captured";
+			}
 		}
-//		Toast.makeText(Sprite_Activity.this, textEvent, Toast.LENGTH_SHORT)
-//				.show();
+		Toast.makeText(Sprite_Activity.this, textEvent, Toast.LENGTH_SHORT)
+				.show();
 	}
 
 	@Override
 	public void onLocationChaged(Location location) {
 		// TODO spawn new pokemon
 		mWorldCenter = location;
-		setWorldAltitude(location.getAltitude());
+		// DEBUG
+		// setWorldAltitude(location.getAltitude());
 		mWorld.setLocation(mWorldCenter);
-		Toast.makeText(
-				this,
-				"alt: " + location.getAltitude() + " worldalt: "
-						+ mWorldCenter.getAltitude(), Toast.LENGTH_SHORT)
-				.show();
 	}
 
 	@Override

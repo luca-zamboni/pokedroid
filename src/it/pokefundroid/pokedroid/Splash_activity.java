@@ -3,7 +3,7 @@ package it.pokefundroid.pokedroid;
 import it.pokefundroid.pokedroid.utils.LocationUtils;
 import it.pokefundroid.pokedroid.utils.LocationUtils.ErrorType;
 import it.pokefundroid.pokedroid.utils.LocationUtils.ILocation;
-import it.pokefundroid.pokedroid.utils.SharedPreferencesUtilities;
+import it.pokefundroid.pokedroid.utils.LocationUtils.LocationType;
 import it.pokefundroid.pokedroid.utils.StaticClass;
 import android.app.Activity;
 import android.content.Intent;
@@ -30,26 +30,27 @@ public class Splash_activity extends Activity implements ILocation {
 		text = (TextView) findViewById(R.id.text);
 
 		
-		 mLocationUtils = new LocationUtils(this, this);
+		 mLocationUtils = new LocationUtils(this, this, LocationType.NETWORK);
 		// DEBUG PURPOSE
-		SharedPreferencesUtilities.setUserHeight(this, 1.75f);
-		Location location = new Location("network");
-		// MY house
-		// location.setLatitude(45.4103907616809d);
-		// location.setLongitude(10.985591523349285d);
-		// julia's place
-		location.setLatitude(45.33497882075608d);
-		location.setLongitude(11.242532143369317d);
-		 //trento
-		 location.setLatitude(46.04688826482743);
-		 location.setLongitude(11.134816808626056);
-		location.setAccuracy(10.0f);
-		Intent newActivity = new Intent(Splash_activity.this,
-				Sprite_Activity.class);
-		newActivity.putExtra("loc",
-				new double[] { location.getLatitude(), location.getLongitude(),
-						location.getAltitude(), location.getAccuracy() });
-		startActivity(newActivity);
+
+//		SharedPreferencesUtilities.setUserHeight(this, 1.75f);
+//		Location location = new Location("network");
+//		// MY house
+//		// location.setLatitude(45.4103907616809d);
+//		// location.setLongitude(10.985591523349285d);
+//		// julia's place
+//		location.setLatitude(45.33497882075608d);
+//		location.setLongitude(11.242532143369317d);
+//		 //trento
+//		 location.setLatitude(46.04688826482743);
+//		 location.setLongitude(11.134816808626056);
+//		location.setAccuracy(10.0f);
+//		Intent newActivity = new Intent(Splash_activity.this,
+//				Sprite_Activity.class);
+//		newActivity.putExtra("loc",
+//				new double[] { location.getLatitude(), location.getLongitude(),
+//						location.getAltitude(), location.getAccuracy() });
+//		startActivity(newActivity);
 //		// Splash_activity.this.finish();
 
 		//startActivity(new Intent(Splash_activity.this,Menu_Activity.class));
@@ -75,13 +76,13 @@ public class Splash_activity extends Activity implements ILocation {
 
 	@Override
 	public void onLocationChaged(Location location) {
+		mLocationUtils.close();
 		Intent newActivity = new Intent(Splash_activity.this,
 				Sprite_Activity.class);
 		newActivity.putExtra("loc",
 				new double[] { location.getLatitude(), location.getLongitude(),
 						location.getAltitude(), location.getAccuracy() });
 		startActivity(newActivity);
-		mLocationUtils.close();
 		setText("acc: " + location.getAccuracy() + " lat:"
 				+ location.getLatitude() + " lon:" + location.getLongitude());
 	}

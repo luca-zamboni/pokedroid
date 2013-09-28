@@ -78,7 +78,6 @@ public class Pokemon {
 		c.moveToFirst();
 		this.name = c.getString(c.getColumnIndex("identifier"));
 		this.type = "N.D.";
-		a.close();
 	}
 	
 	public String getName(){;

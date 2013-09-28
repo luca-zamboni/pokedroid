@@ -13,6 +13,7 @@ public class PersonalPokemon extends Pokemon {
 	public int found_x;
 	public int found_y;
 	
+
 	public PersonalPokemon(int id,String my_name, int sex, int found_x, int found_y) {
 		super(id);
 		this.id = id;
