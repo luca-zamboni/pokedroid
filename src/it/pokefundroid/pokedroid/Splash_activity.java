@@ -34,8 +34,8 @@ public class Splash_activity extends Activity implements ILocation {
 		
 		 mLocationUtils = new LocationUtils(this, this, LocationType.NETWORK);
 		// DEBUG PURPOSE
-		SharedPreferencesUtilities.setUserHeight(this, 1.75f);
-		Location location = new Location("network");
+//		SharedPreferencesUtilities.setUserHeight(this, 1.75f);
+//		Location location = new Location("network");
 //		// MY house
 //		// location.setLatitude(45.4103907616809d);
 //		// location.setLongitude(10.985591523349285d);
@@ -84,7 +84,6 @@ public class Splash_activity extends Activity implements ILocation {
 				new double[] { location.getLatitude(), location.getLongitude(),
 						location.getAltitude(), location.getAccuracy() });
 		startActivity(newActivity);
-		this.finish();
 		setText("acc: " + location.getAccuracy() + " lat:"
 				+ location.getLatitude() + " lon:" + location.getLongitude());
 	}

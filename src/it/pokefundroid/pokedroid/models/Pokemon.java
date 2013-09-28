@@ -72,7 +72,7 @@ public class Pokemon {
 		return (RARITY[id-1]);
 	}
 	
-	public Pokemon(int id,Context context){
+	public Pokemon(Context context,int id){
 		this.id = id;
 		this.context = context;
 		Cursor c = StaticClass.dbpoke.query("pokemon_species",new String[] {
@@ -81,7 +81,6 @@ public class Pokemon {
 		c.moveToFirst();
 		this.name = c.getString(c.getColumnIndex("identifier"));
 		this.type = "N.D.";
-		a.close();
 	}
 	
 	public String getName(){;
