@@ -9,7 +9,11 @@ import android.os.Bundle;
 
 public class LocationUtils {
 	public enum ErrorType {
-		DISABLED, ENABLED,
+		DISABLED, ENABLED
+	}
+
+	public enum LocationType {
+		NETWORK, GPS
 	}
 
 	public interface ILocation {
@@ -23,18 +27,27 @@ public class LocationUtils {
 	private LocationManager mLocationManager;
 	private LocationListener mLocationListener;
 	private ILocation mLocationInterface;
+	private LocationType mType;
 	private long mTimeInterval = 1000;
 	private float mMinDistance = 10;
 
+	public LocationUtils(Context ctx, ILocation ilocation, LocationType type) {
+		this.mLocationInterface = ilocation;
+		this.mType = type;
+		initializeLocationService(ctx);
+	}
+	
 	public LocationUtils(Context ctx, ILocation ilocation) {
 		this.mLocationInterface = ilocation;
+		this.mType = LocationType.GPS;
 		initializeLocationService(ctx);
 	}
 
-	public LocationUtils(Context ctx, ILocation ilocation, long timeInterval,
-			float minDistance) {
+	public LocationUtils(Context ctx, ILocation ilocation, LocationType type,
+			long timeInterval, float minDistance) {
 		super();
 		this.mLocationInterface = ilocation;
+		this.mType = type;
 		this.mTimeInterval = timeInterval;
 		this.mMinDistance = minDistance;
 		mLocationInterface = ilocation;
@@ -89,15 +102,21 @@ public class LocationUtils {
 	}
 
 	private void activateUpdates() {
-		// mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
-		// mTimeInterval, mMinDistance, mLocationListener);
-		mLocationManager.requestLocationUpdates(
-				LocationManager.NETWORK_PROVIDER, mTimeInterval, mMinDistance,
-				mLocationListener);
+		if (mType == LocationType.NETWORK) {
+
+			mLocationManager.requestLocationUpdates(
+					LocationManager.NETWORK_PROVIDER, mTimeInterval,
+					mMinDistance, mLocationListener);
+		} else {
+			mLocationManager.requestLocationUpdates(
+					LocationManager.GPS_PROVIDER, mTimeInterval, mMinDistance,
+					mLocationListener);
+		}
 	}
 
 	public void close() {
 		mLocationManager.removeUpdates(mLocationListener);
+		mLocationListener = null;
 	}
 
 	private class MyLocationListener implements LocationListener {
