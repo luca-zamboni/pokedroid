@@ -20,6 +20,7 @@ import com.beyondar.android.world.objects.GeoObject;
 import com.beyondar.android.world.objects.BeyondarObject;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Location;
@@ -36,6 +37,12 @@ import android.widget.Toast;
 public class Sprite_Activity extends Activity implements OnARTouchListener,
 		ILocation {
 
+	public enum AugmentedRealityErrors{
+		NOT_ENOUGH_ACCURACY
+	}
+	
+	public static final String RESULTS = "Results";
+	
 	private static final int FIGHT_PROXIMITY = 2;
 	
 	private BeyondarGLSurfaceView mBeyondarGLSurfaceView;
@@ -53,7 +60,8 @@ public class Sprite_Activity extends Activity implements OnARTouchListener,
 
 		mBeyondarGLSurfaceView = (BeyondarGLSurfaceView) findViewById(R.id.customGLSurface);
 		mCameraView = (CameraView) findViewById(R.id.camera);
-
+		mLocationUtils = new LocationUtils(this, this);
+		
 		// We create the world and set it in to the view
 		createWorld();
 		mBeyondarGLSurfaceView.setWorld(mWorld);
@@ -62,12 +70,12 @@ public class Sprite_Activity extends Activity implements OnARTouchListener,
 		mBeyondarGLSurfaceView.setOnARTouchListener(this);
 
 	}
-	
+
 	@Override
 	protected void onResume() {
 		super.onResume();
 		mBeyondarGLSurfaceView.onResume();
-		mLocationUtils = new LocationUtils(this, this, LocationType.NETWORK);
+		
 		// This is needed, sometimes pokemons are behind the camera...
 		mCameraView.setVisibility(View.VISIBLE);
 	}
@@ -97,15 +105,16 @@ public class Sprite_Activity extends Activity implements OnARTouchListener,
 		setWorldAltitude(loc[2]);
 
 		mWorld.setLocation(mWorldCenter);
-
-		fillPkmn(mWorld, mWorldCenter.getLatitude(),
-				mWorldCenter.getLongitude(), mWorldCenter.getAltitude(),
-				mWorldCenter.getAccuracy());
-
+		if (mWorldCenter.getAccuracy() < ((mLocationUtils.getLocationType()==LocationType.NETWORK)?40:15))
+			fillPkmn(mWorld, mWorldCenter.getLatitude(),
+					mWorldCenter.getLongitude(), mWorldCenter.getAltitude(),
+					mWorldCenter.getAccuracy());
+		else{
+			exitWithError(AugmentedRealityErrors.NOT_ENOUGH_ACCURACY);
+		}
 		mWorld.setDefaultBitmap(R.drawable.creature_6);
-
 	}
-	
+
 	private void fillPkmn(World w, double... loc) {
 
 		int many = FindingUtilities.generateHowManyPokemonInRange(loc[3]);
@@ -131,13 +140,12 @@ public class Sprite_Activity extends Activity implements OnARTouchListener,
 		mWorldCenter.setAltitude((teoalt > 0) ? teoalt : d);
 	}
 
-
 	private void fillObj(GeoObject go1, int id, Location loc) {
 		go1.setLatitude(loc.getLatitude());
 		go1.setLongitude(loc.getLongitude());
 		go1.setAltitude(loc.getAltitude());
 		go1.setImageUri(getImagUri(id));
-		go1.setName(id+"");
+		go1.setName(id + "");
 	}
 
 	private String getImagUri(int id) {
@@ -147,6 +155,13 @@ public class Sprite_Activity extends Activity implements OnARTouchListener,
 			return "assets://pkm/pkfrlg0" + id + ".png";
 		else
 			return "assets://pkm/pkfrlg" + id + ".png";
+	}
+	
+	private void exitWithError(AugmentedRealityErrors notEnoughAccuracy) {
+		Intent result = new Intent();
+		result.putExtra(RESULTS, AugmentedRealityErrors.NOT_ENOUGH_ACCURACY);
+		this.setResult(RESULT_OK,result);
+		this.finish();
 	}
 
 	@Override
@@ -161,27 +176,28 @@ public class Sprite_Activity extends Activity implements OnARTouchListener,
 
 		String textEvent = "";
 
-//		switch (event.getAction()) {
-//		case MotionEvent.ACTION_DOWN:
-//			break;
-//		case MotionEvent.ACTION_UP:
-//			textEvent = "Event type ACTION_UP: ";
-//			break;
-//		case MotionEvent.ACTION_MOVE:
-//			break;
-//		default:
-//			break;
-//		}
+		// switch (event.getAction()) {
+		// case MotionEvent.ACTION_DOWN:
+		// break;
+		// case MotionEvent.ACTION_UP:
+		// textEvent = "Event type ACTION_UP: ";
+		// break;
+		// case MotionEvent.ACTION_MOVE:
+		// break;
+		// default:
+		// break;
+		// }
 
 		Iterator<BeyondarObject> iterator = geoObjects.iterator();
 		while (iterator.hasNext()) {
 			GeoObject geoObject = (GeoObject) iterator.next();
 			textEvent = textEvent + " " + geoObject.getName();
 			float[] results = new float[2];
-			Location.distanceBetween(mWorldCenter.getLatitude(), mWorldCenter.getLongitude(),
-					geoObject.getLatitude(), geoObject.getLongitude(), results);
-			if(results[0]<=FIGHT_PROXIMITY){
-				textEvent+= ": captured";
+			Location.distanceBetween(mWorldCenter.getLatitude(),
+					mWorldCenter.getLongitude(), geoObject.getLatitude(),
+					geoObject.getLongitude(), results);
+			if (results[0] <= FIGHT_PROXIMITY) {
+				textEvent += ": captured";
 			}
 		}
 		Toast.makeText(Sprite_Activity.this, textEvent, Toast.LENGTH_SHORT)
