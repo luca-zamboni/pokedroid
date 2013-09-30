@@ -84,6 +84,7 @@ public class Splash_activity extends Activity implements ILocation {
 				new double[] { location.getLatitude(), location.getLongitude(),
 						location.getAltitude(), location.getAccuracy() });
 		startActivity(newActivity);
+		this.finish();
 		setText("acc: " + location.getAccuracy() + " lat:"
 				+ location.getLatitude() + " lon:" + location.getLongitude());
 	}
