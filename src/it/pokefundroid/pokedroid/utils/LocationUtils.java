@@ -11,13 +11,8 @@ import android.location.LocationProvider;
 import android.os.Bundle;
 
 public class LocationUtils {
-<<<<<<< HEAD
-	public enum ErrorType { 
-		DISABLED, ENABLED
-=======
 	public enum ErrorType {
 		DISABLED, ENABLED, TIME_FINISHED
->>>>>>> degio
 	}
 
 	public enum LocationType {
