@@ -1,40 +1,14 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:android1="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout_scuadra"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:id="@+id/layout_scuadra"
     android:orientation="vertical" >
 
-    <LinearLayout
-        android:layout_marginTop="1pt"
-        android:clickable="true"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
-
-        <ImageView
-            android:id="@+id/img_poke_team1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="2pt"
-            android:src="@drawable/ic_launcher" />
-
-        <TextView
-            android:id="@+id/level_team1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:paddingLeft="5pt"
-            android:text="lv.100"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
-
-        <TextView
-            android:id="@+id/my_name1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:paddingLeft="5pt"
-            android:text="My pokemon name"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
-
-    </LinearLayout>
+    <ListView
+        android1:id="@+id/pokemon_list_view"
+        android1:layout_width="match_parent" 
+        android1:layout_height="wrap_content" >
+    </ListView>
 
 </LinearLayout>

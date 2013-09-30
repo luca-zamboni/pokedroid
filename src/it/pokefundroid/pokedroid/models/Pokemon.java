@@ -72,11 +72,12 @@ public class Pokemon {
 	
 	public Pokemon(int id){
 		this.id = id;
-		Cursor c = StaticClass.query("pokemon_species",new String[] {
+		this.name = "asddsa";
+		/*Cursor c = StaticClass.query("pokemon_species",new String[] {
 				"identifier"},
 				"id = " + id);
-		c.moveToFirst();
-		this.name = c.getString(c.getColumnIndex("identifier"));
+		c.moveToFirst();*/
+		//this.name = c.getString(c.getColumnIndex("identifier"));
 		this.type = "N.D.";
 	}
 	
