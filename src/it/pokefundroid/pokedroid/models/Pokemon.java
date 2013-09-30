@@ -73,12 +73,13 @@ public class Pokemon {
 	public Pokemon(int id){
 		this.id = id;
 		this.name = "asddsa";
-		/*Cursor c = StaticClass.query("pokemon_species",new String[] {
-				"identifier"},
-				"id = " + id);
-		c.moveToFirst();*/
-		//this.name = c.getString(c.getColumnIndex("identifier"));
+		StaticClass.dbpoke.openDataBase();
+		Cursor c = StaticClass.dbpoke.dbpoke
+				.rawQuery("SELECT identifier FROM pokemon_species WHERE id="+id, null);
+		c.moveToFirst();
+		this.name = c.getString(c.getColumnIndex("identifier"));
 		this.type = "N.D.";
+		StaticClass.dbpoke.close();
 	}
 	
 	public String getName(){;

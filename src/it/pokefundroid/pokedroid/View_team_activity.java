@@ -23,8 +23,8 @@ public class View_team_activity extends Activity {
 		
 		ArrayList<PersonalPokemon> poke = new ArrayList<PersonalPokemon>();
 		
-		poke.add(new PersonalPokemon(1, "ww", 1, 123, 123));
-		poke.add(new PersonalPokemon(1, "345asd", 1, 123, 123));
+		poke.add(new PersonalPokemon(151, "pene", 1, 123, 123));
+		poke.add(new PersonalPokemon(3, "345asd", 0, 123, 123));
 
 		PersonalPokemonAdapter adapter = new PersonalPokemonAdapter(getApplicationContext(),poke);
 		poke_list.setAdapter(adapter);

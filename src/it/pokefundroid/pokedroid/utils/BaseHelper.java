@@ -39,10 +39,6 @@ public class BaseHelper extends SQLiteOpenHelper{
 		}
     	openDataBase();
     }	
-     
-    public Cursor query(String tableName,String[] culomns,String where){
-    	return dbpoke.query(tableName,culomns,where,null,null,null,null,null);
-    }
  
   /**
      * Creates a empty database on the system and rewrites it with your own database.
