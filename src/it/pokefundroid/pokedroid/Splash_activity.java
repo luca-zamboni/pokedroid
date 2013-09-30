@@ -13,7 +13,7 @@ import android.view.Menu;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class Splash_activity extends Activity implements ILocation {
+public class Splash_activity extends Activity{
 
 	public TextView text;
 	int ratata = 0;
@@ -28,8 +28,8 @@ public class Splash_activity extends Activity implements ILocation {
 		StaticClass.openBatabaseConection(getApplicationContext());
 
 		text = (TextView) findViewById(R.id.text);
-
 		
+<<<<<<< HEAD
 		 mLocationUtils = new LocationUtils(this, this, LocationType.NETWORK);
 		// DEBUG PURPOSE
 
@@ -60,6 +60,10 @@ public class Splash_activity extends Activity implements ILocation {
 //		 double[]{location.getLatitude(),location.getLongitude(),location.getAltitude()});
 //		startActivity(newActivity);
 		//Splash_activity.this.finish();
+=======
+		startActivity(new Intent(Splash_activity.this,Menu_Activity.class));
+		this.finish();
+>>>>>>> degio
 	}
 
 	@Override
@@ -72,32 +76,6 @@ public class Splash_activity extends Activity implements ILocation {
 	public void setText(String m) {
 		text = (TextView) findViewById(R.id.text);
 		text.setText(m);
-	}
-
-	@Override
-	public void onLocationChaged(Location location) {
-		mLocationUtils.close();
-		Intent newActivity = new Intent(Splash_activity.this,
-				Sprite_Activity.class);
-		newActivity.putExtra("loc",
-				new double[] { location.getLatitude(), location.getLongitude(),
-						location.getAltitude(), location.getAccuracy() });
-		startActivity(newActivity);
-		setText("acc: " + location.getAccuracy() + " lat:"
-				+ location.getLatitude() + " lon:" + location.getLongitude());
-	}
-
-	@Override
-	public void onErrorOccured(ErrorType ex, String provider) {
-		// TODO aviare un activity di errore. oppure
-		// chiedere all'utente di attivare il gpx ecc.
-		Toast.makeText(this, provider, Toast.LENGTH_SHORT).show();
-	}
-
-	@Override
-	public void onStatusChanged(String provider, boolean isActive) {
-		// TODO a seconda dello stato riavviare
-		Toast.makeText(this, provider+isActive, Toast.LENGTH_SHORT).show();
 	}
 
 }

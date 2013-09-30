@@ -6,11 +6,19 @@
 
     <!-- Activity menu -->
     <string name="title_activity_menu_">Menu</string>
-    <string name="zaino">Zaino</string>
+    <string name="zaino">Backpack</string>
     <string name="pokemon">Pokemon</string>
-    <string name="pcdibill">Pc di Bill</string>
+    <string name="explore">Explore</string>
+    <string name="pcdibill">Bill\'s PC</string>
     <string name="title_activity_view_team_activity">View team</string>
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_sprite_">Sprite_Activity</string>
+    
+    <!-- Dialogs -->
+    <string name="not_enough_accuracy_title">Weak signal</string>
+    <string name="not_enough_accuracy">We are sorry, we can\'t be more precise on your location, 
+        please try again later.</string>
+    <string name="locating_progress_title">Where are you?</string>
+    <string name="locating_progress_msg">Our Jynxes are trying to locating you &#8230;</string>
 
 </resources>

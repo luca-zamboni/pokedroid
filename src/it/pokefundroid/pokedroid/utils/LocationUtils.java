@@ -1,5 +1,8 @@
 package it.pokefundroid.pokedroid.utils;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import android.content.Context;
 import android.location.Location;
 import android.location.LocationListener;
@@ -8,8 +11,13 @@ import android.location.LocationProvider;
 import android.os.Bundle;
 
 public class LocationUtils {
+<<<<<<< HEAD
 	public enum ErrorType { 
 		DISABLED, ENABLED
+=======
+	public enum ErrorType {
+		DISABLED, ENABLED, TIME_FINISHED
+>>>>>>> degio
 	}
 
 	public enum LocationType {
@@ -30,13 +38,14 @@ public class LocationUtils {
 	private LocationType mType;
 	private long mTimeInterval = 1000;
 	private float mMinDistance = 10;
+	private Timer mTimer;
 
 	public LocationUtils(Context ctx, ILocation ilocation, LocationType type) {
 		this.mLocationInterface = ilocation;
 		this.mType = type;
 		initializeLocationService(ctx);
 	}
-	
+
 	public LocationUtils(Context ctx, ILocation ilocation) {
 		this.mLocationInterface = ilocation;
 		this.mType = LocationType.GPS;
@@ -56,6 +65,10 @@ public class LocationUtils {
 
 	public long getPollingTimeInterval() {
 		return mTimeInterval;
+	}
+	
+	public LocationType getLocationType(){
+		return mType;
 	}
 
 	/**
@@ -101,6 +114,18 @@ public class LocationUtils {
 		activateUpdates();
 	}
 
+	public void setTimer(int seconds) {
+		mTimer = new Timer();
+		mTimer.schedule(new TimerTask() {
+			@Override
+			public void run() {
+				if (mLocationListener != null)
+					mLocationManager.removeUpdates(mLocationListener);
+				mLocationInterface.onErrorOccured(ErrorType.TIME_FINISHED, "null");
+			}
+		}, mTimeInterval * seconds);
+	}
+
 	private void activateUpdates() {
 		if (mType == LocationType.NETWORK) {
 
@@ -115,15 +140,18 @@ public class LocationUtils {
 	}
 
 	public void close() {
-		mLocationManager.removeUpdates(mLocationListener);
-		mLocationListener = null;
+		if (mLocationListener != null) {
+			mLocationManager.removeUpdates(mLocationListener);
+			mLocationListener = null;
+			mTimer.cancel();
+		}
 	}
 
 	private class MyLocationListener implements LocationListener {
 
 		@Override
 		public void onLocationChanged(Location location) {
-			if (location.getAccuracy() >= mMinDistance) {
+			if (location.getAccuracy() <= mMinDistance) {
 				mLocationInterface.onLocationChaged(location);
 			}
 		}

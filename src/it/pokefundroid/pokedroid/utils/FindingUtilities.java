@@ -70,7 +70,7 @@ public class FindingUtilities {
 	
 	public static int generateHowManyPokemonInRange(double range){
 		Random random = new Random(System.currentTimeMillis());
-		return random.nextInt((int) (MAX_POKEMON_IN_RANGE*range) )+1;
+		return random.nextInt((int) (MAX_POKEMON_IN_RANGE*range)+1);
 	}
 
 	private static void generateSet() {
