@@ -17,11 +17,19 @@
         android:layout_alignParentTop="true"
         android:src="@drawable/creature_6" />
 
+    <include
+        android:id="@+id/include1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        layout="@layout/capturemenu" />
+
     <ImageView
         android:id="@+id/fight_myPkmn"
         android:layout_width="@dimen/my_pokemon_capture_width"
         android:layout_height="@dimen/my_pokemon_capture_height"
-        android:layout_alignParentBottom="true"
+        android:layout_above="@+id/include1"
         android:layout_alignParentLeft="true"
         android:scaleType="centerCrop"
         android:src="@drawable/creature_6" />

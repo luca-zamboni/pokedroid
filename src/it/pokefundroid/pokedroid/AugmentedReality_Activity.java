@@ -42,7 +42,6 @@ public class AugmentedReality_Activity extends FragmentActivity implements
 
 	public static final String RESULTS = "Results";
 
-	private static final String CHOOSE_DIALOG_TAG = "choosedialogTAG";
 	private static final int FIGHT_PROXIMITY = 10;
 
 	private BeyondarGLSurfaceView mBeyondarGLSurfaceView;
