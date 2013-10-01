@@ -1,5 +1,7 @@
 package it.pokefundroid.pokedroid;
 
+import it.pokefundroid.pokedroid.models.Pokemon;
+import it.pokefundroid.pokedroid.utils.FindingUtilities;
 import it.pokefundroid.pokedroid.utils.LocationUtils;
 import it.pokefundroid.pokedroid.utils.LocationUtils.ErrorType;
 import it.pokefundroid.pokedroid.utils.LocationUtils.ILocation;
@@ -9,6 +11,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,6 +33,14 @@ public class Splash_activity extends Activity{
 		text = (TextView) findViewById(R.id.text);
 		
 		startActivity(new Intent(Splash_activity.this,Menu_Activity.class));
+		
+		for(int i = 0; i< 100; i++) {
+			int id = FindingUtilities.findInPosition(45.872363876, 65.23857394769);
+			Pokemon p = new Pokemon(id);
+			String s = p.getName();
+			Log.e("test", s);
+		}
+		
 		this.finish();
 	}
 

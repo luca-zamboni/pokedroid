@@ -11,8 +11,7 @@ public class FindingUtilities {
 	private final static int[] CHANCE = { 950, 800, 200, 30, 1, 0 };
 	// possibilita' su 1000 elementi di essere selezionati nel set;
 
-	private final static int[] FINDINGCHANCE = { 12, 16, 22, 40, 125 };
-	// original 18, 22, 27, 55, 150
+	private final static int[] FINDINGCHANCE = { 100, 80, 35, 15, 5, 1 };
 
 	public static int[] currentPkmnSet = null;
 
