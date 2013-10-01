@@ -5,36 +5,43 @@ import it.pokefundroid.pokedroid.utils.LocationUtils;
 import it.pokefundroid.pokedroid.utils.LocationUtils.ErrorType;
 import it.pokefundroid.pokedroid.utils.LocationUtils.ILocation;
 import it.pokefundroid.pokedroid.utils.LocationUtils.LocationType;
+import it.pokefundroid.pokedroid.viewUtils.ImageAdapter;
+import it.pokefundroid.pokedroid.viewUtils.ImageAdapter.IPokemonSelection;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
+import android.widget.GridView;
 import android.widget.Toast;
 
 import com.beyondar.android.opengl.views.BeyondarGLSurfaceView;
 import com.beyondar.android.opengl.views.OnARTouchListener;
 import com.beyondar.android.views.CameraView;
+import com.beyondar.android.views.CameraView.IPictureCallback;
 import com.beyondar.android.world.World;
 import com.beyondar.android.world.objects.BeyondarObject;
 import com.beyondar.android.world.objects.GeoObject;
 
-public class AugmentedReality_Activity extends FragmentActivity implements OnARTouchListener,
-		ILocation {
+public class AugmentedReality_Activity extends FragmentActivity implements
+		OnARTouchListener, ILocation, IPictureCallback, IPokemonSelection {
 
 	public static final String RESULTS = "Results";
-	
+
 	private static final String CHOOSE_DIALOG_TAG = "choosedialogTAG";
 	private static final int FIGHT_PROXIMITY = 10;
 
@@ -44,6 +51,10 @@ public class AugmentedReality_Activity extends FragmentActivity implements OnART
 	private Location mWorldCenter;
 	private LocationUtils mLocationUtils;
 	private LocationType mLocationType;
+
+	private int CAPTURE_CODE = 1;
+
+	private String mSelected = "";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -149,13 +160,54 @@ public class AugmentedReality_Activity extends FragmentActivity implements OnART
 			return "assets://pkm/pkfrlg" + id + ".png";
 	}
 	
-	public static byte[] compressBitmap(Bitmap b){
+	private void showChoosePokemonDialog(ArrayList<String> pokemonsIDs) {
+		LayoutInflater inflater = getLayoutInflater();
+		View v = inflater.inflate(R.layout.dialog_choosepokemon, null, false);
+		GridView gv = (GridView) v.findViewById(R.id.dialog_pokemongridview);
+		gv.setAdapter(new ImageAdapter(this, this, pokemonsIDs));
+
+		AlertDialog.Builder builder = new AlertDialog.Builder(this).setTitle(
+				R.string.choose_pokemon_title).setView(v);
+		builder.create().show();
+	}
+
+	private void doAction(List<BeyondarObject> geoObjects) {
+		Iterator<BeyondarObject> iterator = geoObjects.iterator();
+		ArrayList<String> outPokemon = new ArrayList<String>();
+		while (iterator.hasNext()) {
+			GeoObject geoObject = (GeoObject) iterator.next();
+			float[] results = new float[2];
+			Location.distanceBetween(mWorldCenter.getLatitude(),
+					mWorldCenter.getLongitude(), geoObject.getLatitude(),
+					geoObject.getLongitude(), results);
+			// TODO DEBUG
+			// if (results[0] <= FIGHT_PROXIMITY) {
+			// outPokemon.add(geoObject.getName());
+			// }
+			if (results[0] <= FIGHT_PROXIMITY
+					* (mWorldCenter.getAccuracy() / 2)) {
+				outPokemon.add(geoObject.getName());
+			}
+		}
+		if (outPokemon.size() == 0)
+			Toast.makeText(this, getString(R.string.pokemon_too_far),
+					Toast.LENGTH_SHORT).show();
+		else if (outPokemon.size() > 1)
+			showChoosePokemonDialog(outPokemon);
+		else {
+			this.mSelected = outPokemon.get(0);
+			mCameraView.tackePicture(this);
+		}
+	}
+	
+
+	public static byte[] compressBitmap(Bitmap b) {
 		ByteArrayOutputStream bs = new ByteArrayOutputStream();
 		b.compress(Bitmap.CompressFormat.PNG, 50, bs);
 		return bs.toByteArray();
 	}
 
-	public static  Bitmap fastblur(Bitmap sentBitmap, int radius) {
+	public static Bitmap fastblur(Bitmap sentBitmap, int radius) {
 
 		// Stack Blur v1.0 from
 		// http://www.quasimondo.com/StackBlurForCanvas/StackBlurDemo.html
@@ -195,7 +247,6 @@ public class AugmentedReality_Activity extends FragmentActivity implements OnART
 		int h = bitmap.getHeight();
 
 		int[] pix = new int[w * h];
-		Log.e("pix", w + " " + h + " " + pix.length);
 		bitmap.getPixels(pix, 0, w, 0, 0, w, h);
 
 		int wm = w - 1;
@@ -387,37 +438,7 @@ public class AugmentedReality_Activity extends FragmentActivity implements OnART
 		return (bitmap);
 	}
 
-	private void showChoosePokemonDialog(ArrayList<String> pokemonsIDs){
-		ChoosePokemonDialog cpd  = ChoosePokemonDialog.newIstance(pokemonsIDs);
-		cpd.show(getSupportFragmentManager(),CHOOSE_DIALOG_TAG);
-	}
-	 private void doAction(List<BeyondarObject> geoObjects){
-		 Iterator<BeyondarObject> iterator = geoObjects.iterator();
-			ArrayList<String> outPokemon = new ArrayList<String>();
-			while (iterator.hasNext()) {
-				GeoObject geoObject = (GeoObject) iterator.next();
-				float[] results = new float[2];
-				Location.distanceBetween(mWorldCenter.getLatitude(),
-						mWorldCenter.getLongitude(), geoObject.getLatitude(),
-						geoObject.getLongitude(), results);
-				//TODO DEBUG
-//				if (results[0] <= FIGHT_PROXIMITY) {
-//					outPokemon.add(geoObject.getName());
-//				}
-				if (results[0] <= FIGHT_PROXIMITY*(mWorldCenter.getAccuracy()/2)) {
-					outPokemon.add(geoObject.getName());
-				}
-			}
-			if (outPokemon.size() == 0)
-				Toast.makeText(this, getString(R.string.pokemon_too_far),
-						Toast.LENGTH_SHORT).show();
-			else if(outPokemon.size()>1)
-				showChoosePokemonDialog(outPokemon);
-			else
-				Toast.makeText(this, outPokemon.get(0),
-						Toast.LENGTH_SHORT).show();
-	 }
-	
+
 	@Override
 	public void onTouchARView(MotionEvent event,
 			BeyondarGLSurfaceView beyondarView) {
@@ -440,7 +461,6 @@ public class AugmentedReality_Activity extends FragmentActivity implements OnART
 			break;
 		}
 
-		
 	}
 
 	@Override
@@ -469,4 +489,21 @@ public class AugmentedReality_Activity extends FragmentActivity implements OnART
 		// TODO a seconda dello stato riavviare
 	}
 
+	@Override
+	public void onPictureTaken(Bitmap picture) {
+		if (!mSelected.equals("")) {
+			Intent i = new Intent(this, CaptureActivity.class);
+			i.putExtra(CaptureActivity.PASSED_WILD_ID_KEY, mSelected);
+			byte[] b =compressBitmap(fastblur(picture, 5));
+			i.putExtra(CaptureActivity.PASSED_BACKGROUND_KEY,b);
+			startActivityForResult(i, CAPTURE_CODE);
+			mSelected = "";
+		}
+	}
+
+	@Override
+	public void onPokemonSelected(String id) {
+		mSelected = id;
+		mCameraView.tackePicture(this);
+	}
 }

@@ -93,11 +93,15 @@ public class CameraView extends SurfaceView implements SurfaceHolder.Callback,
 			mSupportedPreviewSizes = mCamera.getParameters().getSupportedPreviewSizes();
 			mSupportedFlashModes = mCamera.getParameters().getSupportedFlashModes();
 			// Set the camera to Auto Flash mode.
-			if (mSupportedFlashModes != null
-					&& mSupportedFlashModes.contains(Camera.Parameters.FLASH_MODE_AUTO)) {
-				Camera.Parameters parameters = mCamera.getParameters();
-				parameters.setFlashMode(Camera.Parameters.FLASH_MODE_AUTO);
-				mCamera.setParameters(parameters);
+//			if (mSupportedFlashModes != null
+//					&& mSupportedFlashModes.contains(Camera.Parameters.FLASH_MODE_AUTO)) {
+//				Camera.Parameters parameters = mCamera.getParameters();
+//				parameters.setFlashMode(Camera.Parameters.FLASH_MODE_AUTO);
+//				mCamera.setParameters(parameters);
+//			}
+			if(mSupportedFlashModes !=null){
+				Camera.Parameters p= mCamera.getParameters();
+				p.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
 			}
 		}
 		
