@@ -1,15 +1,15 @@
 package it.pokefundroid.pokedroid;
 
 
-import java.io.Serializable;
-
 import it.pokefundroid.pokedroid.utils.LocationUtils;
 import it.pokefundroid.pokedroid.utils.LocationUtils.ErrorType;
 import it.pokefundroid.pokedroid.utils.LocationUtils.ILocation;
 import it.pokefundroid.pokedroid.utils.LocationUtils.LocationType;
+
+import java.io.Serializable;
+
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.AlertDialog.Builder;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -18,7 +18,6 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.textservice.TextInfo;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -58,7 +57,7 @@ public class Menu_Activity extends Activity implements ILocation {
 				
 //				TODO DEBUG
 //				mLocationUtils = new LocationUtils(Menu_Activity.this,
-//						Menu_Activity.this, LocationType.NETWORK);
+//						Menu_Activity.this);
 				
 				mLocationUtils = new LocationUtils(Menu_Activity.this,
 						Menu_Activity.this, LocationType.NETWORK);
@@ -148,7 +147,7 @@ public class Menu_Activity extends Activity implements ILocation {
 		mProgressDialog.dismiss();
 		mLocationUtils.close();
 		Intent newActivity = new Intent(Menu_Activity.this,
-				Sprite_Activity.class);
+				AugmentedReality_Activity.class);
 		newActivity.putExtra("loc",
 				new double[] { location.getLatitude(), location.getLongitude(),
 						location.getAltitude(), location.getAccuracy() });
@@ -185,7 +184,7 @@ public class Menu_Activity extends Activity implements ILocation {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (resultCode == RESULT_OK) {
 			if (requestCode == AUGMENTED_REALITY_CODE) {
-				Serializable results = data.getSerializableExtra(Sprite_Activity.RESULTS);
+				Serializable results = data.getSerializableExtra(AugmentedReality_Activity.RESULTS);
 				if (results.equals(ErrorType.NOT_ENOUGH_ACCURACY)) {
 					displayErrors(R.string.not_enough_accuracy_title,
 							R.string.not_enough_accuracy);

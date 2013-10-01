@@ -138,7 +138,8 @@ public class LocationUtils {
 		if (mLocationListener != null) {
 			mLocationManager.removeUpdates(mLocationListener);
 			mLocationListener = null;
-			mTimer.cancel();
+			if(mTimer!=null)
+				mTimer.cancel();
 		}
 	}
 

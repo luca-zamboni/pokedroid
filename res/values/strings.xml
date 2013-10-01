@@ -14,7 +14,11 @@
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_sprite_">Sprite_Activity</string>
     
+    <!-- Augmented Reality Activity -->
+    <string name="pokemon_too_far">The pokemon is too far, please get closer</string>
+    
     <!-- Dialogs -->
+    <string name="choose_pokemon_title">Pick one:</string>
     <string name="not_enough_accuracy_title">Weak signal</string>
     <string name="not_enough_accuracy">We are sorry, we can\'t be more precise on your location, 
         please try again later.</string>
