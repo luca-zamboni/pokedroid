@@ -7,8 +7,10 @@ import java.io.IOException;
 import java.util.List;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -43,9 +45,11 @@ public class ImageAdapter extends BaseAdapter {
 		if (convertView == null) { // if it's not recycled, initialize some
 									// attributes
 			imageView = new ImageView(mContext);
-			 imageView.setLayoutParams(new GridView.LayoutParams(85, 85));
-			 imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-			 imageView.setPadding(8, 8, 8, 8);
+			Resources r = mContext.getResources();
+			imageView.setLayoutParams(new GridView.LayoutParams(
+					getPixelsFromDPI(r, r.getDimensionPixelSize(R.dimen.pokemon_size)),
+					getPixelsFromDPI(r, r.getDimensionPixelSize(R.dimen.pokemon_size))));
+			imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
 		} else {
 			imageView = (ImageView) convertView;
 		}
@@ -67,6 +71,11 @@ public class ImageAdapter extends BaseAdapter {
 			return "pkm/pkfrlg0" + id + ".png";
 		else
 			return "pkm/pkfrlg" + id + ".png";
+	}
+
+	private int getPixelsFromDPI(Resources r, int n) {
+		return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, n,
+				r.getDisplayMetrics());
 	}
 
 }

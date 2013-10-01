@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.location.Location;
@@ -401,6 +400,10 @@ public class AugmentedReality_Activity extends FragmentActivity implements OnART
 				Location.distanceBetween(mWorldCenter.getLatitude(),
 						mWorldCenter.getLongitude(), geoObject.getLatitude(),
 						geoObject.getLongitude(), results);
+				//TODO DEBUG
+//				if (results[0] <= FIGHT_PROXIMITY) {
+//					outPokemon.add(geoObject.getName());
+//				}
 				if (results[0] <= FIGHT_PROXIMITY*(mWorldCenter.getAccuracy()/2)) {
 					outPokemon.add(geoObject.getName());
 				}
