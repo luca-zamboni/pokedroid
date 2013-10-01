@@ -1,6 +1,8 @@
 package it.pokefundroid.pokedroid;
 
-import it.pokefundroid.pokedroid.Sprite_Activity.AugmentedRealityErrors;
+
+import java.io.Serializable;
+
 import it.pokefundroid.pokedroid.utils.LocationUtils;
 import it.pokefundroid.pokedroid.utils.LocationUtils.ErrorType;
 import it.pokefundroid.pokedroid.utils.LocationUtils.ILocation;
@@ -16,6 +18,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.textservice.TextInfo;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -52,9 +55,13 @@ public class Menu_Activity extends Activity implements ILocation {
 			@Override
 			public void onClick(View v) {
 				createProgressDialog();
-
+				
+//				TODO DEBUG
+//				mLocationUtils = new LocationUtils(Menu_Activity.this,
+//						Menu_Activity.this, LocationType.NETWORK);
+				
 				mLocationUtils = new LocationUtils(Menu_Activity.this,
-						Menu_Activity.this);
+						Menu_Activity.this, LocationType.NETWORK);
 				mLocationUtils.setTimer(MAX_WAIT);
 				// TODO DEBUG PURPOSE
 				// SharedPreferencesUtilities.setUserHeight(this, 1.75f);
@@ -152,7 +159,7 @@ public class Menu_Activity extends Activity implements ILocation {
 	public void onErrorOccured(ErrorType ex, String provider) {
 		// TODO aviare un activity di errore. oppure
 		// chiedere all'utente di attivare il gpx ecc.
-		if (ex == ErrorType.TIME_FINISHED) {
+		if (ex == ErrorType.TIME_FINISHED || ex == ErrorType.NOT_ENOUGH_ACCURACY) {
 			mProgressDialog.dismiss();
 			runOnUiThread(new Runnable() {
 				
@@ -170,7 +177,7 @@ public class Menu_Activity extends Activity implements ILocation {
 	@Override
 	public void onStatusChanged(String provider, boolean isActive) {
 		// TODO a seconda dello stato riavviare
-		Toast.makeText(this, provider + isActive, Toast.LENGTH_SHORT).show();
+		//Toast.makeText(this, provider + isActive, Toast.LENGTH_SHORT).show();
 	}
 
 	@Override
@@ -178,10 +185,14 @@ public class Menu_Activity extends Activity implements ILocation {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (resultCode == RESULT_OK) {
 			if (requestCode == AUGMENTED_REALITY_CODE) {
-				if (data.getSerializableExtra(Sprite_Activity.RESULTS).equals(
-						AugmentedRealityErrors.NOT_ENOUGH_ACCURACY)) {
+				Serializable results = data.getSerializableExtra(Sprite_Activity.RESULTS);
+				if (results.equals(ErrorType.NOT_ENOUGH_ACCURACY)) {
 					displayErrors(R.string.not_enough_accuracy_title,
 							R.string.not_enough_accuracy);
+				}
+				else if( results.equals(ErrorType.TIME_FINISHED)){
+					displayErrors(R.string.time_finished_title,
+							R.string.time_finished_msg);
 				}
 			}
 		}

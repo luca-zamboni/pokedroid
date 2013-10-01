@@ -37,19 +37,16 @@ import android.widget.Toast;
 public class Sprite_Activity extends Activity implements OnARTouchListener,
 		ILocation {
 
-	public enum AugmentedRealityErrors{
-		NOT_ENOUGH_ACCURACY
-	}
-	
 	public static final String RESULTS = "Results";
-	
+
 	private static final int FIGHT_PROXIMITY = 2;
-	
+
 	private BeyondarGLSurfaceView mBeyondarGLSurfaceView;
 	private CameraView mCameraView;
 	private World mWorld;
 	private Location mWorldCenter;
 	private LocationUtils mLocationUtils;
+	private LocationType mLocationType;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -60,8 +57,9 @@ public class Sprite_Activity extends Activity implements OnARTouchListener,
 
 		mBeyondarGLSurfaceView = (BeyondarGLSurfaceView) findViewById(R.id.customGLSurface);
 		mCameraView = (CameraView) findViewById(R.id.camera);
-		mLocationUtils = new LocationUtils(this, this);
-		
+		//TODO DEBUG
+		//mLocationType = LocationType.GPS;
+		mLocationType = LocationType.GPS;
 		// We create the world and set it in to the view
 		createWorld();
 		mBeyondarGLSurfaceView.setWorld(mWorld);
@@ -75,7 +73,7 @@ public class Sprite_Activity extends Activity implements OnARTouchListener,
 	protected void onResume() {
 		super.onResume();
 		mBeyondarGLSurfaceView.onResume();
-		
+		mLocationUtils = new LocationUtils(this, this, mLocationType);
 		// This is needed, sometimes pokemons are behind the camera...
 		mCameraView.setVisibility(View.VISIBLE);
 	}
@@ -105,13 +103,9 @@ public class Sprite_Activity extends Activity implements OnARTouchListener,
 		setWorldAltitude(loc[2]);
 
 		mWorld.setLocation(mWorldCenter);
-		if (mWorldCenter.getAccuracy() < ((mLocationUtils.getLocationType()==LocationType.NETWORK)?40:15))
-			fillPkmn(mWorld, mWorldCenter.getLatitude(),
-					mWorldCenter.getLongitude(), mWorldCenter.getAltitude(),
-					mWorldCenter.getAccuracy());
-		else{
-			exitWithError(AugmentedRealityErrors.NOT_ENOUGH_ACCURACY);
-		}
+		fillPkmn(mWorld, mWorldCenter.getLatitude(),
+				mWorldCenter.getLongitude(), mWorldCenter.getAltitude(),
+				mWorldCenter.getAccuracy());
 		mWorld.setDefaultBitmap(R.drawable.creature_6);
 	}
 
@@ -119,7 +113,7 @@ public class Sprite_Activity extends Activity implements OnARTouchListener,
 
 		int many = FindingUtilities.generateHowManyPokemonInRange(loc[3]);
 
-		for (int i = 0; i < many; i++) { 
+		for (int i = 0; i < many; i++) {
 
 			Location tmp = FindingUtilities.getLocation(loc[0], loc[1], loc[3]);
 			tmp.setAltitude(loc[2]);
@@ -156,13 +150,6 @@ public class Sprite_Activity extends Activity implements OnARTouchListener,
 			return "assets://pkm/pkfrlg0" + id + ".png";
 		else
 			return "assets://pkm/pkfrlg" + id + ".png";
-	}
-	
-	private void exitWithError(AugmentedRealityErrors notEnoughAccuracy) {
-		Intent result = new Intent();
-		result.putExtra(RESULTS, AugmentedRealityErrors.NOT_ENOUGH_ACCURACY);
-		this.setResult(RESULT_OK,result);
-		this.finish();
 	}
 
 	@Override
@@ -209,16 +196,23 @@ public class Sprite_Activity extends Activity implements OnARTouchListener,
 	public void onLocationChaged(Location location) {
 		// TODO spawn new pokemon
 		mWorldCenter = location;
-		// DEBUG
-		// setWorldAltitude(location.getAltitude());
 		mWorld.setLocation(mWorldCenter);
 	}
+	
+
+	private void exitWithError(ErrorType type) {
+		Intent result = new Intent();
+		result.putExtra(RESULTS, type);
+		this.setResult(RESULT_OK, result);
+		this.finish();
+	}
+
 
 	@Override
 	public void onErrorOccured(ErrorType ex, String provider) {
-		// TODO aviare un activity di errore. oppure
-		// chiedere all'utente di attivare il gpx ecc.
-
+		// TODO chiedere all'utente di attivare il gps ecc.
+		exitWithError(ex);
+		
 	}
 
 	@Override
