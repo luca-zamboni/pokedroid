@@ -34,13 +34,6 @@ public class Splash_activity extends Activity{
 		
 		startActivity(new Intent(Splash_activity.this,Menu_Activity.class));
 		
-		for(int i = 0; i< 100; i++) {
-			int id = FindingUtilities.findInPosition(45.872363876, 65.23857394769);
-			Pokemon p = new Pokemon(id);
-			String s = p.getName();
-			Log.e("test", s);
-		}
-		
 		this.finish();
 	}
 

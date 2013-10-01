@@ -86,16 +86,23 @@ public class FindingUtilities {
 	private static boolean generateRandoms(double latitude, double longitude) {
 		// quadrati di 0,001 gradi, circa 111 metri all'equatore
 		boolean ret = false;
+		
+		//sposto di 3 cifre in sotto la virgola e taglio i decimali castando a long
 		latitude *= 10 ^ 3;
 		longitude *= 10 ^ 3;
 		long lat = (long) latitude;
 		long lon = (long) longitude;
-		if (((lat * lon) - (151 * lat)) != selectionSeed
-				|| ((lat * lon) - (270 * lon)) != setSeed) {
-			selectionSeed = (lat * lon) - (151 * lat);
-			setSeed = (lat * lon) - (270 * lon);
+		
+		long tSelectionSeed = ((lat * lon) - (151 * lat));
+		long tSetSeed = ((lat * lon) - (270 * lon));
+		
+		if (tSelectionSeed != selectionSeed || tSetSeed != setSeed) {
+			selectionSeed = tSelectionSeed;
+			setSeed = tSetSeed;
 			ret = true;
 		}
+		
+		
 		selectionRandom = new Random(selectionSeed);
 		setRandom = new Random(setSeed);
 		return ret;

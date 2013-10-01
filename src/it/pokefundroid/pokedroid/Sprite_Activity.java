@@ -60,7 +60,7 @@ public class Sprite_Activity extends Activity implements OnARTouchListener,
 
 		mBeyondarGLSurfaceView = (BeyondarGLSurfaceView) findViewById(R.id.customGLSurface);
 		mCameraView = (CameraView) findViewById(R.id.camera);
-		mLocationUtils = new LocationUtils(this, this);
+		mLocationUtils = new LocationUtils(this, this, LocationType.NETWORK);
 		
 		// We create the world and set it in to the view
 		createWorld();
@@ -125,11 +125,6 @@ public class Sprite_Activity extends Activity implements OnARTouchListener,
 			tmp.setAltitude(loc[2]);
 			int id = FindingUtilities.findInPosition(tmp.getLatitude(),
 					tmp.getLongitude());
-			if (id != -1) {
-				GeoObject go = new GeoObject(i);
-				fillObj(go, id, tmp);
-				w.addBeyondarObject(go);
-			}
 
 		}
 	}
