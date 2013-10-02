@@ -13,7 +13,17 @@ import android.graphics.BitmapFactory;
 public class Pokemon {
 	
 	private int id;
-	private String name;
+	private String name; 
+	
+	private int firstType;
+	private int secndType;
+	
+	private short baseHp;
+	private short baseAtk;
+	private short baseDef;
+	private short baseSAtk;
+	private short baseSDef;
+	private short baseSpd;
 	
 	public final static int NUMBER_POKEMON = 151; 
 	
@@ -25,23 +35,13 @@ public class Pokemon {
 	public final static int VERYRARE = 4;
 	public final static int NONPRESENT = 5;
 	
-	public final static int[] IDS = {
-		1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 
-		11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 
-		21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 
-		31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 
-		41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 
-		51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 
-		61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 
-		71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 
-		81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 
-		91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 
-		101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 
-		111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 
-		121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 
-		131, 132, 133, 134, 135, 136, 137, 138, 139, 140, 
-		141, 142, 143, 144, 145, 146, 147, 148, 149, 150, 151
-	};
+	//stat id
+	public final static int HEALTPOINT = 1;
+	public final static int ATTACK = 2;
+	public final static int DEFENCE = 3;
+	public final static int SPATTACK = 4;
+	public final static int SPDEFENCE = 5;
+	public final static int SPEED = 6;
 	
 	//commento in fondo il numero delle evoluzioni/pokemon seguito dalla prima forma
 	public final static int[] RARITY = {
@@ -62,7 +62,7 @@ public class Pokemon {
 		RARE, RARE, RARE, RARE, RARE, RARE, SUBRARE, VERYCOMMON, SUBRARE, //1mime, 1scyther, 1jynx, 1electabuzz, 1magmar, 1pinsir, 1tauros, 2magikarp
 		SUBRARE, RARE, RARE, NONPRESENT, NONPRESENT, NONPRESENT, RARE, RARE, NONPRESENT, //1lapras, 1ditto, 4eevee, 1porygon, 2omanyte
 		RARE, NONPRESENT, RARE, SUBRARE, VERYRARE, VERYRARE, VERYRARE, //2kabuto, 1aerodactyl, 1snorlax, 3 legendary birds
-		RARE, NONPRESENT, NONPRESENT, VERYRARE, VERYRARE //3dratini, mewtwo, mew
+		RARE, NONPRESENT, NONPRESENT, VERYRARE, COMMON //3dratini, mewtwo, mew
 	};
 	/**
 	 * metodo per ricavarsi dall'id del pokemon la sua rarita'
@@ -103,6 +103,21 @@ public class Pokemon {
 	public Pokemon(int id){
 		this.id = id;
 		this.name = StaticClass.dbpoke.oneRowOnColumnQuery("pokemon_species", "identifier", "id="+id);
+		this.baseHp = Short.parseShort(StaticClass.dbpoke.oneRowOnColumnQuery("pokemon_stats", "base_stat", 
+				"pokemon_id="+id+" and stat_id="+HEALTPOINT));
+		this.baseAtk = Short.parseShort(StaticClass.dbpoke.oneRowOnColumnQuery("pokemon_stats", "base_stat", 
+				"pokemon_id="+id+" and stat_id="+ATTACK));
+		this.baseDef = Short.parseShort(StaticClass.dbpoke.oneRowOnColumnQuery("pokemon_stats", "base_stat", 
+				"pokemon_id="+id+" and stat_id="+DEFENCE));
+		this.baseSAtk = Short.parseShort(StaticClass.dbpoke.oneRowOnColumnQuery("pokemon_stats", "base_stat", 
+				"pokemon_id="+id+" and stat_id="+SPATTACK));
+		this.baseSDef = Short.parseShort(StaticClass.dbpoke.oneRowOnColumnQuery("pokemon_stats", "base_stat", 
+				"pokemon_id="+id+" and stat_id="+SPDEFENCE));
+		this.baseSpd = Short.parseShort(StaticClass.dbpoke.oneRowOnColumnQuery("pokemon_stats", "base_stat", 
+				"pokemon_id="+id+" and stat_id="+SPEED)); 
+		//TODO query to take the double pkmn type 0 isn't a type id: no type id
+		this.firstType = 0; 
+		this.secndType = 0;
 	}
 	
 	public String getName(){;
@@ -112,6 +127,37 @@ public class Pokemon {
 	public int getId(){
 		return id;
 	}
-	
+
+	public short getBaseHp() {
+		return baseHp;
+	}
+
+	public short getBaseAtk() {
+		return baseAtk;
+	}
+
+	public short getBaseDef() {
+		return baseDef;
+	}
+
+	public short getBaseSAtk() {
+		return baseSAtk;
+	}
+
+	public short getBaseSDef() {
+		return baseSDef;
+	}
+
+	public short getBaseSpd() {
+		return baseSpd;
+	}
+
+	public int getFirstType() {
+		return firstType;
+	}
+
+	public int getSecndType() {
+		return secndType;
+	}
 	
 }

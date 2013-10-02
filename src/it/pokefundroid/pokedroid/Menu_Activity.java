@@ -144,14 +144,14 @@ public class Menu_Activity extends Activity implements ILocation {
 
 	@Override
 	public void onLocationChaged(Location location) {
-		mProgressDialog.dismiss();
+		mProgressDialog.dismiss(); 
 		mLocationUtils.close();
-		Intent newActivity = new Intent(Menu_Activity.this,
+		/*Intent newActivity = new Intent(Menu_Activity.this,
 				AugmentedReality_Activity.class);
 		newActivity.putExtra("loc",
 				new double[] { location.getLatitude(), location.getLongitude(),
 						location.getAltitude(), location.getAccuracy() });
-		startActivityForResult(newActivity, AUGMENTED_REALITY_CODE);
+		startActivityForResult(newActivity, AUGMENTED_REALITY_CODE);*/
 	}
 
 	@Override
@@ -181,7 +181,7 @@ public class Menu_Activity extends Activity implements ILocation {
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
+		/*super.onActivityResult(requestCode, resultCode, data);
 		if (resultCode == RESULT_OK) {
 			if (requestCode == AUGMENTED_REALITY_CODE) {
 				Serializable results = data.getSerializableExtra(AugmentedReality_Activity.RESULTS);
@@ -194,7 +194,7 @@ public class Menu_Activity extends Activity implements ILocation {
 							R.string.time_finished_msg);
 				}
 			}
-		}
+		}*/
 	}
 
 }

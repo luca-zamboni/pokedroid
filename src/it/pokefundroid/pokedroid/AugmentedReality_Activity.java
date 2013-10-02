@@ -1,3 +1,4 @@
+
 package it.pokefundroid.pokedroid;
 
 import it.pokefundroid.pokedroid.utils.FindingUtilities;
