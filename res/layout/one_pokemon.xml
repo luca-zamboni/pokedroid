@@ -12,29 +12,22 @@
         android:src="@drawable/ic_launcher" />
 
     <TextView
+        android:id="@+id/pokemon_sex"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@+id/pokemon_picture"
+        android:text=" "
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <TextView
         android:id="@+id/pokemon_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/pokemon_picture"
-        android:gravity="center_vertical"
+        android:layout_alignBaseline="@+id/pokemon_sex"
+        android:layout_alignBottom="@+id/pokemon_sex"
+        android:layout_toRightOf="@+id/pokemon_sex"
         android:text="Pokemon name"
-        android:textSize="8pt" />
-
-    <ImageView
-        android:id="@+id/imageView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_toRightOf="@+id/pokemon_name"
-        android:src="@drawable/creature_6" />
-
-    <ProgressBar
-        android:id="@+id/pokemon_health_bar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/pokemon_name"
-        android:layout_below="@+id/pokemon_name" />
-    
+        android:textAppearance="?android:attr/textAppearanceLarge" />
 
 </RelativeLayout>

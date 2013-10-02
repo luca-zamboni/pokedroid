@@ -1,6 +1,8 @@
 package it.pokefundroid.pokedroid;
 
 import it.pokefundroid.pokedroid.models.PersonalPokemon;
+import it.pokefundroid.pokedroid.models.Pokemon;
+import it.pokefundroid.pokedroid.utils.StaticClass;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -8,6 +10,8 @@ import java.util.ArrayList;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,7 +26,7 @@ public class PersonalPokemonAdapter extends ArrayAdapter<PersonalPokemon> {
 
 	public PersonalPokemonAdapter(Context context,
 			ArrayList<PersonalPokemon> pPokemon) {
-		super(context, R.layout.one_pokemon_activity, pPokemon);
+		super(context, R.layout.one_pokemon, pPokemon);
 		this.context = context;
 		this.pPokemon = pPokemon;
 	}
@@ -31,25 +35,41 @@ public class PersonalPokemonAdapter extends ArrayAdapter<PersonalPokemon> {
 	public View getView(int position, View convertView, ViewGroup parent) {
 		LayoutInflater inflater = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		View rowView = inflater.inflate(R.layout.one_pokemon_activity, parent,
+		View rowView = inflater.inflate(R.layout.one_pokemon, parent,
 				false);
-		TextView textView = (TextView) rowView.findViewById(R.id.pokemon_name);
-		ImageView imageView = (ImageView) rowView
+		
+		//// find view
+		TextView pokemonName = (TextView) rowView.findViewById(R.id.pokemon_name);
+		ImageView pokemon_pictures = (ImageView) rowView
 				.findViewById(R.id.pokemon_picture);
-		textView.setText(pPokemon.get(position).getName());
+		TextView pokemonSex = (TextView) rowView
+				.findViewById(R.id.pokemon_sex);
+		
+		//// set text of pokemon
+		pokemonName.setText(pPokemon.get(position).getName());
+		pokemonName.setTextColor(Color.BLACK);
+		
+		//// set image of pokemon
 		int id = pPokemon.get(position).getId();
-		Bitmap bm = null;
-		try {
-			bm = BitmapFactory.decodeStream(context.getAssets().open(
-					"pkm/pkfrlg" + (id < 10 ? "00" : id < 100 ? "0" : "") + id
-							+ ".png"));
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			Log.e("PersonalPokemonAdapter", "CANNATO!! CANNATO!!!");
+		Bitmap pictures  = Pokemon.getImagBitmap(context, id);
+		pokemon_pictures.setImageBitmap(pictures);
+		
+		/// set sex of pokemon
+		String sexChar = PersonalPokemon.getSexAsci(pPokemon.get(position).getSex());
+		pokemonSex.setText(sexChar);
+		if(sexChar.equals("♀")){
+			pokemonSex.setTextColor(Color.MAGENTA);
+		}else{
+			if(sexChar.equals("♂")){
+				pokemonSex.setTextColor(Color.BLUE);
+			}
 		}
-		imageView.setImageBitmap(bm);
+		
 
 		return rowView;
 	}
 }
+
+
+
+

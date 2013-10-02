@@ -1,15 +1,19 @@
 package it.pokefundroid.pokedroid.models;
 
-import it.pokefundroid.pokedroid.utils.BaseHelper;
 import it.pokefundroid.pokedroid.utils.StaticClass;
-import android.database.Cursor;
+
+import java.io.IOException;
+import java.io.InputStream;
+
+import android.content.Context;
+import android.content.res.AssetManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 
 public class Pokemon {
 	
 	private int id;
 	private String name;
-	private String type;
-	private BaseHelper a;
 	
 	public final static int NUMBER_POKEMON = 151; 
 	
@@ -70,24 +74,39 @@ public class Pokemon {
 		return (RARITY[id-1]);
 	}
 	
+	public static String getImagUri(int id) {
+		if (id < 10)
+			return "assets://pkm/pkfrlg00" + id + ".png";
+		if (id < 100)
+			return "assets://pkm/pkfrlg0" + id + ".png";
+		else
+			return "assets://pkm/pkfrlg" + id + ".png";
+	}
+	
+	public static Bitmap getImagBitmap(Context context,int id) {
+		String s;
+		if (id < 10)
+			s = "pkm/pkfrlg00" + id + ".png";
+		else{
+			if (id < 100)
+				s = "pkm/pkfrlg0" + id + ".png";
+			else
+				s = "pkm/pkfrlg" + id + ".png";
+		}
+		
+
+	    return StaticClass.getBitmapFromAssats(context, s);
+	}
+	
+//////// FINE STATIC ----- INIZIO CLASSE ISTANZIABILE POKEMON
+	
 	public Pokemon(int id){
 		this.id = id;
-		this.name = "asddsa";
-		StaticClass.dbpoke.openDataBase();
-		Cursor c = StaticClass.dbpoke.dbpoke
-				.rawQuery("SELECT identifier FROM pokemon_species WHERE id="+id, null);
-		c.moveToFirst();
-		this.name = c.getString(c.getColumnIndex("identifier"));
-		this.type = "N.D.";
-		StaticClass.dbpoke.close();
+		this.name = StaticClass.dbpoke.oneRowOnColumnQuery("pokemon_species", "identifier", "id="+id);
 	}
 	
 	public String getName(){;
 		return name;
-	}
-	
-	public String getType(){
-		return type;
 	}
 	
 	public int getId(){

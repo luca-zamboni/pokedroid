@@ -13,15 +13,35 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 public class BaseHelper extends SQLiteOpenHelper{
-	 
+
     //The Android's default system path of your application database.
     private static String DB_PATH = "/data/data/it.pokefundroid.pokedroid/databases/";
- 
     private static String DB_NAME = "pokemon";
- 
     public SQLiteDatabase dbpoke;
  
     private final Context myContext;
+	public static final String POKEMON_SPECIES = "pokemon_species";
+	public static final String GENDERS = "genders";
+	
+	
+	public static final String TABLE_PERSONAL_POKEMON = "my_pokemon";
+	 
+    public static final String MY_ID = "my_id";
+    public static final String BASE_POKEMON_ID = "id";
+    public static final String MY_NAME = "my_name";
+    public static final String SEX = "sex";
+    public static final String FOUND_X = "found_coordinate_x";
+    public static final String FOUND_Y = "found_coordinate_y";
+    
+    
+    ///// create table my pokemon ..... estarna al mega dump scaricato da internet
+    private static final String CREATE_MY_POKEMON_TABLE = "create table if not exists "+ TABLE_PERSONAL_POKEMON +
+    		" (my_id integer primary key autoincrement," +
+    		"id integer not null," +
+    		"my_name text null," +
+    		"sex integer not null," +
+    		"found_coordinate_x integer null, " +
+    		"found_coordinate_y integer null);";
  
     /**
      * Constructor
@@ -39,6 +59,21 @@ public class BaseHelper extends SQLiteOpenHelper{
 		}
     	openDataBase();
     }	
+    
+    public String oneRowOnColumnQuery(String tableName,String columns,String where){
+    	openDataBase();
+    	Cursor c = dbpoke.rawQuery("select "+ columns +" from "+ tableName +" where " + where, null);
+    	c.moveToFirst();
+    	String s = c.getString(c.getColumnIndex(columns));
+    	close();
+    	return s;
+    }
+    
+    public void executeSQL(String query){
+    	openDataBase();
+    	dbpoke.execSQL(query);
+    	close();
+    }
  
   /**
      * Creates a empty database on the system and rewrites it with your own database.
@@ -54,7 +89,7 @@ public class BaseHelper extends SQLiteOpenHelper{
     		//By calling this method and empty database will be created into the default system path
                //of your application so we are gonna be able to overwrite that database with our database.
         	this.getReadableDatabase();
- 
+        	
         	try {
  
     			copyDataBase();
@@ -64,8 +99,16 @@ public class BaseHelper extends SQLiteOpenHelper{
         		throw new Error("Error copying database");
  
         	}
+        	createMyTable();
     	}
  
+    }
+    
+    private void createMyTable(){
+    	openDataBase();
+    	dbpoke.execSQL(CREATE_MY_POKEMON_TABLE);
+    	dbpoke.
+    	close();
     }
  
     /**
@@ -74,14 +117,14 @@ public class BaseHelper extends SQLiteOpenHelper{
      */
     private boolean checkDataBase(){
  
-    	SQLiteDatabase checkDB = null;
+    	SQLiteDatabase checkDB = null; 
  
     	try{
     		String myPath = DB_PATH + DB_NAME;
     		checkDB = SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READONLY);
  
     	}catch(Exception e){
- 
+  
     		//database does't exist yet.
  
     	}

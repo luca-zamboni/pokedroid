@@ -1,17 +1,24 @@
 package it.pokefundroid.pokedroid.models;
 
 
-import java.util.ArrayList;
+import java.io.IOException;
+import java.io.InputStream;
 
+import it.pokefundroid.pokedroid.utils.BaseHelper;
+import it.pokefundroid.pokedroid.utils.StaticClass;
 import android.content.Context;
+import android.content.res.AssetManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Log;
 
 public class PersonalPokemon extends Pokemon {
 
 	public String my_name;
 	private int id;
-	public int sex;
-	public int found_x;
-	public int found_y;
+	private int sex;
+	private int found_x;
+	private int found_y;
 	
 
 	public PersonalPokemon(int id,String my_name, int sex, int found_x, int found_y) {
@@ -22,34 +29,61 @@ public class PersonalPokemon extends Pokemon {
 		this.found_x = found_x;
 		this.found_y = found_y;
 	}
-	
-	public static ArrayList<PersonalPokemon> getAllPersonaPokemon(Context con){
-		/*int id;
-		String my_name;
-		int sex;
-		int found_x;
-		int found_y;
-		BaseAdapter a = new BaseAdapter(con);
-		a.open();
-		Cursor c = a.database.query(BaseHelper.TABLE_PERSONAL_POKEMON,new String[] {BaseHelper.BASE_POKEMON_ID,
-				BaseHelper.MY_NAME, 
-				BaseHelper.SEX, 
-				BaseHelper.FOUND_X, 
-				BaseHelper.FOUND_Y
-				},null,null,null,null,null);
-		c.moveToFirst();
-		ArrayList<PersonalPokemon> per = new ArrayList<PersonalPokemon>();
-		while(c.moveToNext()){
-			id = c.getInt(0);
-			my_name = c.getString(1);
-			sex = c.getInt(2);
-			found_x = c.getInt(3);
-			found_y = c.getInt(4);
-			per.add(new PersonalPokemon(con, id, my_name, sex, found_x, found_y));
+
+	public void saveOnDatabase() {
+		String insertPersonalPokemon = "INSERT INTO "+ BaseHelper.TABLE_PERSONAL_POKEMON +" ";
+		insertPersonalPokemon += " ( " +
+				BaseHelper.BASE_POKEMON_ID+"," +
+				BaseHelper.SEX+"," +
+				BaseHelper.FOUND_X+"," +
+				BaseHelper.FOUND_Y+"," +
+				BaseHelper.MY_NAME+" ) ";
+		insertPersonalPokemon += " VALUES ( " +
+				id +"," +
+				sex +"," +
+				found_x +"," +
+				found_y +"," +
+				my_name +" ); "  ;
+		
+		Log.e("asd", insertPersonalPokemon);
+		
+		StaticClass.dbpoke.executeSQL(insertPersonalPokemon);
+		
+	}
+
+	public String getMy_name() {
+		return my_name;
+	}
+
+
+	public int getId() {
+		return id;
+	}
+
+
+	public int getSex() {
+		return sex;
+	}
+
+
+	public int getFound_x() {
+		return found_x;
+	}
+
+
+	public int getFound_y() {
+		return found_y;
+	}
+
+	public static String getSexAsci(int sex) {
+		String s = " ";
+		if(sex == 1){
+			s = "♀";
+		}else{
+			if(sex == 2)
+				s = "♂";
 		}
-		a.close();
-		return per;*/
-		return null;
+		return s;
 	}
 	
 }
