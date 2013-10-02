@@ -13,12 +13,18 @@
     <string name="title_activity_view_team_activity">View team</string>
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_sprite_">Sprite_Activity</string>
-    
+
+    <!-- Augmented Reality Activity -->
+    <string name="pokemon_too_far">The pokemon is too far, please get closer</string>
+
     <!-- Dialogs -->
+    <string name="choose_pokemon_title">Fight one:</string>
     <string name="not_enough_accuracy_title">Weak signal</string>
     <string name="not_enough_accuracy">We are sorry, we can\'t be more precise on your location, 
         please try again later.</string>
+    <string name="time_finished_title">No signal</string>
+    <string name="time_finished_msg">We are sorry, our Jinxes can\'t locate you.</string>
     <string name="locating_progress_title">Where are you?</string>
-    <string name="locating_progress_msg">Our Jynxes are trying to locating you &#8230;</string>
+    <string name="locating_progress_msg">Our Jynxes are trying to locate you &#8230;</string>
 
 </resources>

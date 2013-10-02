@@ -12,7 +12,7 @@ import android.os.Bundle;
 
 public class LocationUtils {
 	public enum ErrorType {
-		DISABLED, ENABLED, TIME_FINISHED
+		DISABLED, ENABLED, TIME_FINISHED, NOT_ENOUGH_ACCURACY
 	}
 
 	public enum LocationType {
@@ -32,7 +32,7 @@ public class LocationUtils {
 	private ILocation mLocationInterface;
 	private LocationType mType;
 	private long mTimeInterval = 1000;
-	private float mMinDistance = 10;
+	private float mMinDistance = 50;
 	private Timer mTimer;
 
 	public LocationUtils(Context ctx, ILocation ilocation, LocationType type) {
@@ -138,7 +138,8 @@ public class LocationUtils {
 		if (mLocationListener != null) {
 			mLocationManager.removeUpdates(mLocationListener);
 			mLocationListener = null;
-			mTimer.cancel();
+			if(mTimer!=null)
+				mTimer.cancel();
 		}
 	}
 
@@ -148,6 +149,9 @@ public class LocationUtils {
 		public void onLocationChanged(Location location) {
 			if (location.getAccuracy() <= mMinDistance) {
 				mLocationInterface.onLocationChaged(location);
+			}
+			else{
+				mLocationInterface.onErrorOccured(ErrorType.NOT_ENOUGH_ACCURACY, "accuracy");
 			}
 		}
 

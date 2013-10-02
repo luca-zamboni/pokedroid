@@ -1,8 +1,8 @@
 <resources>
 
-    <!--
-         Customize dimensions originally defined in res/values/dimens.xml (such as
-         screen margins) for sw600dp devices (e.g. 7" tablets) here.
-    -->
-
+    <dimen name="pokemon_choose_size">70dp</dimen>
+    <dimen name="pokemon_capture_width">300dp</dimen>
+    <dimen name="pokemon_capture_height">200dp</dimen>
+    <dimen name="my_pokemon_capture_width">600dp</dimen>
+    <dimen name="my_pokemon_capture_height">400dp</dimen>
 </resources>

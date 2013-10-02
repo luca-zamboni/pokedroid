@@ -39,7 +39,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="it.pokefundroid.pokedroid.Sprite_Activity"
+        <activity android:name="it.pokefundroid.pokedroid.AugmentedReality_Activity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="landscape" >
             
@@ -47,6 +47,10 @@
         <activity
             android:name="it.pokefundroid.pokedroid.Menu_Activity"
             android:label="@string/title_activity_menu_" >
+        </activity>
+        <activity
+            android:name="it.pokefundroid.pokedroid.CaptureActivity"
+            android:theme="@android:style/Theme.Black.NoTitleBar" >
         </activity>
         <activity
             android:name="it.pokefundroid.pokedroid.View_team_activity"
