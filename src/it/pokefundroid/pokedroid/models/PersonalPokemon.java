@@ -19,15 +19,17 @@ public class PersonalPokemon extends Pokemon {
 	private int sex;
 	private int found_x;
 	private int found_y;
+	private int level;
 	
 
-	public PersonalPokemon(int id,String my_name, int sex, int found_x, int found_y) {
+	public PersonalPokemon(int id,String my_name, int sex, int found_x, int found_y, int level) {
 		super(id);
 		this.id = id;
 		this.my_name = my_name;
 		this.sex = sex;
 		this.found_x = found_x;
 		this.found_y = found_y;
+		this.level = 20;
 	}
 
 	public void saveOnDatabase() {
@@ -60,6 +62,9 @@ public class PersonalPokemon extends Pokemon {
 		return id;
 	}
 
+	public int getLevel() {
+		return level;
+	}
 
 	public int getSex() {
 		return sex;

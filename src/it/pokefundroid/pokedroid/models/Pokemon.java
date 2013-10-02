@@ -22,6 +22,8 @@ public class Pokemon {
 	private short baseSDef;
 	private short baseSpd;
 	
+	private int pkmnType;
+	
 	public final static int NUMBER_POKEMON = 151; 
 	
 	//rarity
@@ -112,6 +114,7 @@ public class Pokemon {
 				"pokemon_id="+id+" and stat_id="+SPDEFENCE));
 		this.baseSpd = Short.parseShort(StaticClass.dbpoke.oneRowOnColumnQuery("pokemon_stats", "base_stat", 
 				"pokemon_id="+id+" and stat_id="+SPEED));
+		this.pkmnType = 1; //TODO query to take the double pkmn type
 	}
 	
 	public String getName(){;
