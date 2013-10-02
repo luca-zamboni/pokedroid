@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import android.R;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
