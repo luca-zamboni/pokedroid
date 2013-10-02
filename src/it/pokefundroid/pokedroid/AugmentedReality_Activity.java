@@ -491,7 +491,7 @@ public class AugmentedReality_Activity extends FragmentActivity implements
 		if (!mSelected.equals("")) {
 			Intent i = new Intent(this, CaptureActivity.class);
 			i.putExtra(CaptureActivity.PASSED_WILD_ID_KEY, mSelected);
-			byte[] b =compressBitmap(fastblur(picture, 5));
+			byte[] b =compressBitmap(fastblur(picture, 3));
 			i.putExtra(CaptureActivity.PASSED_BACKGROUND_KEY,b);
 			startActivityForResult(i, CAPTURE_CODE);
 			mSelected = "";
