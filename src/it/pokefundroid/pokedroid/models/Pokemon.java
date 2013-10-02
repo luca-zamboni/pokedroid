@@ -62,7 +62,7 @@ public class Pokemon {
 		RARE, RARE, RARE, RARE, RARE, RARE, SUBRARE, VERYCOMMON, SUBRARE, //1mime, 1scyther, 1jynx, 1electabuzz, 1magmar, 1pinsir, 1tauros, 2magikarp
 		SUBRARE, RARE, RARE, NONPRESENT, NONPRESENT, NONPRESENT, RARE, RARE, NONPRESENT, //1lapras, 1ditto, 4eevee, 1porygon, 2omanyte
 		RARE, NONPRESENT, RARE, SUBRARE, VERYRARE, VERYRARE, VERYRARE, //2kabuto, 1aerodactyl, 1snorlax, 3 legendary birds
-		RARE, NONPRESENT, NONPRESENT, VERYRARE, COMMON //3dratini, mewtwo, mew
+		RARE, NONPRESENT, NONPRESENT, VERYRARE, VERYCOMMON //3dratini, mewtwo, mew
 	};
 	/**
 	 * metodo per ricavarsi dall'id del pokemon la sua rarita'
