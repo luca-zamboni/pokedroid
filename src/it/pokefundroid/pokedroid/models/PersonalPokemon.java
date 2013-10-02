@@ -16,15 +16,17 @@ public class PersonalPokemon extends Pokemon {
 	private int sex;
 	private int found_x;
 	private int found_y;
+	private int level;
 	
 
-	public PersonalPokemon(int id,String my_name, int sex, int found_x, int found_y) {
+	public PersonalPokemon(int id,String my_name, int sex, int found_x, int found_y, int level) {
 		super(id);
 		this.id = id;
 		this.my_name = my_name;
 		this.sex = sex;
 		this.found_x = found_x;
 		this.found_y = found_y;
+		this.level = 20;
 	}
 
 	public void saveOnDatabase() {
@@ -57,6 +59,9 @@ public class PersonalPokemon extends Pokemon {
 		return id;
 	}
 
+	public int getLevel() {
+		return level;
+	}
 
 	public int getSex() {
 		return sex;
@@ -101,7 +106,7 @@ public class PersonalPokemon extends Pokemon {
 			sex = c.getInt(c.getColumnIndex(BaseHelper.SEX));
 			found_x = c.getInt(c.getColumnIndex(BaseHelper.FOUND_X));
 			found_y = c.getInt(c.getColumnIndex(BaseHelper.FOUND_Y));
-			mPokemon.add(new PersonalPokemon(id, my_name, sex, found_x, found_y));
+			mPokemon.add(new PersonalPokemon(id, my_name, sex, found_x, found_y, 20));
 		}
 		
 		StaticClass.dbpoke.close();

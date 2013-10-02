@@ -76,7 +76,7 @@ public class FindingUtilities {
 		currentPkmnSet = new int[3];
 		for (int i = 0; i < 3;) {
 			int id = selectionRandom.nextInt(151);
-			id = Pokemon.IDS[id];
+			id = id+1;
 			boolean b = selectByRarity(Pokemon.getRarityFromId(id));
 			if (b)
 				currentPkmnSet[i++] = id;
