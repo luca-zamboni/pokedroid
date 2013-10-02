@@ -26,14 +26,7 @@ public class Splash_activity extends Activity {
 		StaticClass.openBatabaseConection(getApplicationContext());
 
 		text = (TextView) findViewById(R.id.text);
-<<<<<<< HEAD
-		
-		startActivity(new Intent(Splash_activity.this,Menu_Activity.class));
-		
-=======
-
 		startActivity(new Intent(Splash_activity.this, Menu_Activity.class));
->>>>>>> degio
 		this.finish();
 	}
 
