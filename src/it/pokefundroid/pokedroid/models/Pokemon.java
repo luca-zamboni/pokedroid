@@ -13,7 +13,10 @@ import android.graphics.BitmapFactory;
 public class Pokemon {
 	
 	private int id;
-	private String name;
+	private String name; 
+	
+	private int firstType;
+	private int secndType;
 	
 	private short baseHp;
 	private short baseAtk;
@@ -21,8 +24,6 @@ public class Pokemon {
 	private short baseSAtk;
 	private short baseSDef;
 	private short baseSpd;
-	
-	private int pkmnType;
 	
 	public final static int NUMBER_POKEMON = 151; 
 	
@@ -61,7 +62,7 @@ public class Pokemon {
 		RARE, RARE, RARE, RARE, RARE, RARE, SUBRARE, VERYCOMMON, SUBRARE, //1mime, 1scyther, 1jynx, 1electabuzz, 1magmar, 1pinsir, 1tauros, 2magikarp
 		SUBRARE, RARE, RARE, NONPRESENT, NONPRESENT, NONPRESENT, RARE, RARE, NONPRESENT, //1lapras, 1ditto, 4eevee, 1porygon, 2omanyte
 		RARE, NONPRESENT, RARE, SUBRARE, VERYRARE, VERYRARE, VERYRARE, //2kabuto, 1aerodactyl, 1snorlax, 3 legendary birds
-		RARE, NONPRESENT, NONPRESENT, VERYRARE, VERYRARE //3dratini, mewtwo, mew
+		RARE, NONPRESENT, NONPRESENT, VERYRARE, COMMON //3dratini, mewtwo, mew
 	};
 	/**
 	 * metodo per ricavarsi dall'id del pokemon la sua rarita'
@@ -113,8 +114,10 @@ public class Pokemon {
 		this.baseSDef = Short.parseShort(StaticClass.dbpoke.oneRowOnColumnQuery("pokemon_stats", "base_stat", 
 				"pokemon_id="+id+" and stat_id="+SPDEFENCE));
 		this.baseSpd = Short.parseShort(StaticClass.dbpoke.oneRowOnColumnQuery("pokemon_stats", "base_stat", 
-				"pokemon_id="+id+" and stat_id="+SPEED));
-		this.pkmnType = 1; //TODO query to take the double pkmn type
+				"pokemon_id="+id+" and stat_id="+SPEED)); 
+		//TODO query to take the double pkmn type 0 isn't a type id: no type id
+		this.firstType = 0; 
+		this.secndType = 0;
 	}
 	
 	public String getName(){;
@@ -147,6 +150,14 @@ public class Pokemon {
 
 	public short getBaseSpd() {
 		return baseSpd;
+	}
+
+	public int getFirstType() {
+		return firstType;
+	}
+
+	public int getSecndType() {
+		return secndType;
 	}
 	
 }
