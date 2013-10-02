@@ -15,7 +15,7 @@ public class CombatUtils {
 		double rawDamage;
 		int randomNumber = (new Random()).nextInt(26)+85;
 		double effectivness = 1.0;
-		int stab = 1.0;
+		double stab = 1.0;
 		int power = 50;
 		double nature = 1.0;
 		double additional = 1.0;

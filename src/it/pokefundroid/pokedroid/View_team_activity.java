@@ -22,10 +22,10 @@ public class View_team_activity extends Activity {
 		poke_list = (ListView) findViewById(R.id.pokemon_list_view);
 		
 		ArrayList<PersonalPokemon> poke = new ArrayList<PersonalPokemon>();
-		PersonalPokemon m = new PersonalPokemon(151, "My_Love", 1, 123, 123);
+		PersonalPokemon m = new PersonalPokemon(151, "My_Love", 1, 123, 123, 20);
 		m.saveOnDatabase();
 		poke.add(m);
-		poke.add(new PersonalPokemon(6, "Powaaaaaaaa", 2, 123, 123));
+		poke.add(new PersonalPokemon(6, "Powaaaaaaaa", 2, 123, 123, 20));
 
 		PersonalPokemonAdapter adapter = new PersonalPokemonAdapter(getApplicationContext(),poke);
 		poke_list.setAdapter(adapter);
