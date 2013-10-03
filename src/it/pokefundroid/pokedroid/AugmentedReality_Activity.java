@@ -8,6 +8,7 @@ import it.pokefundroid.pokedroid.utils.LocationUtils.ILocation;
 import it.pokefundroid.pokedroid.utils.LocationUtils.LocationType;
 import it.pokefundroid.pokedroid.viewUtils.ImageAdapter;
 import it.pokefundroid.pokedroid.viewUtils.ImageAdapter.IPokemonSelection;
+import it.pokefundroid.pokedroid.viewUtils.ParcelableMonster;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
@@ -19,7 +20,10 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MotionEvent;
@@ -52,7 +56,7 @@ public class AugmentedReality_Activity extends FragmentActivity implements
 
 	private int CAPTURE_CODE = 1;
 
-	private String mSelected = "";
+	private ParcelableMonster mSelected;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -105,7 +109,11 @@ public class AugmentedReality_Activity extends FragmentActivity implements
 		mWorldCenter = new Location("world");
 		mWorldCenter.setLatitude(loc[0]);
 		mWorldCenter.setLongitude(loc[1]);
+		
+		//TODO DEBUG
+		Log.i(AugmentedReality_Activity.class.getName(), "accuracy: "+ loc[3]);
 		mWorldCenter.setAccuracy((float) loc[3]);
+		
 		setWorldAltitude(loc[2]);
 
 		mWorld.setLocation(mWorldCenter);
@@ -158,11 +166,11 @@ public class AugmentedReality_Activity extends FragmentActivity implements
 			return "assets://pkm/pkfrlg" + id + ".png";
 	}
 	
-	private void showChoosePokemonDialog(ArrayList<String> pokemonsIDs) {
+	private void showChoosePokemonDialog(ArrayList<ParcelableMonster> monstersIDs) {
 		LayoutInflater inflater = getLayoutInflater();
 		View v = inflater.inflate(R.layout.dialog_choosepokemon, null, false);
 		GridView gv = (GridView) v.findViewById(R.id.dialog_pokemongridview);
-		gv.setAdapter(new ImageAdapter(this, this, pokemonsIDs));
+		gv.setAdapter(new ImageAdapter(this, this, monstersIDs));
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(this).setTitle(
 				R.string.choose_pokemon_title).setView(v);
@@ -171,7 +179,7 @@ public class AugmentedReality_Activity extends FragmentActivity implements
 
 	private void doAction(List<BeyondarObject> geoObjects) {
 		Iterator<BeyondarObject> iterator = geoObjects.iterator();
-		ArrayList<String> outPokemon = new ArrayList<String>();
+		ArrayList<ParcelableMonster> outMonster= new ArrayList<ParcelableMonster>();
 		while (iterator.hasNext()) {
 			GeoObject geoObject = (GeoObject) iterator.next();
 			float[] results = new float[2];
@@ -184,16 +192,19 @@ public class AugmentedReality_Activity extends FragmentActivity implements
 			// }
 			if (results[0] <= FIGHT_PROXIMITY
 					* (mWorldCenter.getAccuracy() / 2)) {
-				outPokemon.add(geoObject.getName());
+				ParcelableMonster pm = new ParcelableMonster();
+				pm.setId( geoObject.getName() );
+				pm.setLocation(new double[]{geoObject.getLatitude(),geoObject.getLongitude()});
+				outMonster.add(pm);
 			}
 		}
-		if (outPokemon.size() == 0)
+		if (outMonster.size() == 0)
 			Toast.makeText(this, getString(R.string.pokemon_too_far),
 					Toast.LENGTH_SHORT).show();
-		else if (outPokemon.size() > 1)
-			showChoosePokemonDialog(outPokemon);
+		else if (outMonster.size() > 1)
+			showChoosePokemonDialog(outMonster);
 		else {
-			this.mSelected = outPokemon.get(0);
+			mSelected = outMonster.get(0);
 			mCameraView.tackePicture(this);
 		}
 	}
@@ -491,17 +502,33 @@ public class AugmentedReality_Activity extends FragmentActivity implements
 	public void onPictureTaken(Bitmap picture) {
 		if (!mSelected.equals("")) {
 			Intent i = new Intent(this, CaptureActivity.class);
-			i.putExtra(CaptureActivity.PASSED_WILD_ID_KEY, mSelected);
+			i.putExtra(CaptureActivity.PASSED_WILD_MONSTER_KEY, mSelected);
 			byte[] b =compressBitmap(fastblur(picture, 3));
 			i.putExtra(CaptureActivity.PASSED_BACKGROUND_KEY,b);
 			startActivityForResult(i, CAPTURE_CODE);
-			mSelected = "";
+			mSelected = null;
 		}
 	}
 
 	@Override
-	public void onPokemonSelected(String id) {
-		mSelected = id;
+	public void onPokemonSelected(ParcelableMonster pm) {
+		mSelected = pm;
 		mCameraView.tackePicture(this);
 	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode,data);
+		if(resultCode == RESULT_OK){
+			if(requestCode == CAPTURE_CODE){
+				String response = data.getStringExtra(CaptureActivity.RESPONSE_KEY);
+				if(response!=null && response.trim().length()>0){
+					Toast.makeText(this, response, Toast.LENGTH_SHORT).show();
+				}
+			}
+		}
+	}
+	
+
+	
 }

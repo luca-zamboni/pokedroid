@@ -13,6 +13,6 @@
         android:layout_alignParentTop="true"
         android:background="@drawable/selector_blue"
         android:padding="@dimen/activity_vertical_margin"
-        android:text="Button" />
+        android:text="@string/capture" />
 
 </RelativeLayout>

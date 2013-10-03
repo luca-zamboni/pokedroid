@@ -1,6 +1,7 @@
 package it.pokefundroid.pokedroid;
 
 import it.pokefundroid.pokedroid.models.PersonalPokemon;
+import it.pokefundroid.pokedroid.viewUtils.PersonalPokemonAdapter;
 
 import java.util.ArrayList;
 

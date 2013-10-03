@@ -1,5 +1,8 @@
-package it.pokefundroid.pokedroid;
+package it.pokefundroid.pokedroid.viewUtils;
 
+import it.pokefundroid.pokedroid.R;
+import it.pokefundroid.pokedroid.R.id;
+import it.pokefundroid.pokedroid.R.layout;
 import it.pokefundroid.pokedroid.models.PersonalPokemon;
 import it.pokefundroid.pokedroid.models.Pokemon;
 import it.pokefundroid.pokedroid.utils.StaticClass;

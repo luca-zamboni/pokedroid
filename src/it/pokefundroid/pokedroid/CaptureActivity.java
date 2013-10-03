@@ -3,26 +3,34 @@ package it.pokefundroid.pokedroid;
 import java.io.IOException;
 
 import it.pokefundroid.pokedroid.models.PersonalPokemon;
+import it.pokefundroid.pokedroid.models.PersonalPokemon.PokemonSex;
 import it.pokefundroid.pokedroid.models.Pokemon;
 import it.pokefundroid.pokedroid.viewUtils.ImageAdapter;
+import it.pokefundroid.pokedroid.viewUtils.ParcelableMonster;
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 public class CaptureActivity extends Activity {
 
 	public static final String PASSED_BACKGROUND_KEY = "background";
-	public static final String PASSED_WILD_ID_KEY = "wildID";
+	public static final String PASSED_WILD_MONSTER_KEY = "wildMonster";
+	
+	public static final String RESPONSE_KEY= "captureResponse";
 
 	private Bitmap mBitmapBackground;
 	private ImageView mBackground;
 	private ImageView mWildPokemon;
 	private ImageView mMyPokemon;
 	private Button mCapture;
+	private ParcelableMonster pm;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -39,9 +47,20 @@ public class CaptureActivity extends Activity {
 
 			@Override
 			public void onClick(View v) {
+				int sex = (int) ((Math.random()*3)+1);
+				PokemonSex realSex;
+				if(sex ==1)
+					realSex = PokemonSex.MALE;
+				else if(sex == 2)
+					realSex = PokemonSex.FEMALE;
+				else
+					realSex = PokemonSex.GENDERLESS;
 				PersonalPokemon pkmn = new PersonalPokemon(Integer
-						.parseInt(mWildPokemon.getTag().toString()), "Lol", 0, 46, 45, 13);
+						.parseInt(pm.getId()), "Lol", realSex, pm.getLocation()[0],pm.getLocation()[1], 13);
 				pkmn.saveOnDatabase();
+				
+				//TODO no string!
+				exit("Captured!");
 			}
 		});
 
@@ -68,11 +87,10 @@ public class CaptureActivity extends Activity {
 	}
 
 	private void setWildPokemon(Bundle extras) {
-		String id = extras.getString(PASSED_WILD_ID_KEY);
+		this.pm = (ParcelableMonster)extras.getParcelable(PASSED_WILD_MONSTER_KEY);
 		try {
 			mWildPokemon.setImageBitmap(BitmapFactory.decodeStream(getAssets()
-					.open(ImageAdapter.getPokemonFilename(id))));
-			mWildPokemon.setTag(id);
+					.open(ImageAdapter.getPokemonFilename(pm.getId()))));
 		} catch (IOException e) {
 			// TODO nothing for now
 		}
@@ -83,6 +101,13 @@ public class CaptureActivity extends Activity {
 		mBitmapBackground = BitmapFactory.decodeByteArray(byteArray, 0,
 				byteArray.length);
 		mBackground.setImageBitmap(mBitmapBackground);
+	}
+	
+	private void exit(String response){
+		Intent i = new Intent(this, CaptureActivity.class);
+		i.putExtra(RESPONSE_KEY,response);
+		setResult(RESULT_OK, i);
+		this.finish();
 	}
 
 }
