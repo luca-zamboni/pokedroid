@@ -21,8 +21,8 @@ public class CombatUtils {
 		int power = move.getPower();
 		double nature = 1.0;
 		double additional = 1.0;
-		int attack =(int) ((((15.0+2.0*atk.getBaseAtk()+0.0/4)*atk.getLevel())/100+5)*nature);
-		int defence=(int) ((((15.0+2.0*def.getBaseDef()+0.0/4)*def.getLevel())/100+5)*nature);
+		int attack = (int) ((((15+2*atk.getBaseAtk()+0/4)*atk.getLevel())/100+5)* nature);
+		int defence= (int) ((((15+2*def.getBaseDef()+0/4)*def.getLevel())/100+5)* nature);
 		
 		finalDamage = (int) ((effectivness*randomNumber*stab*additional/50)*(attack*power*0.02*
 				(atk.getLevel()/5+1)/defence+1));

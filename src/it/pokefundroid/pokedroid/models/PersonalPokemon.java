@@ -5,6 +5,7 @@ import it.pokefundroid.pokedroid.utils.BaseHelper;
 import it.pokefundroid.pokedroid.utils.StaticClass;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import android.database.Cursor;
 import android.util.Log;
@@ -18,15 +19,25 @@ public class PersonalPokemon extends Pokemon {
 	private int found_y;
 	private int level;
 	
+	//personal ev of the pokemon initialized to 0
+	private int hpEv = 0;
+	private int atkEv = 0;
+	private int defEv = 0;
+	private int sAtkEv = 0;
+	private int sDefEv = 0;
+	private int spdEv = 0;
+	
 
 	public PersonalPokemon(int id,String my_name, int sex, int found_x, int found_y, int level) {
 		super(id);
+		
 		this.id = id;
 		this.my_name = my_name;
 		this.sex = sex;
 		this.found_x = found_x;
 		this.found_y = found_y;
-		this.level = 20;
+		this.level = 20;		
+		
 	}
 
 	public void saveOnDatabase() {
@@ -48,6 +59,31 @@ public class PersonalPokemon extends Pokemon {
 		
 		StaticClass.dbpoke.executeSQL(insertPersonalPokemon);
 		
+	}
+	
+	public int attack(PersonalPokemon defender, Move move) {
+		PersonalPokemon atk = this;
+		PersonalPokemon def = defender;
+		
+		//TODO if to change about the type of the move (eg. status, special, phisical)
+		//damage case
+		int finalDamage = 0;
+		double rawDamage;
+		int randomNumber = (new Random()).nextInt(26)+85;
+		double effectivness = 1.0;
+		double stab = (atk.getFirstType()==move.getType() || atk.getSecndType() == move.getType()) ? 1.5 : 1.0;
+		int power = move.getPower();
+		double nature = 1.0;
+		double additional = 1.0;
+		
+		int attack = atk.getAttack();
+		int defence= def.getDefence();
+		
+		//damage formula
+		finalDamage = (int) ((effectivness*randomNumber*stab*additional/50)*(attack*power*0.02*
+				(atk.getLevel()/5+1)/defence+1));
+		
+		return finalDamage;
 	}
 
 	public String getMy_name() {
@@ -75,6 +111,30 @@ public class PersonalPokemon extends Pokemon {
 
 	public int getFound_y() {
 		return found_y;
+	}
+	
+	public int getHp() {
+		return (int) ((((15+2*this.getBaseHp()+0/4)*this.getLevel())/100+5));
+	}
+	
+	public int getAttack() {
+		return (int) ((((15+2*this.getBaseAtk()+0/4)*this.getLevel())/100+5));
+	}
+	
+	public int getDefence() {
+		return (int) ((((15+2*this.getBaseDef()+0/4)*this.getLevel())/100+5));
+	}
+	
+	public int getSpecialAttack() {
+		return (int) ((((15+2*this.getBaseSAtk()+0/4)*this.getLevel())/100+5));
+	}
+	
+	public int getSpecialDefence() {
+		return (int) ((((15+2*this.getBaseSDef()+0/4)*this.getLevel())/100+5));
+	}
+	
+	public int getSpeed() {
+		return (int) ((((15+2*this.getBaseSpd()+0/4)*this.getLevel())/100+5));
 	}
 	
 	///// static metod
