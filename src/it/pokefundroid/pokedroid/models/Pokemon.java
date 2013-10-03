@@ -4,6 +4,7 @@ import it.pokefundroid.pokedroid.utils.StaticClass;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Random;
 
 import android.content.Context;
 import android.content.res.AssetManager;
@@ -15,15 +16,25 @@ public class Pokemon {
 	private int id;
 	private String name; 
 	
+	//basic types of the pokemon
 	private int firstType;
 	private int secndType;
 	
+	//base stats of the pokemon
 	private short baseHp;
 	private short baseAtk;
 	private short baseDef;
 	private short baseSAtk;
 	private short baseSDef;
 	private short baseSpd;
+	
+	//ev yield by the pokemon
+	private short hpYield;
+	private short atkYield;
+	private short defYield;
+	private short spAtkYield;
+	private short spDefYield;
+	private short spdYield;
 	
 	public final static int NUMBER_POKEMON = 151; 
 	
@@ -103,6 +114,8 @@ public class Pokemon {
 	public Pokemon(int id){
 		this.id = id;
 		this.name = StaticClass.dbpoke.oneRowOnColumnQuery("pokemon_species", "identifier", "id="+id);
+		
+		//get base stats from the db
 		this.baseHp = Short.parseShort(StaticClass.dbpoke.oneRowOnColumnQuery("pokemon_stats", "base_stat", 
 				"pokemon_id="+id+" and stat_id="+HEALTPOINT));
 		this.baseAtk = Short.parseShort(StaticClass.dbpoke.oneRowOnColumnQuery("pokemon_stats", "base_stat", 
@@ -115,6 +128,20 @@ public class Pokemon {
 				"pokemon_id="+id+" and stat_id="+SPDEFENCE));
 		this.baseSpd = Short.parseShort(StaticClass.dbpoke.oneRowOnColumnQuery("pokemon_stats", "base_stat", 
 				"pokemon_id="+id+" and stat_id="+SPEED)); 
+		
+		this.hpYield = Short.parseShort(StaticClass.dbpoke.oneRowOnColumnQuery("pokemon_stats", "effort", 
+				"pokemon_id="+id+" and stat_id="+HEALTPOINT));
+		this.atkYield = Short.parseShort(StaticClass.dbpoke.oneRowOnColumnQuery("pokemon_stats", "effort", 
+				"pokemon_id="+id+" and stat_id="+ATTACK));
+		this.defYield = Short.parseShort(StaticClass.dbpoke.oneRowOnColumnQuery("pokemon_stats", "effort", 
+				"pokemon_id="+id+" and stat_id="+DEFENCE));
+		this.spAtkYield = Short.parseShort(StaticClass.dbpoke.oneRowOnColumnQuery("pokemon_stats", "effort", 
+				"pokemon_id="+id+" and stat_id="+SPATTACK));
+		this.spDefYield = Short.parseShort(StaticClass.dbpoke.oneRowOnColumnQuery("pokemon_stats", "effort", 
+				"pokemon_id="+id+" and stat_id="+SPDEFENCE));
+		this.spdYield = Short.parseShort(StaticClass.dbpoke.oneRowOnColumnQuery("pokemon_stats", "effort", 
+				"pokemon_id="+id+" and stat_id="+SPEED)); 
+		
 		//TODO query to take the double pkmn type 0 isn't a type id: no type id
 		this.firstType = 0; 
 		this.secndType = 0;
@@ -158,6 +185,30 @@ public class Pokemon {
 
 	public int getSecndType() {
 		return secndType;
+	}
+
+	public short getHpYield() {
+		return hpYield;
+	}
+
+	public short getAtkYield() {
+		return atkYield;
+	}
+
+	public short getDefYield() {
+		return defYield;
+	}
+
+	public short getSpAtkYield() {
+		return spAtkYield;
+	}
+
+	public short getSpDefYield() {
+		return spDefYield;
+	}
+
+	public short getSpdYield() {
+		return spdYield;
 	}
 	
 }

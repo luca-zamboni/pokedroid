@@ -18,11 +18,11 @@ import android.widget.ImageView;
 public class ImageAdapter extends BaseAdapter {
 	
 	public interface IPokemonSelection {
-		public void onPokemonSelected(String id);
+		public void onPokemonSelected(ParcelableMonster id);
 	}
 
 	private Context mContext;
-	private List<String> mPokemonsIDs;
+	private List<ParcelableMonster> mPokemonsIDs;
 	private IPokemonSelection inter;
 
 	public ImageAdapter(IPokemonSelection inter,Context c, List pokemonsIDs) {
@@ -60,7 +60,7 @@ public class ImageAdapter extends BaseAdapter {
 		try {
 			imageView.setImageBitmap(BitmapFactory.decodeStream(mContext
 					.getAssets().open(
-							getPokemonFilename(mPokemonsIDs.get(position)))));
+							getPokemonFilename(mPokemonsIDs.get(position).getId()))));
 		} catch (IOException e) {
 			imageView.setImageResource(R.drawable.creature_6);
 		}

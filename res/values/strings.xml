@@ -26,5 +26,6 @@
     <string name="time_finished_msg">We are sorry, our Jinxes can\'t locate you.</string>
     <string name="locating_progress_title">Where are you?</string>
     <string name="locating_progress_msg">Our Jynxes are trying to locate you &#8230;</string>
+    <string name="capture">Catch it!</string>
 
 </resources>
