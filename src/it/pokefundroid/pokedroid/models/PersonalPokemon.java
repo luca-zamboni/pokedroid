@@ -186,6 +186,8 @@ public class PersonalPokemon extends Pokemon {
 				realSex = PokemonSex.GENDERLESS;
 			found_x = c.getInt(c.getColumnIndex(BaseHelper.FOUND_X));
 			found_y = c.getInt(c.getColumnIndex(BaseHelper.FOUND_Y));
+			
+			
 			//TODO remove hardcoded
 			mPokemon.add(new PersonalPokemon(id, my_name, realSex, found_x, found_y, 20));
 		}

@@ -27,5 +27,14 @@
     <string name="locating_progress_title">Where are you?</string>
     <string name="locating_progress_msg">Our Jynxes are trying to locate you &#8230;</string>
     <string name="capture">Catch it!</string>
+    
+    <!-- Dialog poke stat viewver -->
+    <string name="title_dialog_viewstatpoke">Pokemon Stats</string>
+    <string name="hp">hp</string>
+    <string name="att">Attak</string>
+    <string name="def">Defense</string>
+    <string name="spatt">S. Attak</string>
+    <string name="spdef">S. Defense</string>
+    <string name="speed">Speed</string>
 
 </resources>
