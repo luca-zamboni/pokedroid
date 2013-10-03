@@ -33,6 +33,13 @@ public class BaseHelper extends SQLiteOpenHelper{
     public static final String FOUND_X = "found_coordinate_x";
     public static final String FOUND_Y = "found_coordinate_y";
     public static final String LEVEL = "level";
+    public static final String HPEV = "hpEv";
+    public static final String ATKEV = "atkEv";
+    public static final String DEFEV = "defEv";
+    public static final String SATKEV = "sAtkEv";
+    public static final String SDEFEV = "sDefEv";
+    public static final String SPDEV = "spdEv";
+	
     
     
     ///// create table my pokemon ..... estarna al mega dump scaricato da internet
@@ -42,7 +49,14 @@ public class BaseHelper extends SQLiteOpenHelper{
     		MY_NAME +" text null," +
     		SEX+" integer not null," +
     		FOUND_X + " integer null, " +
-    		FOUND_Y + " integer null);";
+    		FOUND_Y + " integer null," +
+			HPEV + " short not null," +
+			ATKEV + " short not null," +
+			DEFEV + " short not null," +
+			SATKEV + " short not null," +
+			SDEFEV + " short not null," +
+			SPDEV + " short not null" +
+					");";
  
     public BaseHelper(Context context) {
     	super(context, DB_NAME, null, 1);
@@ -56,13 +70,26 @@ public class BaseHelper extends SQLiteOpenHelper{
     	createMyTable();
     }	
     
-    public String oneRowOnColumnQuery(String tableName,String columns,String where){
+    public String oneRowOnColumnQuery(String tableName,String column,String where){
     	openDataBase();
-    	Cursor c = dbpoke.rawQuery("select "+ columns +" from "+ tableName +" where " + where, null);
+    	Cursor c = dbpoke.rawQuery("select "+ column +" from "+ tableName +" where " + where, null);
     	c.moveToFirst();
-    	String s = c.getString(c.getColumnIndex(columns));
+    	String s = "";
+    	s = c.getString(c.getColumnIndex(column));
     	close();
     	return s;
+    }
+    
+    public ArrayList<String> multiRawOnColumnQuery(String tableName,String column,String where){
+    	
+    	ArrayList<String> array = new ArrayList<String>();
+    	openDataBase();
+    	Cursor c = dbpoke.rawQuery("select "+ column +" from "+ tableName +" where " + where, null);
+    	while(c.moveToNext()){
+    		array.add(c.getString(c.getColumnIndex(column)));
+    	}
+    	close();
+    	return array;
     }
     
     public String[] oneRowMultiColumnQuery(String tableName,String[] columns,String where){
