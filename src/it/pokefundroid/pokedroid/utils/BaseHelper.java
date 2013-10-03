@@ -60,7 +60,8 @@ public class BaseHelper extends SQLiteOpenHelper{
     	openDataBase();
     	Cursor c = dbpoke.rawQuery("select "+ columns +" from "+ tableName +" where " + where, null);
     	c.moveToFirst();
-    	String s = c.getString(c.getColumnIndex(columns));
+    	String s = "";
+    	s = c.getString(c.getColumnIndex(columns));
     	close();
     	return s;
     }

@@ -45,7 +45,7 @@ public class PersonalPokemon extends Pokemon {
 				found_y +"," +
 				"'"+my_name +"'); "  ;
 		
-		//Log.e("asd", insertPersonalPokemon);
+		Log.e("asd", insertPersonalPokemon);
 		
 		StaticClass.dbpoke.executeSQL(insertPersonalPokemon);
 		
@@ -98,7 +98,6 @@ public class PersonalPokemon extends Pokemon {
 		Cursor c = StaticClass.dbpoke.dbpoke.rawQuery("SELECT * FROM "+BaseHelper.TABLE_PERSONAL_POKEMON, null);
 		int id,sex,found_x,found_y;
 		String my_name;
-		c.moveToFirst();
 		ArrayList<PersonalPokemon> mPokemon = new ArrayList<PersonalPokemon>();
 		while(c.moveToNext()){
 			id = c.getInt(c.getColumnIndex(BaseHelper.BASE_POKEMON_ID));
