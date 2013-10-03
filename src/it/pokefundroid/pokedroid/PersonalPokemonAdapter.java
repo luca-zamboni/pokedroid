@@ -2,17 +2,12 @@ package it.pokefundroid.pokedroid;
 
 import it.pokefundroid.pokedroid.models.PersonalPokemon;
 import it.pokefundroid.pokedroid.models.Pokemon;
-import it.pokefundroid.pokedroid.utils.StaticClass;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,10 +39,17 @@ public class PersonalPokemonAdapter extends ArrayAdapter<PersonalPokemon> {
 				.findViewById(R.id.pokemon_picture);
 		TextView pokemonSex = (TextView) rowView
 				.findViewById(R.id.pokemon_sex);
+		TextView pokemonLevel = (TextView) rowView
+				.findViewById(R.id.pokemon_level);
 		
+
 		//// set text of pokemon
 		pokemonName.setText(pPokemon.get(position).getName());
 		pokemonName.setTextColor(Color.BLACK);
+		
+		//// set level of pokemon
+		pokemonLevel.setText("lv. "+pPokemon.get(position).getLevel());
+		pokemonLevel.setTextColor(Color.BLACK); 
 		
 		//// set image of pokemon
 		int id = pPokemon.get(position).getId();
