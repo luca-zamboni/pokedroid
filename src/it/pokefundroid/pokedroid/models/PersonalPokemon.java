@@ -6,6 +6,7 @@ import it.pokefundroid.pokedroid.utils.StaticClass;
 
 import java.util.ArrayList;
 
+import android.content.Context;
 import android.database.Cursor;
 import android.util.Log;
 
@@ -90,8 +91,9 @@ public class PersonalPokemon extends Pokemon {
 		return s;
 	}
 	
-	public static ArrayList<PersonalPokemon> getAllPersonaPokemon(){
-		
+	public static ArrayList<PersonalPokemon> getAllPersonaPokemon(Context ctx){
+		if(StaticClass.dbpoke==null)
+			StaticClass.openBatabaseConection(ctx.getApplicationContext());
 		StaticClass.dbpoke.openDataBase();
 		Cursor c = StaticClass.dbpoke.dbpoke.rawQuery("SELECT * FROM "+BaseHelper.TABLE_PERSONAL_POKEMON, null);
 		int id,sex,found_x,found_y;

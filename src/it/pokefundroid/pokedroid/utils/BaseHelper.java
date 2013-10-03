@@ -53,7 +53,7 @@ public class BaseHelper extends SQLiteOpenHelper{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-    	openDataBase();
+    	createMyTable();
     }	
     
     public String oneRowOnColumnQuery(String tableName,String columns,String where){
