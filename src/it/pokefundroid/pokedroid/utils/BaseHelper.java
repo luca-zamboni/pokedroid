@@ -56,14 +56,26 @@ public class BaseHelper extends SQLiteOpenHelper{
     	createMyTable();
     }	
     
-    public String oneRowOnColumnQuery(String tableName,String columns,String where){
+    public String oneRowOnColumnQuery(String tableName,String column,String where){
     	openDataBase();
-    	Cursor c = dbpoke.rawQuery("select "+ columns +" from "+ tableName +" where " + where, null);
+    	Cursor c = dbpoke.rawQuery("select "+ column +" from "+ tableName +" where " + where, null);
     	c.moveToFirst();
     	String s = "";
-    	s = c.getString(c.getColumnIndex(columns));
+    	s = c.getString(c.getColumnIndex(column));
     	close();
     	return s;
+    }
+    
+    public ArrayList<String> multiRawOnColumnQuery(String tableName,String column,String where){
+    	
+    	ArrayList<String> array = new ArrayList<String>();
+    	openDataBase();
+    	Cursor c = dbpoke.rawQuery("select "+ column +" from "+ tableName +" where " + where, null);
+    	while(c.moveToNext()){
+    		array.add(c.getString(c.getColumnIndex(column)));
+    	}
+    	close();
+    	return array;
     }
     
     public String[] oneRowMultiColumnQuery(String tableName,String[] columns,String where){
