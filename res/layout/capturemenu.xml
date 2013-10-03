@@ -6,7 +6,7 @@
     android:padding="@dimen/activity_vertical_margin" >
 
     <Button
-        android:id="@+id/button1"
+        android:id="@+id/capture_captureBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"

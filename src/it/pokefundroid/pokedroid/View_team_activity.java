@@ -20,7 +20,7 @@ public class View_team_activity extends Activity {
 		setTitle("Your Team");
 		
 		poke_list = (ListView) findViewById(R.id.pokemon_list_view);
-		ArrayList<PersonalPokemon> poke = PersonalPokemon.getAllPersonaPokemon();
+		ArrayList<PersonalPokemon> poke = PersonalPokemon.getAllPersonaPokemon(this);
 		PersonalPokemonAdapter adapter = new PersonalPokemonAdapter(getApplicationContext(),poke);
 		poke_list.setAdapter(adapter);
 		
