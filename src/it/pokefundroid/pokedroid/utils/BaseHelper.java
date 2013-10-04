@@ -48,8 +48,8 @@ public class BaseHelper extends SQLiteOpenHelper{
     		BASE_POKEMON_ID + " integer not null," +
     		MY_NAME +" text null," +
     		SEX+" integer not null," +
-    		FOUND_X + " integer null, " +
-    		FOUND_Y + " integer null," +
+    		FOUND_X + " double null, " +
+    		FOUND_Y + " double null," +
 			HPEV + " short not null," +
 			ATKEV + " short not null," +
 			DEFEV + " short not null," +
