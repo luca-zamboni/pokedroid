@@ -8,6 +8,7 @@
     <string name="title_activity_menu_">Menu</string>
     <string name="zaino">Backpack</string>
     <string name="pokemon">Pokemon</string>
+    <string name="exchange">Exchange</string>
     <string name="explore">Explore</string>
     <string name="pcdibill">Bill\'s PC</string>
     <string name="title_activity_view_team_activity">View team</string>
@@ -27,7 +28,7 @@
     <string name="locating_progress_title">Where are you?</string>
     <string name="locating_progress_msg">Our Jynxes are trying to locate you &#8230;</string>
     <string name="capture">Catch it!</string>
-    
+
     <!-- Dialog poke stat viewver -->
     <string name="title_dialog_viewstatpoke">Pokemon Stats</string>
     <string name="hp">hp</string>
@@ -36,5 +37,6 @@
     <string name="spatt">S. Attak</string>
     <string name="spdef">S. Defense</string>
     <string name="speed">Speed</string>
+    <string name="title_activity_exchange_activity">Exchange_activity</string>
 
 </resources>
