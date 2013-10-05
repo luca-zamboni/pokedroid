@@ -53,6 +53,12 @@ public class PersonalPokemon extends Pokemon {
 				BaseHelper.SEX+"," +
 				BaseHelper.FOUND_X+"," +
 				BaseHelper.FOUND_Y+"," +
+				BaseHelper.HPEV+"," +
+				BaseHelper.ATKEV+"," +
+				BaseHelper.DEFEV+"," +
+				BaseHelper.SATKEV+"," +
+				BaseHelper.SDEFEV+"," +
+				BaseHelper.SPDEV+"," +
 				BaseHelper.MY_NAME+" ) ";
 		int sex;
 		if(this.sex == PokemonSex.MALE)
@@ -66,6 +72,12 @@ public class PersonalPokemon extends Pokemon {
 				sex +"," +
 				found_x +"," +
 				found_y +"," +
+				hpEv +"," +
+				atkEv +"," +
+				defEv +"," +
+				sAtkEv +"," +
+				sDefEv +"," +
+				spdEv +"," +
 				"'"+my_name +"'); "  ;
 		
 		Log.e("asd", insertPersonalPokemon);
