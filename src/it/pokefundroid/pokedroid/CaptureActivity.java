@@ -1,6 +1,7 @@
 package it.pokefundroid.pokedroid;
 
 import java.io.IOException;
+import java.util.List;
 
 import it.pokefundroid.pokedroid.models.PersonalPokemon;
 import it.pokefundroid.pokedroid.models.PersonalPokemon.PokemonSex;
@@ -31,6 +32,7 @@ public class CaptureActivity extends Activity {
 	private ImageView mMyPokemon;
 	private Button mCapture;
 	private ParcelableMonster pm;
+	private List<PersonalPokemon> mTeam;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -47,14 +49,8 @@ public class CaptureActivity extends Activity {
 
 			@Override
 			public void onClick(View v) {
-				int sex = (int) ((Math.random()*3)+1);
-				PokemonSex realSex;
-				if(sex ==1)
-					realSex = PokemonSex.MALE;
-				else if(sex == 2)
-					realSex = PokemonSex.FEMALE;
-				else
-					realSex = PokemonSex.GENDERLESS;
+				int sex = (int) ((Math.random()*2)+1);
+				PokemonSex realSex =PersonalPokemon.intToGender(sex);
 				PersonalPokemon pkmn = new PersonalPokemon(Integer
 						.parseInt(pm.getId()), "Lol", realSex, pm.getFoundX(),pm.getFoundY(), 13);
 				pkmn.saveOnDatabase();
@@ -63,7 +59,7 @@ public class CaptureActivity extends Activity {
 				exit("Captured!");
 			}
 		});
-
+		mTeam = PersonalPokemon.getAllPersonaPokemon(this);
 		Bundle extras = getIntent().getExtras();
 		setBackground(extras);
 		setWildPokemon(extras);
@@ -71,11 +67,17 @@ public class CaptureActivity extends Activity {
 	}
 
 	private void setMyPokemon(Bundle extras) {
-		// TODO get him from the team class
-		int id = 7;
+		// TODO get him from the team classe
+		if(mTeam.isEmpty()){
+			//TODO DEBUG
+	    	PersonalPokemon first = new PersonalPokemon(4, "Charmy", PokemonSex.MALE, 45, 46, 5);
+	    	first.saveOnDatabase();
+	    	mTeam = PersonalPokemon.getAllPersonaPokemon(this);
+		}
+		PersonalPokemon pp = mTeam.get((int)Math.random()*mTeam.size());
 		try {
 			mMyPokemon.setImageBitmap(BitmapFactory.decodeStream(getAssets()
-					.open(getRearPokemonFilename("1"))));
+					.open(getRearPokemonFilename(pp.getId()+""))));
 		} catch (IOException e) {
 			// TODO nothing for now
 		}

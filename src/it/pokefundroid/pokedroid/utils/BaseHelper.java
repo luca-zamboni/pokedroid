@@ -1,5 +1,8 @@
 package it.pokefundroid.pokedroid.utils;
 
+import it.pokefundroid.pokedroid.models.PersonalPokemon;
+import it.pokefundroid.pokedroid.models.PersonalPokemon.PokemonSex;
+
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -134,6 +137,8 @@ public class BaseHelper extends SQLiteOpenHelper{
     	dbpoke.execSQL(CREATE_MY_POKEMON_TABLE);
     	dbpoke.
     	close();
+    	
+    	
     }
     /**
      * Check if the database already exist to avoid re-copying the file each time you open the application.
