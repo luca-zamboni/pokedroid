@@ -68,8 +68,7 @@ public class AugmentedReality_Activity extends FragmentActivity implements
 		mBeyondarGLSurfaceView = (BeyondarGLSurfaceView) findViewById(R.id.customGLSurface);
 		mCameraView = (CameraView) findViewById(R.id.camera);
 		// TODO DEBUG
-		// mLocationType = LocationType.GPS;
-		mLocationType = LocationType.GPS;
+		mLocationType = LocationType.NETWORK;
 		// We create the world and set it in to the view
 		createWorld();
 		mBeyondarGLSurfaceView.setWorld(mWorld);
