@@ -1,21 +1,15 @@
 package it.pokefundroid.pokedroid.viewUtils;
 
 import it.pokefundroid.pokedroid.R;
-import it.pokefundroid.pokedroid.R.id;
-import it.pokefundroid.pokedroid.R.layout;
 import it.pokefundroid.pokedroid.models.PersonalPokemon;
 import it.pokefundroid.pokedroid.models.Pokemon;
-import it.pokefundroid.pokedroid.utils.StaticClass;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,18 +41,27 @@ public class PersonalPokemonAdapter extends ArrayAdapter<PersonalPokemon> {
 				.findViewById(R.id.pokemon_picture);
 		TextView pokemonSex = (TextView) rowView
 				.findViewById(R.id.pokemon_sex);
+		TextView pokemonLevel = (TextView) rowView
+				.findViewById(R.id.pokemon_level);
 		
+		final PersonalPokemon mPoke = pPokemon.get(position);
+		
+
 		//// set text of pokemon
-		pokemonName.setText(pPokemon.get(position).getName());
+		pokemonName.setText(mPoke.getName());
 		pokemonName.setTextColor(Color.BLACK);
 		
+		//// set level of pokemon
+		pokemonLevel.setText("lv. "+mPoke.getLevel());
+		pokemonLevel.setTextColor(Color.BLACK); 
+		
 		//// set image of pokemon
-		int id = pPokemon.get(position).getId();
+		int id = mPoke.getId();
 		Bitmap pictures  = Pokemon.getImagBitmap(context, id);
 		pokemon_pictures.setImageBitmap(pictures);
 		
 		/// set sex of pokemon
-		String sexChar = PersonalPokemon.getSexAsci(pPokemon.get(position).getSex());
+		String sexChar = PersonalPokemon.getSexAsci(mPoke.getSex());
 		pokemonSex.setText(sexChar);
 		if(sexChar.equals("♀")){
 			pokemonSex.setTextColor(Color.MAGENTA);
@@ -68,6 +71,31 @@ public class PersonalPokemonAdapter extends ArrayAdapter<PersonalPokemon> {
 			}
 		}
 		
+		rowView.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				LayoutInflater inflate = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+				View m = inflate.inflate(R.layout.dialog_stat_viewer, null, false);
+				AlertDialog.Builder builder = new AlertDialog.Builder(context);
+				TextView thp = (TextView) m.findViewById(R.id.poke_hp);
+				TextView tatt = (TextView) m.findViewById(R.id.poke_attak);
+				TextView tdef = (TextView) m.findViewById(R.id.poke_defense);
+				TextView tspatt = (TextView) m.findViewById(R.id.poke_spattak);
+				TextView tspdef = (TextView) m.findViewById(R.id.poke_spdefense);
+				TextView tspeed = (TextView) m.findViewById(R.id.poke_speed);
+				
+				thp.setText(""+mPoke.getHp());
+				tatt.setText(""+mPoke.getAttack());
+				tdef.setText(""+mPoke.getDefence());
+				tspatt.setText(""+mPoke.getAtkYield());
+				tspdef.setText(""+mPoke.getSpDefYield());
+				tspeed.setText(""+mPoke.getSpeed());
+				
+				builder.setTitle(R.string.title_dialog_viewstatpoke);
+				builder.setView(m);
+				builder.create().show();
+			}
+		});
 
 		return rowView;
 	}

@@ -32,7 +32,7 @@ public class LocationUtils {
 	private ILocation mLocationInterface;
 	private LocationType mType;
 	private long mTimeInterval = 1000;
-	private float mMinDistance = 50;
+	private float mMinDistance;
 	private Timer mTimer;
 
 	public LocationUtils(Context ctx, ILocation ilocation, LocationType type) {
@@ -103,7 +103,7 @@ public class LocationUtils {
 	}
 
 	private void initializeLocationService(Context ctx) {
-		mLocationManager = (LocationManager) ctx
+		mLocationManager = (LocationManager) ctx.getApplicationContext()
 				.getSystemService(Context.LOCATION_SERVICE);
 		mLocationListener = new MyLocationListener();
 		activateUpdates();
@@ -123,11 +123,12 @@ public class LocationUtils {
 
 	private void activateUpdates() {
 		if (mType == LocationType.NETWORK) {
-
+			mMinDistance=50;
 			mLocationManager.requestLocationUpdates(
 					LocationManager.NETWORK_PROVIDER, mTimeInterval,
 					mMinDistance, mLocationListener);
 		} else {
+			mMinDistance=15;
 			mLocationManager.requestLocationUpdates(
 					LocationManager.GPS_PROVIDER, mTimeInterval, mMinDistance,
 					mLocationListener);

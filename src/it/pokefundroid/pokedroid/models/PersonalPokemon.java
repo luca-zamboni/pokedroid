@@ -53,13 +53,13 @@ public class PersonalPokemon extends Pokemon {
 				BaseHelper.SEX+"," +
 				BaseHelper.FOUND_X+"," +
 				BaseHelper.FOUND_Y+"," +
-				BaseHelper.MY_NAME+"," +
 				BaseHelper.HPEV+"," +
 				BaseHelper.ATKEV+"," +
 				BaseHelper.DEFEV+"," +
 				BaseHelper.SATKEV+"," +
 				BaseHelper.SDEFEV+"," +
-				BaseHelper.SPDEV+" ) ";
+				BaseHelper.SPDEV+"," +
+				BaseHelper.MY_NAME+" ) ";
 		int sex;
 		if(this.sex == PokemonSex.MALE)
 			sex=1;
@@ -72,9 +72,13 @@ public class PersonalPokemon extends Pokemon {
 				sex +"," +
 				found_x +"," +
 				found_y +"," +
-				"'"+my_name +"', "+
-				hpEv +", " +atkEv+", " +defEv+", " +sAtkEv+", "+sDefEv+", "+
-				spdEv+"); ";
+				hpEv +"," +
+				atkEv +"," +
+				defEv +"," +
+				sAtkEv +"," +
+				sDefEv +"," +
+				spdEv +"," +
+				"'"+my_name +"'); "  ;
 		
 		Log.e("asd", insertPersonalPokemon);
 		
@@ -194,6 +198,8 @@ public class PersonalPokemon extends Pokemon {
 				realSex = PokemonSex.GENDERLESS;
 			found_x = c.getInt(c.getColumnIndex(BaseHelper.FOUND_X));
 			found_y = c.getInt(c.getColumnIndex(BaseHelper.FOUND_Y));
+			
+			
 			//TODO remove hardcoded
 			mPokemon.add(new PersonalPokemon(id, my_name, realSex, found_x, found_y, 20));
 		}
