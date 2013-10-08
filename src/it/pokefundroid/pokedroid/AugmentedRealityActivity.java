@@ -1,4 +1,3 @@
-
 package it.pokefundroid.pokedroid;
 
 import it.pokefundroid.pokedroid.models.PersonalPokemon.PokemonSex;
@@ -42,7 +41,7 @@ import com.beyondar.android.world.World;
 import com.beyondar.android.world.objects.BeyondarObject;
 import com.beyondar.android.world.objects.GeoObject;
 
-public class AugmentedReality_Activity extends FragmentActivity implements
+public class AugmentedRealityActivity extends FragmentActivity implements
 		OnARTouchListener, ILocation, IPictureCallback, IPokemonSelection {
 
 	public static final String RESULTS = "Results";
@@ -54,8 +53,7 @@ public class AugmentedReality_Activity extends FragmentActivity implements
 	private World mWorld;
 	private Location mWorldCenter;
 	private LocationUtils mLocationUtils;
-	private LocationType mLocationType;
-
+	
 	private int CAPTURE_CODE = 1;
 
 	private ParcelableMonster mSelected;
@@ -69,8 +67,7 @@ public class AugmentedReality_Activity extends FragmentActivity implements
 
 		mBeyondarGLSurfaceView = (BeyondarGLSurfaceView) findViewById(R.id.customGLSurface);
 		mCameraView = (CameraView) findViewById(R.id.camera);
-		// TODO DEBUG
-		mLocationType = LocationType.NETWORK;
+
 		// We create the world and set it in to the view
 		createWorld();
 		mBeyondarGLSurfaceView.setWorld(mWorld);
@@ -84,7 +81,7 @@ public class AugmentedReality_Activity extends FragmentActivity implements
 	protected void onResume() {
 		super.onResume();
 		mBeyondarGLSurfaceView.onResume();
-		mLocationUtils = new LocationUtils(this, this, mLocationType);
+		mLocationUtils = new LocationUtils(this, this, LocationType.NETWORK);
 		// This is needed, sometimes pokemons are behind the camera...
 		mCameraView.setVisibility(View.VISIBLE);
 	}
@@ -95,7 +92,7 @@ public class AugmentedReality_Activity extends FragmentActivity implements
 		mBeyondarGLSurfaceView.onPause();
 		mLocationUtils.close();
 	}
-	
+
 	private void createWorld() {
 		mWorld = new World(this);
 
@@ -104,11 +101,11 @@ public class AugmentedReality_Activity extends FragmentActivity implements
 		mWorldCenter = new Location("world");
 		mWorldCenter.setLatitude(loc[0]);
 		mWorldCenter.setLongitude(loc[1]);
-		
-		//TODO DEBUG
-		Log.i(AugmentedReality_Activity.class.getName(), "accuracy: "+ loc[3]);
+
+		// TODO DEBUG
+		Log.i(AugmentedRealityActivity.class.getName(), "accuracy: " + loc[3]);
 		mWorldCenter.setAccuracy((float) loc[3]);
-		
+
 		setWorldAltitude(loc[2]);
 
 		mWorld.setLocation(mWorldCenter);
@@ -124,7 +121,7 @@ public class AugmentedReality_Activity extends FragmentActivity implements
 
 		for (int i = 0; i < many; i++) {
 
-			Location tmp = FindingUtilities.getLocation(loc[0], loc[1], loc[3]);
+			Location tmp = FindingUtilities.getRandomLocation(loc[0], loc[1], loc[3]);
 			//tmp.setAltitude(loc[2]);
 			int id = FindingUtilities.findInPosition(tmp.getLatitude(),
 					tmp.getLongitude());
@@ -133,12 +130,11 @@ public class AugmentedReality_Activity extends FragmentActivity implements
 				fillObj(go, id, tmp);
 				w.addBeyondarObject(go);
 			}
-
 		}
 	}
 
 	private void setWorldAltitude(double d) {
-		// DEBUG
+		// TODO DEBUG
 		// double teoalt= d-SharedPreferencesUtilities.getUserHeight(this)*2;
 		double teoalt = d;
 		mWorldCenter.setAltitude((teoalt > 0) ? teoalt : d);
@@ -160,8 +156,9 @@ public class AugmentedReality_Activity extends FragmentActivity implements
 		else
 			return "assets://pkm/pkfrlg" + id + ".png";
 	}
-	
-	private void showChoosePokemonDialog(ArrayList<ParcelableMonster> monstersIDs) {
+
+	private void showChoosePokemonDialog(
+			ArrayList<ParcelableMonster> monstersIDs) {
 		LayoutInflater inflater = getLayoutInflater();
 		View v = inflater.inflate(R.layout.dialog_choosepokemon, null, false);
 		GridView gv = (GridView) v.findViewById(R.id.dialog_pokemongridview);
@@ -174,7 +171,7 @@ public class AugmentedReality_Activity extends FragmentActivity implements
 
 	private void doAction(List<BeyondarObject> geoObjects) {
 		Iterator<BeyondarObject> iterator = geoObjects.iterator();
-		ArrayList<ParcelableMonster> outMonster= new ArrayList<ParcelableMonster>();
+		ArrayList<ParcelableMonster> outMonster = new ArrayList<ParcelableMonster>();
 		while (iterator.hasNext()) {
 			GeoObject geoObject = (GeoObject) iterator.next();
 			float[] results = new float[2];
@@ -187,8 +184,9 @@ public class AugmentedReality_Activity extends FragmentActivity implements
 			// }
 			if (results[0] <= FIGHT_PROXIMITY
 					* (mWorldCenter.getAccuracy() / 2)) {
-				ParcelableMonster pm = new ParcelableMonster(geoObject.getName(), "", geoObject.getLatitude(),
-						geoObject.getLongitude(),PokemonSex.FEMALE , 20);
+				ParcelableMonster pm = new ParcelableMonster(
+						geoObject.getName(), "", geoObject.getLatitude(),
+						geoObject.getLongitude(), PokemonSex.FEMALE, 20);
 				outMonster.add(pm);
 			}
 		}
@@ -202,7 +200,6 @@ public class AugmentedReality_Activity extends FragmentActivity implements
 			mCameraView.tackePicture(this);
 		}
 	}
-
 
 	@Override
 	public void onTouchARView(MotionEvent event,
@@ -259,8 +256,9 @@ public class AugmentedReality_Activity extends FragmentActivity implements
 		if (!mSelected.equals("")) {
 			Intent i = new Intent(this, CaptureActivity.class);
 			i.putExtra(CaptureActivity.PASSED_WILD_MONSTER_KEY, mSelected);
-			byte[] b =StaticClass.compressBitmap(StaticClass.fastBlur(picture, 3));
-			i.putExtra(CaptureActivity.PASSED_BACKGROUND_KEY,b);
+			byte[] b = StaticClass.compressBitmap(StaticClass.fastBlur(picture,
+					3));
+			i.putExtra(CaptureActivity.PASSED_BACKGROUND_KEY, b);
 			startActivityForResult(i, CAPTURE_CODE);
 			mSelected = null;
 		}
@@ -274,17 +272,16 @@ public class AugmentedReality_Activity extends FragmentActivity implements
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode,data);
-		if(resultCode == RESULT_OK){
-			if(requestCode == CAPTURE_CODE){
-				String response = data.getStringExtra(CaptureActivity.RESPONSE_KEY);
-				if(response!=null && response.trim().length()>0){
+		super.onActivityResult(requestCode, resultCode, data);
+		if (resultCode == RESULT_OK) {
+			if (requestCode == CAPTURE_CODE) {
+				String response = data
+						.getStringExtra(CaptureActivity.RESPONSE_KEY);
+				if (response != null && response.trim().length() > 0) {
 					Toast.makeText(this, response, Toast.LENGTH_SHORT).show();
 				}
 			}
 		}
 	}
-	
 
-	
 }

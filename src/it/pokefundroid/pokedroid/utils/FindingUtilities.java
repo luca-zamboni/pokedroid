@@ -108,7 +108,7 @@ public class FindingUtilities {
 		return ret;
 	}
 	
-	public static Location getLocation(double x0, double y0, double radius) {
+	public static Location getRandomLocation(double x0, double y0, double radius) {
 	    Random random = new Random();
 
 	    // Convert radius from meters to degrees

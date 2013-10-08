@@ -140,7 +140,7 @@ public class Menu_Activity extends Activity implements ILocation {
 		mProgressDialog.dismiss();
 		mLocationUtils.close();
 		Intent newActivity = new Intent(Menu_Activity.this,
-				AugmentedReality_Activity.class);
+				AugmentedRealityActivity.class);
 		newActivity.putExtra("loc",
 				new double[] { location.getLatitude(), location.getLongitude(),
 						location.getAltitude(), location.getAccuracy() });
@@ -179,7 +179,7 @@ public class Menu_Activity extends Activity implements ILocation {
 		if (resultCode == RESULT_OK) {
 			if (requestCode == AUGMENTED_REALITY_CODE) {
 				Serializable results = data
-						.getSerializableExtra(AugmentedReality_Activity.RESULTS);
+						.getSerializableExtra(AugmentedRealityActivity.RESULTS);
 				if (results.equals(ErrorType.NOT_ENOUGH_ACCURACY)) {
 					displayErrors(R.string.not_enough_accuracy_title,
 							R.string.not_enough_accuracy);

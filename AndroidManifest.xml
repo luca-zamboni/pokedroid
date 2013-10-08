@@ -39,7 +39,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="it.pokefundroid.pokedroid.AugmentedReality_Activity"
+            android:name="it.pokefundroid.pokedroid.AugmentedRealityActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="landscape" >
         </activity>
