@@ -6,9 +6,11 @@ import java.io.InputStream;
 
 import android.content.Context;
 import android.content.res.AssetManager;
+import android.content.res.ColorStateList;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 
 public class StaticClass {
 	public static BaseHelper dbpoke;
@@ -16,7 +18,7 @@ public class StaticClass {
 	public static void openBatabaseConection(Context c) {
 		dbpoke = new BaseHelper(c);
 	}
-	
+
 	public static byte[] compressBitmap(Bitmap b) {
 		ByteArrayOutputStream bs = new ByteArrayOutputStream();
 		b.compress(Bitmap.CompressFormat.JPEG, 40, bs);
@@ -264,6 +266,15 @@ public class StaticClass {
 		bitmap.setPixels(pix, 0, w, 0, 0, w, h);
 
 		return (bitmap);
+	}
+
+	public static int getColorFromSexAsci(String sexChar) {
+		if (sexChar.equals("♀")) {
+			return Color.MAGENTA;
+		} else if (sexChar.equals("♂")) {
+			return Color.BLUE;
+		}
+		return Color.BLACK;
 	}
 
 }

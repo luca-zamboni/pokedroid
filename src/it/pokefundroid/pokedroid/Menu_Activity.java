@@ -1,6 +1,5 @@
 package it.pokefundroid.pokedroid;
 
-
 import it.pokefundroid.pokedroid.models.PersonalPokemon.PokemonSex;
 import it.pokefundroid.pokedroid.utils.LocationUtils;
 import it.pokefundroid.pokedroid.utils.LocationUtils.ErrorType;
@@ -26,7 +25,7 @@ import android.widget.Toast;
 public class Menu_Activity extends Activity implements ILocation {
 
 	private final int AUGMENTED_REALITY_CODE = 1;
-	private final int MAX_WAIT= 20;
+	private final int MAX_WAIT = 20;
 
 	private Button mViewPokemon;
 	private Button mExplore;
@@ -48,17 +47,18 @@ public class Menu_Activity extends Activity implements ILocation {
 						View_team_activity.class));
 			}
 		});
-		
+
 		mExchange = (Button) findViewById(R.id.button_exchange);
 		mExchange.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View arg0) {
-				Intent i = new Intent(Menu_Activity.this,Exchange_activity.class);
-				i.putExtra(Exchange_activity.PASSED_MONSTER_KEY, new ParcelableMonster("7", "chaR", 46, 46, PokemonSex.FEMALE, 23));
+				//TODO Debug
+				Intent i = new Intent(Menu_Activity.this, ExchangeActivity.class);
+				i.putExtra(ExchangeActivity.PASSED_MONSTER_KEY,
+						new ParcelableMonster("7", "MySweetSquirtle", 46, 46,
+								PokemonSex.FEMALE, 23));
 				startActivity(i);
-//				startActivity(new Intent(getApplicationContext(),
-//						BluetoothChat.class));
 			}
 		});
 
@@ -68,11 +68,11 @@ public class Menu_Activity extends Activity implements ILocation {
 			@Override
 			public void onClick(View v) {
 				createProgressDialog();
-				
-//				TODO DEBUG
-//				mLocationUtils = new LocationUtils(Menu_Activity.this,
-//						Menu_Activity.this);
-				
+
+				// TODO DEBUG
+				// mLocationUtils = new LocationUtils(Menu_Activity.this,
+				// Menu_Activity.this);
+
 				mLocationUtils = new LocationUtils(Menu_Activity.this,
 						Menu_Activity.this, LocationType.NETWORK);
 				mLocationUtils.setTimer(MAX_WAIT);
@@ -94,7 +94,6 @@ public class Menu_Activity extends Activity implements ILocation {
 		});
 
 	}
-
 
 	private void createProgressDialog() {
 		mProgressDialog = new ProgressDialog(this);
@@ -152,10 +151,11 @@ public class Menu_Activity extends Activity implements ILocation {
 	public void onErrorOccured(ErrorType ex, String provider) {
 		// TODO aviare un activity di errore. oppure
 		// chiedere all'utente di attivare il gpx ecc.
-		if (ex == ErrorType.TIME_FINISHED || ex == ErrorType.NOT_ENOUGH_ACCURACY) {
+		if (ex == ErrorType.TIME_FINISHED
+				|| ex == ErrorType.NOT_ENOUGH_ACCURACY) {
 			mProgressDialog.dismiss();
 			runOnUiThread(new Runnable() {
-				
+
 				@Override
 				public void run() {
 					displayErrors(R.string.not_enough_accuracy_title,
@@ -170,7 +170,7 @@ public class Menu_Activity extends Activity implements ILocation {
 	@Override
 	public void onStatusChanged(String provider, boolean isActive) {
 		// TODO a seconda dello stato riavviare
-		//Toast.makeText(this, provider + isActive, Toast.LENGTH_SHORT).show();
+		// Toast.makeText(this, provider + isActive, Toast.LENGTH_SHORT).show();
 	}
 
 	@Override
@@ -178,12 +178,12 @@ public class Menu_Activity extends Activity implements ILocation {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (resultCode == RESULT_OK) {
 			if (requestCode == AUGMENTED_REALITY_CODE) {
-				Serializable results = data.getSerializableExtra(AugmentedReality_Activity.RESULTS);
+				Serializable results = data
+						.getSerializableExtra(AugmentedReality_Activity.RESULTS);
 				if (results.equals(ErrorType.NOT_ENOUGH_ACCURACY)) {
 					displayErrors(R.string.not_enough_accuracy_title,
 							R.string.not_enough_accuracy);
-				}
-				else if( results.equals(ErrorType.TIME_FINISHED)){
+				} else if (results.equals(ErrorType.TIME_FINISHED)) {
 					displayErrors(R.string.time_finished_title,
 							R.string.time_finished_msg);
 				}

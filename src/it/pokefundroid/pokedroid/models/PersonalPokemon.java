@@ -159,7 +159,7 @@ public class PersonalPokemon extends Pokemon {
 	///// static metod
 
 	public static String getSexAsci(PokemonSex sex) {
-		String s = " ";
+		String s = " " ;
 		if(sex == PokemonSex.MALE){
 			s = "♀";
 		}else{

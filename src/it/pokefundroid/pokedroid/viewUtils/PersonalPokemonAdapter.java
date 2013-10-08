@@ -3,6 +3,7 @@ package it.pokefundroid.pokedroid.viewUtils;
 import it.pokefundroid.pokedroid.R;
 import it.pokefundroid.pokedroid.models.PersonalPokemon;
 import it.pokefundroid.pokedroid.models.Pokemon;
+import it.pokefundroid.pokedroid.utils.StaticClass;
 
 import java.util.ArrayList;
 
@@ -63,13 +64,7 @@ public class PersonalPokemonAdapter extends ArrayAdapter<PersonalPokemon> {
 		/// set sex of pokemon
 		String sexChar = PersonalPokemon.getSexAsci(mPoke.getSex());
 		pokemonSex.setText(sexChar);
-		if(sexChar.equals("♀")){
-			pokemonSex.setTextColor(Color.MAGENTA);
-		}else{
-			if(sexChar.equals("♂")){
-				pokemonSex.setTextColor(Color.BLUE);
-			}
-		}
+		pokemonSex.setTextColor(StaticClass.getColorFromSexAsci(sexChar));
 		
 		rowView.setOnClickListener(new View.OnClickListener() {
 			@Override

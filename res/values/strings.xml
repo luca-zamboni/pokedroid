@@ -37,15 +37,16 @@
     <string name="spatt">S. Attak</string>
     <string name="spdef">S. Defense</string>
     <string name="speed">Speed</string>
-    <string name="title_activity_exchange_activity">Exchange_activity</string>
 
     <!-- BluetoothChat -->
-    <string name="send">Send</string>
     <string name="not_connected">You are not connected to a device</string>
     <string name="bt_not_enabled_leaving">Bluetooth was not enabled. Leaving Bluetooth Chat.</string>
     <string name="title_connecting">connecting&#8230;</string>
     <string name="title_connected_to">connected: </string>
     <string name="title_not_connected">not connected</string>
+    
+    <!-- ExchangeActivity -->
+    <string name="pokemon_level">lvl. %1$s</string>
 
     <!-- DeviceListActivity -->
     <string name="scanning">scanning for devices &#8230;</string>
