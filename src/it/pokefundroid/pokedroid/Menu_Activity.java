@@ -1,10 +1,12 @@
 package it.pokefundroid.pokedroid;
 
 
+import it.pokefundroid.pokedroid.models.PersonalPokemon.PokemonSex;
 import it.pokefundroid.pokedroid.utils.LocationUtils;
 import it.pokefundroid.pokedroid.utils.LocationUtils.ErrorType;
 import it.pokefundroid.pokedroid.utils.LocationUtils.ILocation;
 import it.pokefundroid.pokedroid.utils.LocationUtils.LocationType;
+import it.pokefundroid.pokedroid.viewUtils.ParcelableMonster;
 
 import java.io.Serializable;
 
@@ -52,8 +54,11 @@ public class Menu_Activity extends Activity implements ILocation {
 
 			@Override
 			public void onClick(View arg0) {
-				startActivity(new Intent(getApplicationContext(),
-						BluetoothChat.class));
+				Intent i = new Intent(Menu_Activity.this,Exchange_activity.class);
+				i.putExtra(Exchange_activity.PASSED_MONSTER_KEY, new ParcelableMonster("7", "chaR", 46, 46, PokemonSex.FEMALE, 23));
+				startActivity(i);
+//				startActivity(new Intent(getApplicationContext(),
+//						BluetoothChat.class));
 			}
 		});
 

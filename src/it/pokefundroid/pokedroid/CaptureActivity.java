@@ -56,7 +56,7 @@ public class CaptureActivity extends Activity {
 				else
 					realSex = PokemonSex.GENDERLESS;
 				PersonalPokemon pkmn = new PersonalPokemon(Integer
-						.parseInt(pm.getId()), "Lol", realSex, pm.getLocation()[0],pm.getLocation()[1], 13);
+						.parseInt(pm.getId()), "Lol", realSex, pm.getFoundX(),pm.getFoundY(), 13);
 				pkmn.saveOnDatabase();
 				
 				//TODO no string!

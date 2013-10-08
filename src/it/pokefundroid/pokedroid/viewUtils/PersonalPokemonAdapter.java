@@ -23,7 +23,7 @@ public class PersonalPokemonAdapter extends ArrayAdapter<PersonalPokemon> {
 
 	public PersonalPokemonAdapter(Context context,
 			ArrayList<PersonalPokemon> pPokemon) {
-		super(context, R.layout.one_pokemon, pPokemon);
+		super(context, R.layout.row_team_pokemon, pPokemon);
 		this.context = context;
 		this.pPokemon = pPokemon;
 	}
@@ -32,7 +32,7 @@ public class PersonalPokemonAdapter extends ArrayAdapter<PersonalPokemon> {
 	public View getView(int position, View convertView, ViewGroup parent) {
 		LayoutInflater inflater = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		View rowView = inflater.inflate(R.layout.one_pokemon, parent,
+		View rowView = inflater.inflate(R.layout.row_team_pokemon, parent,
 				false);
 		
 		//// find view

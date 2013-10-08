@@ -57,9 +57,11 @@
         </activity>
         <activity
             android:name="it.pokefundroid.pokedroid.Exchange_activity"
-            android:label="@string/title_activity_exchange_activity" >
+            android:label="@string/title_activity_exchange_activity"
+            android:screenOrientation="landscape" >
         </activity>
         <activity android:name=".BluetoothChat"
+            	  android:screenOrientation="landscape"
                   android:configChanges="orientation|keyboardHidden">
         </activity>
         <activity android:name=".DeviceListActivity"

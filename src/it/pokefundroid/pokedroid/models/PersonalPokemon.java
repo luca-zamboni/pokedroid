@@ -19,11 +19,11 @@ public class PersonalPokemon extends Pokemon {
 	}
 
 	public String my_name;
-	private int id;
-	private PokemonSex sex;
-	private double found_x;
-	private double found_y;
-	private int level;
+	protected int id;
+	protected PokemonSex sex;
+	protected double found_x;
+	protected double found_y;
+	protected int level;
 	
 	//personal ev of the pokemon initialized to 0
 	private int hpEv = 0;
@@ -60,13 +60,7 @@ public class PersonalPokemon extends Pokemon {
 				BaseHelper.SDEFEV+"," +
 				BaseHelper.SPDEV+"," +
 				BaseHelper.MY_NAME+" ) ";
-		int sex;
-		if(this.sex == PokemonSex.MALE)
-			sex=1;
-		else if(this.sex == PokemonSex.FEMALE)
-			sex=2;
-		else
-			sex=3;
+		int sex = genderToInt(this.sex);
 		insertPersonalPokemon += " VALUES ( " +
 				id +"," +
 				sex +"," +
@@ -190,12 +184,7 @@ public class PersonalPokemon extends Pokemon {
 			Log.e("",id+"");
 			my_name = c.getString(c.getColumnIndex(BaseHelper.MY_NAME));
 			sex = c.getInt(c.getColumnIndex(BaseHelper.SEX));
-			if(sex ==1)
-				realSex = PokemonSex.MALE;
-			else if(sex == 2)
-				realSex = PokemonSex.FEMALE;
-			else
-				realSex = PokemonSex.GENDERLESS;
+			realSex = intToGender(sex);
 			found_x = c.getInt(c.getColumnIndex(BaseHelper.FOUND_X));
 			found_y = c.getInt(c.getColumnIndex(BaseHelper.FOUND_Y));
 			
@@ -207,6 +196,28 @@ public class PersonalPokemon extends Pokemon {
 		StaticClass.dbpoke.close();
 		
 		return mPokemon;
+	}
+	
+	public static PokemonSex intToGender(int sex) {
+		PokemonSex realSex;
+		if(sex ==1)
+			realSex = PokemonSex.MALE;
+		else if(sex == 2)
+			realSex = PokemonSex.FEMALE;
+		else
+			realSex = PokemonSex.GENDERLESS;
+		return realSex;
+	}
+
+	public static int genderToInt(PokemonSex realSex){
+		int sex=1;
+		if(realSex == PokemonSex.MALE)
+			sex=1;
+		else if(realSex == PokemonSex.FEMALE)
+			sex=2;
+		else
+			sex=3;
+		return sex;
 	}
 	
 }
