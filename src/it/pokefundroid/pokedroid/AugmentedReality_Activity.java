@@ -69,7 +69,7 @@ public class AugmentedReality_Activity extends FragmentActivity implements
 		mCameraView = (CameraView) findViewById(R.id.camera);
 		// TODO DEBUG
 		// mLocationType = LocationType.GPS;
-		mLocationType = LocationType.NETWORK;
+		mLocationType = LocationType.GPS;
 		// We create the world and set it in to the view
 		createWorld();
 		mBeyondarGLSurfaceView.setWorld(mWorld);
@@ -109,6 +109,10 @@ public class AugmentedReality_Activity extends FragmentActivity implements
 		mWorldCenter = new Location("world");
 		mWorldCenter.setLatitude(loc[0]);
 		mWorldCenter.setLongitude(loc[1]);
+		
+
+		Log.i(AugmentedReality_Activity.class.getName(), "latitude: "+ loc[0]);
+		Log.i(AugmentedReality_Activity.class.getName(), "longitude: "+ loc[1]);
 		
 		//TODO DEBUG
 		Log.i(AugmentedReality_Activity.class.getName(), "accuracy: "+ loc[3]);

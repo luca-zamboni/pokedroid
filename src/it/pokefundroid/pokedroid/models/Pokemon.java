@@ -147,6 +147,10 @@ public class Pokemon {
 		this.secndType = 0;
 	}
 	
+	public int getRarity() {
+		return RARITY[this.id];
+	}
+	
 	public String getName(){;
 		return name;
 	}

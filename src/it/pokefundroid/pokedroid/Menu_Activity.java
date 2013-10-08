@@ -24,7 +24,7 @@ import android.widget.Toast;
 public class Menu_Activity extends Activity implements ILocation {
 
 	private final int AUGMENTED_REALITY_CODE = 1;
-	private final int MAX_WAIT= 15;
+	private final int MAX_WAIT= 30;
 
 	private Button mViewPokemon;
 	private Button mExplore;
@@ -60,7 +60,7 @@ public class Menu_Activity extends Activity implements ILocation {
 //						Menu_Activity.this);
 				
 				mLocationUtils = new LocationUtils(Menu_Activity.this,
-						Menu_Activity.this, LocationType.NETWORK);
+						Menu_Activity.this, LocationType.GPS);
 				mLocationUtils.setTimer(MAX_WAIT);
 				// TODO DEBUG PURPOSE
 				// SharedPreferencesUtilities.setUserHeight(this, 1.75f);

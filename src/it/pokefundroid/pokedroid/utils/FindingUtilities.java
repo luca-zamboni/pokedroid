@@ -13,7 +13,7 @@ public class FindingUtilities {
 
 	private final static int[] FINDINGCHANCE = { 100, 80, 35, 15, 5, 1 };
 
-	public static int[] currentPkmnSet = null;
+	public static Pokemon[] currentPkmnSet = null;
 
 	/**
 	 * selectionRandom usato per scorrere tra tutti i pokemon, setRandom usato
@@ -34,20 +34,20 @@ public class FindingUtilities {
 	 * ricava la rarita' e avvia la procedura per vedere se il 'ritrovamento'
 	 * del pkmn ha avuto successo
 	 */
-	public static int findInPosition(double latitude, double longitude) {
+	public static Pokemon findInPosition(double latitude, double longitude) {
 		Random random = new Random(System.currentTimeMillis());
-		int ret = -1;
+		Pokemon ret = null;
 		boolean changed = generateRandoms(latitude, longitude);
 		if (changed || currentPkmnSet == null) {
 			generateSet();
 		}
-		int total = FINDINGCHANCE[Pokemon.getRarityFromId(currentPkmnSet[0])]
-				+ FINDINGCHANCE[Pokemon.getRarityFromId(currentPkmnSet[1])]
-				+ FINDINGCHANCE[Pokemon.getRarityFromId(currentPkmnSet[2])];
+		int total = FINDINGCHANCE[currentPkmnSet[0].getRarity()]
+				+ FINDINGCHANCE[currentPkmnSet[1].getRarity()]
+				+ FINDINGCHANCE[currentPkmnSet[2].getRarity()];
 		int tmp = random.nextInt(total);
-		if (tmp < FINDINGCHANCE[Pokemon.getRarityFromId(currentPkmnSet[0])]) {
+		if ( tmp < FINDINGCHANCE[currentPkmnSet[0].getRarity()] ) {
 			ret = currentPkmnSet[0];
-		} else if (tmp < (total - FINDINGCHANCE[Pokemon.getRarityFromId(currentPkmnSet[2])])) {
+		} else if ( tmp < (total - FINDINGCHANCE[currentPkmnSet[2].getRarity()]) ) {
 			ret = currentPkmnSet[1];
 		} else {
 			ret = currentPkmnSet[2];
@@ -66,6 +66,9 @@ public class FindingUtilities {
 		return found;
 	}
 	
+	public static Pokemon[] getPokemonSet() {
+		return currentPkmnSet;
+	}
 	
 	public static int generateHowManyPokemonInRange(double range){
 		Random random = new Random(System.currentTimeMillis());
@@ -73,13 +76,13 @@ public class FindingUtilities {
 	}
 
 	private static void generateSet() {
-		currentPkmnSet = new int[3];
+		currentPkmnSet = new Pokemon[3];
 		for (int i = 0; i < 3;) {
 			int id = selectionRandom.nextInt(151);
 			id = id+1;
 			boolean b = selectByRarity(Pokemon.getRarityFromId(id));
 			if (b)
-				currentPkmnSet[i++] = id;
+				currentPkmnSet[i++] = new Pokemon(id);
 		}
 	}
 
