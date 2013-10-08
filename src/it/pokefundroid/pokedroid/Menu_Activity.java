@@ -28,6 +28,7 @@ public class Menu_Activity extends Activity implements ILocation {
 
 	private Button mViewPokemon;
 	private Button mExplore;
+	private Button mExchange;
 	private LocationUtils mLocationUtils;
 	private ProgressDialog mProgressDialog;
 
@@ -37,7 +38,6 @@ public class Menu_Activity extends Activity implements ILocation {
 		setContentView(R.layout.activity_menu);
 
 		mViewPokemon = (Button) findViewById(R.id.button_pokemon);
-
 		mViewPokemon.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -46,9 +46,18 @@ public class Menu_Activity extends Activity implements ILocation {
 						View_team_activity.class));
 			}
 		});
+		
+		mExchange = (Button) findViewById(R.id.button_exchange);
+		mExchange.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				startActivity(new Intent(getApplicationContext(),
+						Exchange_activity.class));
+			}
+		});
 
 		mExplore = (Button) findViewById(R.id.button_explore);
-
 		mExplore.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -78,20 +87,6 @@ public class Menu_Activity extends Activity implements ILocation {
 
 			}
 		});
-
-		// righe per bombo x provare
-		// se va il database
-
-		/*
-		 * String name = null; BaseAdapter a = null;
-		 * Pokemon.fillDatabasePokemon(Menu_Activity.this); a = new
-		 * BaseAdapter(Menu_Activity.this); a.open(); Cursor c =
-		 * a.basePokemonById(new String[] {BaseHelper.NAME}, 1);
-		 * c.moveToFirst(); name =
-		 * c.getString(c.getColumnIndex(BaseHelper.NAME));
-		 * Toast.makeText(getApplicationContext(), name ,2000).show();
-		 * //a.close();
-		 */
 
 	}
 

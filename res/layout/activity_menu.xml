@@ -17,14 +17,14 @@
     android:padding="6dp"
     android:weightSum="2">
 
-	    <Button
-	        android:id="@+id/buttonCollect"
+	     <Button
+	        android:id="@+id/button_explore"
 	        android:layout_width="wrap_content"
-	        android:layout_height="match_parent" 
-	        android:text="@string/zaino"
+	        android:layout_height="match_parent"
+	        android:layout_weight="1"
 	        android:paddingLeft="8dp"
 	        android:paddingRight="8dp"
-	        android:layout_weight="1" />
+	        android:text="@string/explore" />
 
 	    <Button
 	        android:id="@+id/button_pokemon"
@@ -35,16 +35,37 @@
 	        android:paddingRight="8dp"
 	        android:text="@string/pokemon" />
 	    
-	    <Button
-	        android:id="@+id/button_explore"
-	        android:layout_width="wrap_content"
-	        android:layout_height="match_parent"
-	        android:layout_weight="1"
-	        android:paddingLeft="8dp"
-	        android:paddingRight="8dp"
-	        android:text="@string/explore" />
-
+	   
 	</LinearLayout>
 
+     <LinearLayout
+         android:id="@+id/menu_row2"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:layout_alignLeft="@+id/menu_row1"
+         android:layout_below="@+id/menu_row1"
+         android:gravity="center_horizontal"
+         android:orientation="horizontal"
+         android:padding="6dp"
+         android:weightSum="2" >
+
+         <Button
+             android:id="@+id/buttonCollect"
+             android:layout_width="wrap_content"
+             android:layout_height="match_parent"
+             android:layout_weight="1"
+             android:paddingLeft="8dp"
+             android:paddingRight="8dp"
+             android:text="@string/zaino" />
+
+         <Button
+             android:id="@+id/button_exchange"
+             android:layout_width="wrap_content"
+             android:layout_height="match_parent"
+             android:layout_weight="1"
+             android:paddingLeft="8dp"
+             android:paddingRight="8dp"
+             android:text="@string/exchange" />
+     </LinearLayout>
 
 </RelativeLayout>
