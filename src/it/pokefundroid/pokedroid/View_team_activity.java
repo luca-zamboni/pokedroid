@@ -26,11 +26,6 @@ public class View_team_activity extends Activity {
 		poke_list.setAdapter(adapter);
 		
 	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.view_team_activity, menu);
-		return true;
-	}
+	
 
 }

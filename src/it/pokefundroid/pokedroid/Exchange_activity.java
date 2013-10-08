@@ -12,11 +12,4 @@ public class Exchange_activity extends Activity {
 		setContentView(R.layout.exchange_activity);
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.exchange_activity, menu);
-		return true;
-	}
-
 }

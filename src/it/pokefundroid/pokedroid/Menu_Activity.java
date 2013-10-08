@@ -53,7 +53,7 @@ public class Menu_Activity extends Activity implements ILocation {
 			@Override
 			public void onClick(View arg0) {
 				startActivity(new Intent(getApplicationContext(),
-						Exchange_activity.class));
+						BluetoothChat.class));
 			}
 		});
 
@@ -90,12 +90,6 @@ public class Menu_Activity extends Activity implements ILocation {
 
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.menu_, menu);
-		return true;
-	}
 
 	private void createProgressDialog() {
 		mProgressDialog = new ProgressDialog(this);

@@ -14,6 +14,8 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.BLUETOOTH"/>
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
 
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
@@ -57,6 +59,12 @@
             android:name="it.pokefundroid.pokedroid.Exchange_activity"
             android:label="@string/title_activity_exchange_activity" >
         </activity>
+        <activity android:name=".BluetoothChat"
+                  android:configChanges="orientation|keyboardHidden">
+        </activity>
+        <activity android:name=".DeviceListActivity"
+                  android:theme="@android:style/Theme.Dialog"
+                  android:configChanges="orientation|keyboardHidden" />
     </application>
 
 </manifest>

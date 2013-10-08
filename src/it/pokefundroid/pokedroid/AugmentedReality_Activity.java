@@ -93,13 +93,7 @@ public class AugmentedReality_Activity extends FragmentActivity implements
 		mBeyondarGLSurfaceView.onPause();
 		mLocationUtils.close();
 	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.sprite_, menu);
-		return true;
-	}
-
+	
 	private void createWorld() {
 		mWorld = new World(this);
 

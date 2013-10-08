@@ -30,12 +30,6 @@ public class Splash_activity extends Activity {
 		this.finish();
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.splash_activity, menu);
-		return true;
-	}
 
 	public void setText(String m) {
 		text = (TextView) findViewById(R.id.text);
