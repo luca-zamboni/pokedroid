@@ -69,7 +69,7 @@ public class Menu_Activity extends Activity implements ILocation {
 //						Menu_Activity.this);
 				
 				mLocationUtils = new LocationUtils(Menu_Activity.this,
-						Menu_Activity.this, LocationType.GPS);
+						Menu_Activity.this, LocationType.NETWORK);
 				mLocationUtils.setTimer(MAX_WAIT);
 				// TODO DEBUG PURPOSE
 				// SharedPreferencesUtilities.setUserHeight(this, 1.75f);

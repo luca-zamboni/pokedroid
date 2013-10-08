@@ -214,5 +214,19 @@ public class Pokemon {
 	public short getSpdYield() {
 		return spdYield;
 	}
+
+	@Override
+	public boolean equals(Object o) {
+		boolean ret = false;
+		if (o == this) ret = true;
+		else if(o instanceof Pokemon) {
+			ret = this.id == ((Pokemon) o).getId();
+		} else {
+			ret = false;
+		}
+		return ret;
+	}
+	
+	
 	
 }
