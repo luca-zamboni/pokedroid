@@ -123,7 +123,7 @@ public class Sprite_Activity extends Activity implements OnARTouchListener,
 
 			Location tmp = FindingUtilities.getLocation(loc[0], loc[1], loc[3]);
 			tmp.setAltitude(loc[2]);
-			int id = FindingUtilities.findInPosition(tmp.getLatitude(),
+			Pokemon id = FindingUtilities.findInPosition(tmp.getLatitude(),
 					tmp.getLongitude());
 
 		}

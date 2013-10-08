@@ -5,6 +5,7 @@ import it.pokefundroid.pokedroid.models.Pokemon;
 import java.util.Random;
 
 import android.location.Location;
+import android.util.Log;
 
 public class FindingUtilities {
 
@@ -84,11 +85,16 @@ public class FindingUtilities {
 			if (b)
 				currentPkmnSet[i++] = new Pokemon(id);
 		}
+		
+		Log.d("FindingUtilities.generateSet()", currentPkmnSet[0].getName()+"  "+currentPkmnSet[1].getName()+"  "+currentPkmnSet[2].getName()+"\n"+
+		selectionSeed+"  "+setSeed);
 	}
 
 	private static boolean generateRandoms(double latitude, double longitude) {
 		// quadrati di 0,001 gradi, circa 111 metri all'equatore
 		boolean ret = false;
+		
+		Log.d("FindingUtilities.generateRandoms()", latitude+"  "+longitude);
 		
 		//sposto di 3 cifre in sotto la virgola e taglio i decimali castando a long
 		latitude *= 10 ^ 3;

@@ -1,6 +1,7 @@
 
 package it.pokefundroid.pokedroid;
 
+import it.pokefundroid.pokedroid.models.Pokemon;
 import it.pokefundroid.pokedroid.utils.FindingUtilities;
 import it.pokefundroid.pokedroid.utils.LocationUtils;
 import it.pokefundroid.pokedroid.utils.LocationUtils.ErrorType;
@@ -20,8 +21,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.location.Location;
 import android.os.Bundle;
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -135,11 +134,11 @@ public class AugmentedReality_Activity extends FragmentActivity implements
 
 			Location tmp = FindingUtilities.getLocation(loc[0], loc[1], loc[3]);
 			tmp.setAltitude(loc[2]);
-			int id = FindingUtilities.findInPosition(tmp.getLatitude(),
+			Pokemon id = FindingUtilities.findInPosition(tmp.getLatitude(),
 					tmp.getLongitude());
-			if (id != -1) {
+			if (id != null) {
 				GeoObject go = new GeoObject(i);
-				fillObj(go, id, tmp);
+				fillObj(go, id.getId(), tmp);
 				w.addBeyondarObject(go);
 			}
 
