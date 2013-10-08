@@ -180,8 +180,6 @@ public class PersonalPokemon extends Pokemon {
 		ArrayList<PersonalPokemon> mPokemon = new ArrayList<PersonalPokemon>();
 		while(c.moveToNext()){
 			id = c.getInt(c.getColumnIndex(BaseHelper.BASE_POKEMON_ID));
-
-			Log.e("",id+"");
 			my_name = c.getString(c.getColumnIndex(BaseHelper.MY_NAME));
 			sex = c.getInt(c.getColumnIndex(BaseHelper.SEX));
 			realSex = intToGender(sex);

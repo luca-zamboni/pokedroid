@@ -51,6 +51,7 @@ public class CaptureActivity extends Activity {
 			public void onClick(View v) {
 				int sex = (int) ((Math.random()*2)+1);
 				PokemonSex realSex =PersonalPokemon.intToGender(sex);
+				//TODO DEBUG
 				PersonalPokemon pkmn = new PersonalPokemon(Integer
 						.parseInt(pm.getId()), "Lol", realSex, pm.getFoundX(),pm.getFoundY(), 13);
 				pkmn.saveOnDatabase();
@@ -74,7 +75,7 @@ public class CaptureActivity extends Activity {
 	    	first.saveOnDatabase();
 	    	mTeam = PersonalPokemon.getAllPersonaPokemon(this);
 		}
-		PersonalPokemon pp = mTeam.get((int)Math.random()*mTeam.size());
+		PersonalPokemon pp = mTeam.get((int)(Math.random()*mTeam.size()));
 		try {
 			mMyPokemon.setImageBitmap(BitmapFactory.decodeStream(getAssets()
 					.open(getRearPokemonFilename(pp.getId()+""))));

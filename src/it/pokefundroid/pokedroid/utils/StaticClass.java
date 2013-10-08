@@ -21,7 +21,7 @@ public class StaticClass {
 
 	public static byte[] compressBitmap(Bitmap b) {
 		ByteArrayOutputStream bs = new ByteArrayOutputStream();
-		b.compress(Bitmap.CompressFormat.JPEG, 40, bs);
+		b.compress(Bitmap.CompressFormat.JPEG, 50, bs);
 		return bs.toByteArray();
 	}
 

@@ -30,6 +30,11 @@ import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.GridView;
 import android.widget.Toast;
 
@@ -53,7 +58,7 @@ public class AugmentedRealityActivity extends FragmentActivity implements
 	private World mWorld;
 	private Location mWorldCenter;
 	private LocationUtils mLocationUtils;
-	
+
 	private int CAPTURE_CODE = 1;
 
 	private ParcelableMonster mSelected;
@@ -121,8 +126,9 @@ public class AugmentedRealityActivity extends FragmentActivity implements
 
 		for (int i = 0; i < many; i++) {
 
-			Location tmp = FindingUtilities.getRandomLocation(loc[0], loc[1], loc[3]);
-			//tmp.setAltitude(loc[2]);
+			Location tmp = FindingUtilities.getRandomLocation(loc[0], loc[1],
+					loc[3]);
+			// tmp.setAltitude(loc[2]);
 			int id = FindingUtilities.findInPosition(tmp.getLatitude(),
 					tmp.getLongitude());
 			if (id != -1) {
