@@ -27,7 +27,7 @@ public class FindingUtilities {
 	 */
 	public static long selectionSeed = 0;
 	public static long setSeed = 0;
-	private static int MAX_POKEMON_IN_RANGE = 15;
+	private static int MAX_POKEMON_IN_RANGE = 20;
 
 	/**
 	 * metodo che dato un array di interi estrae un elemento fra questi, ne
@@ -69,7 +69,7 @@ public class FindingUtilities {
 	
 	public static int generateHowManyPokemonInRange(double range){
 		Random random = new Random(System.currentTimeMillis());
-		return random.nextInt((int) (MAX_POKEMON_IN_RANGE*range)+1);
+		return random.nextInt((int) (MAX_POKEMON_IN_RANGE*(range<10?range:15))+1);
 	}
 
 	private static void generateSet() {
