@@ -1,6 +1,6 @@
 package it.pokefundroid.pokedroid;
 
-import it.pokefundroid.pokedroid.models.Pokemon;
+import it.pokefundroid.pokedroid.models.Monster;
 import it.pokefundroid.pokedroid.utils.FindingUtilities;
 import it.pokefundroid.pokedroid.utils.LocationUtils;
 import it.pokefundroid.pokedroid.utils.LocationUtils.ErrorType;
@@ -66,7 +66,7 @@ public class AugmentedReality_Activity extends FragmentActivity implements
 		mBeyondarGLSurfaceView = (BeyondarGLSurfaceView) findViewById(R.id.customGLSurface);
 		mCameraView = (CameraView) findViewById(R.id.camera);
 		// TODO DEBUG
-		// mLocationType = LocationType.GPS;
+//		mLocationType = LocationType.GPS;
 		mLocationType = LocationType.NETWORK;
 		// We create the world and set it in to the view
 		createWorld();
@@ -129,7 +129,7 @@ public class AugmentedReality_Activity extends FragmentActivity implements
 		int many = FindingUtilities.generateHowManyPokemonInRange(loc[3]);
 
 		// tmp.setAltitude(loc[2]);
-		Pokemon[] id = FindingUtilities.findInPosition(loc[0], loc[1], many);
+		Monster[] id = FindingUtilities.findInPosition(loc[0], loc[1], many);
 
 		for (int i = 0; i < many; i++) {
 			if (id[i] != null) {

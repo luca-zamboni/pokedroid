@@ -1,8 +1,7 @@
 package it.pokefundroid.pokedroid.viewUtils;
 
 import it.pokefundroid.pokedroid.R;
-import it.pokefundroid.pokedroid.models.PersonalPokemon;
-import it.pokefundroid.pokedroid.models.Pokemon;
+import it.pokefundroid.pokedroid.models.Monster;
 
 import java.util.ArrayList;
 
@@ -17,12 +16,12 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class PersonalPokemonAdapter extends ArrayAdapter<PersonalPokemon> {
+public class PersonalPokemonAdapter extends ArrayAdapter<Monster> {
 	private Context context;
-	private ArrayList<PersonalPokemon> pPokemon;
+	private ArrayList<Monster> pPokemon;
 
 	public PersonalPokemonAdapter(Context context,
-			ArrayList<PersonalPokemon> pPokemon) {
+			ArrayList<Monster> pPokemon) {
 		super(context, R.layout.one_pokemon, pPokemon);
 		this.context = context;
 		this.pPokemon = pPokemon;
@@ -44,7 +43,7 @@ public class PersonalPokemonAdapter extends ArrayAdapter<PersonalPokemon> {
 		TextView pokemonLevel = (TextView) rowView
 				.findViewById(R.id.pokemon_level);
 		
-		final PersonalPokemon mPoke = pPokemon.get(position);
+		final Monster mPoke = pPokemon.get(position);
 		
 
 		//// set text of pokemon
@@ -57,11 +56,11 @@ public class PersonalPokemonAdapter extends ArrayAdapter<PersonalPokemon> {
 		
 		//// set image of pokemon
 		int id = mPoke.getId();
-		Bitmap pictures  = Pokemon.getImagBitmap(context, id);
+		Bitmap pictures  = Monster.getImagBitmap(context, id);
 		pokemon_pictures.setImageBitmap(pictures);
 		
 		/// set sex of pokemon
-		String sexChar = PersonalPokemon.getSexAsci(mPoke.getSex());
+		String sexChar = Monster.getSexAsci(mPoke.getSex());
 		pokemonSex.setText(sexChar);
 		if(sexChar.equals("♀")){
 			pokemonSex.setTextColor(Color.MAGENTA);

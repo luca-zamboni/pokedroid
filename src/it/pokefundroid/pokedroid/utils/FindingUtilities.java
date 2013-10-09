@@ -1,11 +1,8 @@
 package it.pokefundroid.pokedroid.utils;
 
-import it.pokefundroid.pokedroid.models.Pokemon;
+import it.pokefundroid.pokedroid.models.Monster;
 
-import java.util.Iterator;
 import java.util.Random;
-import java.util.Set;
-import java.util.concurrent.CopyOnWriteArraySet;
 
 import android.location.Location;
 import android.util.Log;
@@ -20,7 +17,7 @@ public class FindingUtilities {
 	private final static int MIN_POKEMON = 3;
 	private final static int MAX_POKEMON = 5;
 
-	public static Pokemon[] currentPkmnSet = null;
+	public static Monster[] currentPkmnSet = null;
 
 	/**
 	 * selectionRandom usato per scorrere tra tutti i pokemon, setRandom usato
@@ -34,17 +31,17 @@ public class FindingUtilities {
 	 */
 	public static long selectionSeed = 0;
 	public static long setSeed = 0;
-	private static int MAX_POKEMON_IN_RANGE = 5;
+	private static int MAX_POKEMON_IN_RANGE = 10;
 
 	/**
 	 * metodo che dato un array di interi estrae un elemento fra questi, ne
 	 * ricava la rarita' e avvia la procedura per vedere se il 'ritrovamento'
 	 * del pkmn ha avuto successo
 	 */
-	public static Pokemon[] findInPosition(double latitude, double longitude,
+	public static Monster[] findInPosition(double latitude, double longitude,
 			int number) {
 		Random random = new Random(System.currentTimeMillis());
-		Pokemon[] ret = new Pokemon[number];
+		Monster[] ret = new Monster[number];
 		boolean changed = generateRandoms(latitude, longitude);
 		if (changed || currentPkmnSet == null) {
 			generateSet();
@@ -87,7 +84,7 @@ public class FindingUtilities {
 		return found;
 	}
 
-	public static Pokemon[] getPokemonSet() {
+	public static Monster[] getPokemonSet() {
 		return currentPkmnSet;
 	}
 
@@ -114,7 +111,7 @@ public class FindingUtilities {
 		int dim = setRandom.nextInt(MAX_POKEMON - (MIN_POKEMON - 1))
 				+ MIN_POKEMON;
 		Log.e("AAAAAAARGH", "" + dim);
-		currentPkmnSet = new Pokemon[dim];
+		currentPkmnSet = new Monster[dim];
 
 		for (int i = 0; i < dim; i++) {
 			currentPkmnSet[i] = null;
@@ -122,11 +119,11 @@ public class FindingUtilities {
 
 		for (int i = 0; i < dim;) {
 			int id = selectionRandom.nextInt(151) + 1;
-			boolean b = selectByRarity(Pokemon.getRarityFromId(id));
+			boolean b = selectByRarity(Monster.getRarityFromId(id));
 			if (b) {
 
 				if (!existInSet(id)) {
-					currentPkmnSet[i] = new Pokemon(id);
+					currentPkmnSet[i] = new Monster(id);
 					i++;
 				}
 			}

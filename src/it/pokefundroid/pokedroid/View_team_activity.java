@@ -1,6 +1,6 @@
 package it.pokefundroid.pokedroid;
 
-import it.pokefundroid.pokedroid.models.PersonalPokemon;
+import it.pokefundroid.pokedroid.models.Monster;
 import it.pokefundroid.pokedroid.viewUtils.PersonalPokemonAdapter;
 
 import java.util.ArrayList;
@@ -21,7 +21,7 @@ public class View_team_activity extends Activity {
 		setTitle("Your Team");
 		
 		poke_list = (ListView) findViewById(R.id.pokemon_list_view);
-		ArrayList<PersonalPokemon> poke = PersonalPokemon.getAllPersonaPokemon(this);
+		ArrayList<Monster> poke = Monster.getAllPersonaPokemon(this);
 		PersonalPokemonAdapter adapter = new PersonalPokemonAdapter(View_team_activity.this,poke);
 		poke_list.setAdapter(adapter);
 		

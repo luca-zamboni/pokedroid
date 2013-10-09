@@ -1,38 +1,29 @@
 package it.pokefundroid.pokedroid;
 
-import it.pokefundroid.pokedroid.models.Pokemon;
-import it.pokefundroid.pokedroid.utils.FindingUtilities;
 import it.pokefundroid.pokedroid.utils.LocationUtils;
 import it.pokefundroid.pokedroid.utils.LocationUtils.ErrorType;
 import it.pokefundroid.pokedroid.utils.LocationUtils.ILocation;
 import it.pokefundroid.pokedroid.utils.LocationUtils.LocationType;
-import it.pokefundroid.pokedroid.utils.SharedPreferencesUtilities;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import com.beyondar.android.opengl.util.FpsUpdatable;
-import com.beyondar.android.opengl.views.BeyondarGLSurfaceView;
-import com.beyondar.android.opengl.views.OnARTouchListener;
-import com.beyondar.android.views.CameraView;
-import com.beyondar.android.world.World;
-import com.beyondar.android.world.objects.GeoObject;
-import com.beyondar.android.world.objects.BeyondarObject;
-
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.widget.Toast;
+
+import com.beyondar.android.opengl.views.BeyondarGLSurfaceView;
+import com.beyondar.android.opengl.views.OnARTouchListener;
+import com.beyondar.android.views.CameraView;
+import com.beyondar.android.world.World;
+import com.beyondar.android.world.objects.BeyondarObject;
+import com.beyondar.android.world.objects.GeoObject;
 //TODO this class is still used?
 public class Sprite_Activity extends Activity implements OnARTouchListener,
 		ILocation {
@@ -60,7 +51,7 @@ public class Sprite_Activity extends Activity implements OnARTouchListener,
 
 		mBeyondarGLSurfaceView = (BeyondarGLSurfaceView) findViewById(R.id.customGLSurface);
 		mCameraView = (CameraView) findViewById(R.id.camera);
-		mLocationUtils = new LocationUtils(this, this, LocationType.NETWORK);
+		mLocationUtils = new LocationUtils(this, this, LocationType.GPS);
 		
 		// We create the world and set it in to the view
 		createWorld();

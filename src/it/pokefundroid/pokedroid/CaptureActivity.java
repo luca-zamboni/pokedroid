@@ -1,22 +1,20 @@
 package it.pokefundroid.pokedroid;
 
-import java.io.IOException;
-
-import it.pokefundroid.pokedroid.models.PersonalPokemon;
-import it.pokefundroid.pokedroid.models.PersonalPokemon.PokemonSex;
-import it.pokefundroid.pokedroid.models.Pokemon;
+import it.pokefundroid.pokedroid.models.Monster;
+import it.pokefundroid.pokedroid.models.Monster.PokemonSex;
 import it.pokefundroid.pokedroid.viewUtils.ImageAdapter;
 import it.pokefundroid.pokedroid.viewUtils.ParcelableMonster;
+
+import java.io.IOException;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 public class CaptureActivity extends Activity {
 
@@ -55,7 +53,7 @@ public class CaptureActivity extends Activity {
 					realSex = PokemonSex.FEMALE;
 				else
 					realSex = PokemonSex.GENDERLESS;
-				PersonalPokemon pkmn = new PersonalPokemon(Integer
+				Monster pkmn = new Monster(Integer
 						.parseInt(pm.getId()), "Lol", realSex, pm.getLocation()[0],pm.getLocation()[1], 13);
 				pkmn.saveOnDatabase();
 				
