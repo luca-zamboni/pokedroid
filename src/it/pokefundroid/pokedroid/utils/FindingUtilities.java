@@ -20,7 +20,7 @@ public class FindingUtilities {
 	private final static int MIN_POKEMON = 3;
 	private final static int MAX_POKEMON = 5;
 
-	public static Set<Pokemon> currentPkmnSet = null;
+	public static Pokemon[] currentPkmnSet = null;
 
 	/**
 	 * selectionRandom usato per scorrere tra tutti i pokemon, setRandom usato
@@ -34,16 +34,17 @@ public class FindingUtilities {
 	 */
 	public static long selectionSeed = 0;
 	public static long setSeed = 0;
-	private static int MAX_POKEMON_IN_RANGE = 20;
+	private static int MAX_POKEMON_IN_RANGE = 5;
 
 	/**
 	 * metodo che dato un array di interi estrae un elemento fra questi, ne
 	 * ricava la rarita' e avvia la procedura per vedere se il 'ritrovamento'
 	 * del pkmn ha avuto successo
 	 */
-	public static Pokemon findInPosition(double latitude, double longitude) {
+	public static Pokemon[] findInPosition(double latitude, double longitude,
+			int number) {
 		Random random = new Random(System.currentTimeMillis());
-		Pokemon ret = null;
+		Pokemon[] ret = new Pokemon[number];
 		boolean changed = generateRandoms(latitude, longitude);
 		if (changed || currentPkmnSet == null) {
 			generateSet();
@@ -53,23 +54,25 @@ public class FindingUtilities {
 					((long) latitude * 10 * 10) + "  "
 							+ ((long) longitude * 10 * 10));
 		}
-		
-		Object[] p = currentPkmnSet.toArray();
-		int possibility=0;
-		for (int i =0; i<p.length; i++) {
-			possibility += ((Pokemon) p[i]).getRarity();
+
+		int maxPoss = 0;
+		for (int i = 0; i < currentPkmnSet.length; i++) {
+			maxPoss += FINDINGCHANCE[currentPkmnSet[i].getRarity()];
 		}
-		int rdm = random.nextInt(possibility);
-		
-		possibility = 0;
-		for (int i = 0; i < p.length; i++) {
-			possibility += ((Pokemon) p[i]).getRarity();
-			if (rdm<possibility) {
-				ret = ((Pokemon) p[i]);
-				return ret;
+		for (int j = 0; j < number; j++) {
+			int rdm = random.nextInt(maxPoss);
+
+			int possibility = 0;
+			for (int i = 0; i < currentPkmnSet.length; i++) {
+				possibility += FINDINGCHANCE[currentPkmnSet[i].getRarity()];
+				if (rdm < possibility) {
+					ret[j] = currentPkmnSet[i];
+					break;
+				}
 			}
+
 		}
-		
+
 		return ret;
 	}
 
@@ -84,7 +87,7 @@ public class FindingUtilities {
 		return found;
 	}
 
-	public static Set getPokemonSet() {
+	public static Pokemon[] getPokemonSet() {
 		return currentPkmnSet;
 	}
 
@@ -94,29 +97,47 @@ public class FindingUtilities {
 				: 15)) + 1);
 	}
 
+	private static boolean existInSet(int id) {
+		boolean ret = false;
+
+		for (int i = 0; i < currentPkmnSet.length; i++) {
+			if (currentPkmnSet[i] == null)
+				break;
+			if (currentPkmnSet[i].getId() == id)
+				ret = true;
+		}
+
+		return ret;
+	}
+
 	private static void generateSet() {
-		int dim = setRandom.nextInt(MAX_POKEMON - (MIN_POKEMON-1)) + MIN_POKEMON;
-		Log.e("AAAAAAARGH", ""+dim);
-		currentPkmnSet = new CopyOnWriteArraySet<Pokemon>();
+		int dim = setRandom.nextInt(MAX_POKEMON - (MIN_POKEMON - 1))
+				+ MIN_POKEMON;
+		Log.e("AAAAAAARGH", "" + dim);
+		currentPkmnSet = new Pokemon[dim];
+
+		for (int i = 0; i < dim; i++) {
+			currentPkmnSet[i] = null;
+		}
+
 		for (int i = 0; i < dim;) {
 			int id = selectionRandom.nextInt(151) + 1;
 			boolean b = selectByRarity(Pokemon.getRarityFromId(id));
 			if (b) {
-				boolean insert = currentPkmnSet.add(new Pokemon(id));
 
-				if (insert)
+				if (!existInSet(id)) {
+					currentPkmnSet[i] = new Pokemon(id);
 					i++;
+				}
 			}
 		}
-
-		Iterator<Pokemon> i = currentPkmnSet.iterator();
 		String log = "";
-		while (i.hasNext()) {
-			log+=i.next().getName()+ "  ";
+		for (int i = 0; i < currentPkmnSet.length; i++) {
+			log += currentPkmnSet[i].getName() + "  ";
 		}
 
-		Log.d("FindingUtilities.generateSet()", log+ "\n" + selectionSeed + "  "
-			+ setSeed);
+		Log.d("FindingUtilities.generateSet()", log + "\n" + selectionSeed
+				+ "  " + setSeed);
 	}
 
 	private static boolean generateRandoms(double latitude, double longitude) {

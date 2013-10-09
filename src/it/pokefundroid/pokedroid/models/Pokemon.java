@@ -148,7 +148,7 @@ public class Pokemon {
 	}
 	
 	public int getRarity() {
-		return RARITY[this.id];
+		return RARITY[this.id-1];
 	}
 	
 	public String getName(){;

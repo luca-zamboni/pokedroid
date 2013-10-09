@@ -1,4 +1,3 @@
-
 package it.pokefundroid.pokedroid;
 
 import it.pokefundroid.pokedroid.models.Pokemon;
@@ -108,15 +107,14 @@ public class AugmentedReality_Activity extends FragmentActivity implements
 		mWorldCenter = new Location("world");
 		mWorldCenter.setLatitude(loc[0]);
 		mWorldCenter.setLongitude(loc[1]);
-		
 
-		Log.i(AugmentedReality_Activity.class.getName(), "latitude: "+ loc[0]);
-		Log.i(AugmentedReality_Activity.class.getName(), "longitude: "+ loc[1]);
-		
-		//TODO DEBUG
-		Log.i(AugmentedReality_Activity.class.getName(), "accuracy: "+ loc[3]);
+		Log.i(AugmentedReality_Activity.class.getName(), "latitude: " + loc[0]);
+		Log.i(AugmentedReality_Activity.class.getName(), "longitude: " + loc[1]);
+
+		// TODO DEBUG
+		Log.i(AugmentedReality_Activity.class.getName(), "accuracy: " + loc[3]);
 		mWorldCenter.setAccuracy((float) loc[3]);
-		
+
 		setWorldAltitude(loc[2]);
 
 		mWorld.setLocation(mWorldCenter);
@@ -130,16 +128,15 @@ public class AugmentedReality_Activity extends FragmentActivity implements
 
 		int many = FindingUtilities.generateHowManyPokemonInRange(loc[3]);
 
+		// tmp.setAltitude(loc[2]);
+		Pokemon[] id = FindingUtilities.findInPosition(loc[0], loc[1], many);
+
 		for (int i = 0; i < many; i++) {
-
-			Location tmp = FindingUtilities.getLocation(loc[0], loc[1], loc[3]);
-
-			//tmp.setAltitude(loc[2]);
-			Pokemon id = FindingUtilities.findInPosition(tmp.getLatitude(),
-					tmp.getLongitude());
-			if (id != null) {
+			if (id[i] != null) {
+				Location tmp = FindingUtilities.getLocation(loc[0], loc[1],
+						loc[3]);
 				GeoObject go = new GeoObject(i);
-				fillObj(go, id.getId(), tmp);
+				fillObj(go, id[i].getId(), tmp);
 				w.addBeyondarObject(go);
 			}
 
@@ -169,8 +166,9 @@ public class AugmentedReality_Activity extends FragmentActivity implements
 		else
 			return "assets://pkm/pkfrlg" + id + ".png";
 	}
-	
-	private void showChoosePokemonDialog(ArrayList<ParcelableMonster> monstersIDs) {
+
+	private void showChoosePokemonDialog(
+			ArrayList<ParcelableMonster> monstersIDs) {
 		LayoutInflater inflater = getLayoutInflater();
 		View v = inflater.inflate(R.layout.dialog_choosepokemon, null, false);
 		GridView gv = (GridView) v.findViewById(R.id.dialog_pokemongridview);
@@ -183,7 +181,7 @@ public class AugmentedReality_Activity extends FragmentActivity implements
 
 	private void doAction(List<BeyondarObject> geoObjects) {
 		Iterator<BeyondarObject> iterator = geoObjects.iterator();
-		ArrayList<ParcelableMonster> outMonster= new ArrayList<ParcelableMonster>();
+		ArrayList<ParcelableMonster> outMonster = new ArrayList<ParcelableMonster>();
 		while (iterator.hasNext()) {
 			GeoObject geoObject = (GeoObject) iterator.next();
 			float[] results = new float[2];
@@ -197,8 +195,9 @@ public class AugmentedReality_Activity extends FragmentActivity implements
 			if (results[0] <= FIGHT_PROXIMITY
 					* (mWorldCenter.getAccuracy() / 2)) {
 				ParcelableMonster pm = new ParcelableMonster();
-				pm.setId( geoObject.getName() );
-				pm.setLocation(new double[]{geoObject.getLatitude(),geoObject.getLongitude()});
+				pm.setId(geoObject.getName());
+				pm.setLocation(new double[] { geoObject.getLatitude(),
+						geoObject.getLongitude() });
 				outMonster.add(pm);
 			}
 		}
@@ -212,7 +211,6 @@ public class AugmentedReality_Activity extends FragmentActivity implements
 			mCameraView.tackePicture(this);
 		}
 	}
-	
 
 	public static byte[] compressBitmap(Bitmap b) {
 		ByteArrayOutputStream bs = new ByteArrayOutputStream();
@@ -451,7 +449,6 @@ public class AugmentedReality_Activity extends FragmentActivity implements
 		return (bitmap);
 	}
 
-
 	@Override
 	public void onTouchARView(MotionEvent event,
 			BeyondarGLSurfaceView beyondarView) {
@@ -507,8 +504,8 @@ public class AugmentedReality_Activity extends FragmentActivity implements
 		if (!mSelected.equals("")) {
 			Intent i = new Intent(this, CaptureActivity.class);
 			i.putExtra(CaptureActivity.PASSED_WILD_MONSTER_KEY, mSelected);
-			byte[] b =compressBitmap(fastblur(picture, 3));
-			i.putExtra(CaptureActivity.PASSED_BACKGROUND_KEY,b);
+			byte[] b = compressBitmap(fastblur(picture, 3));
+			i.putExtra(CaptureActivity.PASSED_BACKGROUND_KEY, b);
 			startActivityForResult(i, CAPTURE_CODE);
 			mSelected = null;
 		}
@@ -522,17 +519,16 @@ public class AugmentedReality_Activity extends FragmentActivity implements
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode,data);
-		if(resultCode == RESULT_OK){
-			if(requestCode == CAPTURE_CODE){
-				String response = data.getStringExtra(CaptureActivity.RESPONSE_KEY);
-				if(response!=null && response.trim().length()>0){
+		super.onActivityResult(requestCode, resultCode, data);
+		if (resultCode == RESULT_OK) {
+			if (requestCode == CAPTURE_CODE) {
+				String response = data
+						.getStringExtra(CaptureActivity.RESPONSE_KEY);
+				if (response != null && response.trim().length() > 0) {
 					Toast.makeText(this, response, Toast.LENGTH_SHORT).show();
 				}
 			}
 		}
 	}
-	
 
-	
 }

@@ -33,7 +33,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.widget.Toast;
-
+//TODO this class is still used?
 public class Sprite_Activity extends Activity implements OnARTouchListener,
 		ILocation {
 
@@ -105,29 +105,30 @@ public class Sprite_Activity extends Activity implements OnARTouchListener,
 		setWorldAltitude(loc[2]);
 
 		mWorld.setLocation(mWorldCenter);
-		if (mWorldCenter.getAccuracy() < ((mLocationUtils.getLocationType()==LocationType.NETWORK)?40:15))
-			fillPkmn(mWorld, mWorldCenter.getLatitude(),
-					mWorldCenter.getLongitude(), mWorldCenter.getAltitude(),
-					mWorldCenter.getAccuracy());
+		if (mWorldCenter.getAccuracy() < ((mLocationUtils.getLocationType()==LocationType.NETWORK)?40:15));
+//			fillPkmn(mWorld, mWorldCenter.getLatitude(),
+//					mWorldCenter.getLongitude(), mWorldCenter.getAltitude(),
+//					mWorldCenter.getAccuracy());
 		else{
 			exitWithError(AugmentedRealityErrors.NOT_ENOUGH_ACCURACY);
 		}
 		mWorld.setDefaultBitmap(R.drawable.creature_6);
 	}
 
-	private void fillPkmn(World w, double... loc) {
-
-		int many = FindingUtilities.generateHowManyPokemonInRange(loc[3]);
-
-		for (int i = 0; i < many; i++) { 
-
-			Location tmp = FindingUtilities.getLocation(loc[0], loc[1], loc[3]);
-			tmp.setAltitude(loc[2]);
-			Pokemon id = FindingUtilities.findInPosition(tmp.getLatitude(),
-					tmp.getLongitude());
-
-		}
-	}
+//	private void fillPkmn(World w, double... loc) {
+//
+//		int many = FindingUtilities.generateHowManyPokemonInRange(loc[3]);
+//
+//		for (int i = 0; i < many; i++) { 
+//			
+//			//TODO this function seems useless!!
+//			Location tmp = FindingUtilities.getLocation(loc[0], loc[1], loc[3]);
+//			tmp.setAltitude(loc[2]);
+//			Pokemon id = FindingUtilities.findInPosition(tmp.getLatitude(),
+//					tmp.getLongitude());
+//
+//		}
+//	}
 
 	private void setWorldAltitude(double d) {
 		// DEBUG
