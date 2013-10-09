@@ -1,14 +1,18 @@
 package it.pokefundroid.pokedroid.viewUtils;
 
+import it.pokefundroid.pokedroid.ExchangeActivity;
+import it.pokefundroid.pokedroid.Menu_Activity;
 import it.pokefundroid.pokedroid.R;
 import it.pokefundroid.pokedroid.models.PersonalPokemon;
 import it.pokefundroid.pokedroid.models.Pokemon;
+import it.pokefundroid.pokedroid.models.PersonalPokemon.PokemonSex;
 import it.pokefundroid.pokedroid.utils.StaticClass;
 
 import java.util.ArrayList;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.view.LayoutInflater;
@@ -91,7 +95,18 @@ public class PersonalPokemonAdapter extends ArrayAdapter<PersonalPokemon> {
 				builder.create().show();
 			}
 		});
-
+		rowView.setOnLongClickListener(new View.OnLongClickListener() {
+			
+			@Override
+			public boolean onLongClick(View v) {
+				Intent i = new Intent(getContext(), ExchangeActivity.class);
+				i.putExtra(ExchangeActivity.PASSED_MONSTER_KEY,
+						new ParcelableMonster(mPoke.getId()+"", mPoke.getName(), mPoke.getFound_x(), mPoke.getFound_y(),
+								mPoke.getSex(), mPoke.getLevel()));
+				getContext().startActivity(i);
+				return true;
+			}
+		});
 		return rowView;
 	}
 }

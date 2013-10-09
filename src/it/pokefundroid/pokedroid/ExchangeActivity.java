@@ -18,14 +18,22 @@ package it.pokefundroid.pokedroid;
 
 import java.io.IOException;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import it.pokefundroid.pokedroid.models.PersonalPokemon;
 import it.pokefundroid.pokedroid.utils.BluetoothChatService;
+import it.pokefundroid.pokedroid.utils.ExchangeProtocolUtils;
 import it.pokefundroid.pokedroid.utils.StaticClass;
 import it.pokefundroid.pokedroid.viewUtils.ImageAdapter;
 import it.pokefundroid.pokedroid.viewUtils.ParcelableMonster;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -45,6 +53,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -52,6 +61,12 @@ import android.widget.Toast;
  * This is the main Activity that displays the current chat session.
  */
 public class ExchangeActivity extends Activity {
+	
+	public enum STATUS{
+		SEND,
+		ACCEPT,
+		ACK,
+	}
     // Debugging
     private static final String TAG = "BluetoothChat";
     private static final boolean D = true;
@@ -88,10 +103,17 @@ public class ExchangeActivity extends Activity {
 	private ImageView mMyPokemonPicture;
 	private TextView mMyPokemonSex;
 	private TextView mMyPokemonLevel;
+	
+	private PersonalPokemon mOpponentPokemon;
 	private TextView mOpponentPokemonName;
 	private ImageView mOpponentPokemonPicture;
 	private TextView mOpponentPokemonSex;
 	private TextView mOpponentPokemonLevel;
+	
+	private STATUS mStatus =STATUS.SEND;
+	private int mAccepts,mACKs;
+	
+	private Dialog mDialog;
 
 
     @Override
@@ -174,7 +196,7 @@ public class ExchangeActivity extends Activity {
             // Only if the state is STATE_NONE, do we know that we haven't started already
             if (mChatService.getState() == BluetoothChatService.STATE_NONE) {
               // Start the Bluetooth chat services
-              mChatService.start();
+             // mChatService.start();
             }
         }
     }
@@ -196,6 +218,7 @@ public class ExchangeActivity extends Activity {
     @Override
     public void onStop() {
         super.onStop();
+        if (mChatService != null) mChatService.stop();
     }
 
     @Override
@@ -246,14 +269,32 @@ public class ExchangeActivity extends Activity {
                 if(D) Log.i(TAG, "MESSAGE_STATE_CHANGE: " + msg.arg1);
                 switch (msg.arg1) {
                 case BluetoothChatService.STATE_CONNECTED:
-                	//TODO BEGIN TRANSACTION 
+                	try {
+                		mDialog = new ProgressDialog(ExchangeActivity.this);
+                		((ProgressDialog)mDialog).setMessage("send"+pm.getName());
+                		runOnUiThread(new Runnable() {
+                			
+                			@Override
+                			public void run() {
+                				mDialog.show();
+                			}
+                		});
+						ExchangeActivity.this.sendMessage(ExchangeProtocolUtils.createSendMessage(pm.toPersonalPokemon()));
+					} catch (JSONException e) {
+						Toast.makeText(getApplicationContext(), getString(R.string.error), Toast.LENGTH_SHORT).show();
+						ExchangeActivity.this.finish();
+						mDialog.dismiss();
+					}
                     break;
                 case BluetoothChatService.STATE_CONNECTING:
                    //TODO CONNECTING
                     break;
                 case BluetoothChatService.STATE_LISTEN:
+                	break;
                 case BluetoothChatService.STATE_NONE:
                    //TODO TOAST NOT CONNECTED + EXIT
+                	mChatService.stop();
+                	//mChatService.start();
                     break;
                 }
                 break;
@@ -266,7 +307,7 @@ public class ExchangeActivity extends Activity {
                 byte[] readBuf = (byte[]) msg.obj;
                 // construct a string from the valid bytes in the buffer
                 String readMessage = new String(readBuf, 0, msg.arg1);
-                //TODO TAKE AN ACTION based on readMessage 
+                doAction(readMessage);
                 break;
             case MESSAGE_DEVICE_NAME:
                 // save the connected device's name
@@ -281,7 +322,8 @@ public class ExchangeActivity extends Activity {
             }
         }
     };
-
+	
+    
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(D) Log.d(TAG, "onActivityResult " + resultCode);
         switch (requestCode) {
@@ -311,7 +353,117 @@ public class ExchangeActivity extends Activity {
         }
     }
 
-    @Override
+    protected void doAction(String readMessage) {
+		try {
+			String type = ExchangeProtocolUtils.getMessageType(readMessage);
+			if(type.equals(ExchangeProtocolUtils.SEND_COMMAND)){
+				switch(mStatus){
+				case SEND:
+						mOpponentPokemon = ExchangeProtocolUtils.readSendJSON(new JSONObject(readMessage));
+						//TODO visualize pokemon
+						Log.i("exchange", "arrived: "+mOpponentPokemon.getName());
+						mDialog.dismiss();
+						AlertDialog.Builder builder = new AlertDialog.Builder(ExchangeActivity.this);
+						builder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
+							
+							@Override
+							public void onClick(DialogInterface dialog, int which) {
+								mStatus = STATUS.ACCEPT;
+								String msg;
+								try {
+									mAccepts+=1;
+									msg = ExchangeProtocolUtils.createAcceptMessage(mOpponentPokemon.getId());
+									sendMessage(msg);
+									Log.i("exchange", "sent accept");
+									dialog.dismiss();
+									mDialog = new ProgressDialog(ExchangeActivity.this);
+									((ProgressDialog)mDialog).setMessage("arrived"+mOpponentPokemon.getId());
+								} catch (JSONException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
+								
+							}
+						});
+						mDialog = builder.create();
+						mDialog.show();
+						break;
+				default:
+					Toast.makeText(getApplicationContext(), getString(R.string.error), Toast.LENGTH_SHORT).show();
+					this.finish();
+					break;
+				}
+			}else if(type.equals(ExchangeProtocolUtils.ACCEPT_COMMAND)){
+				mAccepts+=1;
+				switch(mStatus){
+				case ACCEPT:
+					if(mOpponentPokemon!=null){
+						if(ExchangeProtocolUtils.verifyAcceptMessage(new JSONObject(readMessage),
+									Integer.parseInt(pm.getId()))){
+							((ProgressDialog)mDialog).setMessage("accepted"+pm.getId());
+							mDialog.show();
+
+							if(mAccepts>=2){
+								mStatus= STATUS.ACK;
+								sendMessage(ExchangeProtocolUtils.createACKMessage(mOpponentPokemon.getId()));
+							}
+						}
+						else{
+							mStatus = STATUS.SEND;
+							((ProgressDialog)mDialog).setMessage("no accepted");
+						}
+						break;
+					}//go to default
+				case SEND:
+					Log.i("exchange", "reiceived accept");
+					if(mAccepts==2){
+						mStatus= STATUS.ACK;
+						sendMessage(ExchangeProtocolUtils.createACKMessage(mOpponentPokemon.getId()));
+					}
+					break;
+				default:
+					Toast.makeText(getApplicationContext(), getString(R.string.error), Toast.LENGTH_SHORT).show();
+					this.finish();
+					break;
+				}
+				
+			}
+			else if(type.equals(ExchangeProtocolUtils.ACK_COMMAND)){
+				mACKs+=1;
+				switch(mStatus){
+				case ACK:
+					if(mACKs>=2)
+						break;
+					//TODO do operations
+					mDialog.dismiss();
+					
+					if(ExchangeProtocolUtils.verifyACKMessage(new JSONObject(readMessage), Integer.parseInt(pm.getId()))){
+						Toast.makeText(this, "Faccio le operazioni", Toast.LENGTH_SHORT).show();
+						break;
+					}
+					mChatService.stop();
+				case ACCEPT:
+					
+					if(mAccepts==2){
+						mStatus= STATUS.ACK;
+						
+						Toast.makeText(this, "Faccio le operazioni", Toast.LENGTH_SHORT).show();
+						sendMessage(ExchangeProtocolUtils.createACKMessage(mOpponentPokemon.getId()));
+					}
+					break;		
+				default:
+					Toast.makeText(getApplicationContext(), getString(R.string.error), Toast.LENGTH_SHORT).show();
+					this.finish();
+					break;
+				}
+			}
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	@Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.option_menu, menu);

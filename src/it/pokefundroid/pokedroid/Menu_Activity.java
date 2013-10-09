@@ -54,11 +54,7 @@ public class Menu_Activity extends Activity implements ILocation {
 			@Override
 			public void onClick(View arg0) {
 				//TODO Debug
-				Intent i = new Intent(Menu_Activity.this, ExchangeActivity.class);
-				i.putExtra(ExchangeActivity.PASSED_MONSTER_KEY,
-						new ParcelableMonster("7", "MySweetSquirtle", 46, 46,
-								PokemonSex.FEMALE, 23));
-				startActivity(i);
+				
 			}
 		});
 
