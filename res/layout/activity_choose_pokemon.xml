@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/grey_background" >
+
+    <ImageView
+        android:id="@+id/choose_grass"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:minHeight="150dp"
+        android:minWidth="150dp"
+        android:onClick="choosePokemon"
+        android:clickable="true"
+        android:scaleType="fitXY" />
+
+    <ImageView
+        android:id="@+id/choose_fire"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:minHeight="150dp"
+        android:minWidth="150dp"
+        android:clickable="true"
+        android:onClick="choosePokemon"
+        android:scaleType="fitXY" />
+
+    <ImageView
+        android:id="@+id/choose_water"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:minHeight="150dp"
+        android:minWidth="150dp"
+        android:clickable="true"
+        android:onClick="choosePokemon"
+        android:scaleType="fitXY" />
+
+    <TextView
+        android:id="@+id/choose_msg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:text="@string/choose_a_pokemon"
+        android:onClick="choosePokemon"
+        android:clickable="true" 
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+</RelativeLayout>

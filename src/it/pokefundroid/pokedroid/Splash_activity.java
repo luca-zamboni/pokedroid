@@ -23,7 +23,7 @@ public class Splash_activity extends Activity {
 		setContentView(R.layout.splash_activity);
 
 		// Connessionae database all' inizio del progrmma nn cancellare
-		StaticClass.openBatabaseConection(getApplicationContext());
+		//StaticClass.openBatabaseConection(getApplicationContext());
 
 		text = (TextView) findViewById(R.id.text);
 		startActivity(new Intent(Splash_activity.this, Menu_Activity.class));

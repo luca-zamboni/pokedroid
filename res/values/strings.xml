@@ -38,6 +38,10 @@
     <string name="spatt">S. Attak</string>
     <string name="spdef">S. Defense</string>
     <string name="speed">Speed</string>
+    
+    <!-- Dialog confirm pokemon -->
+     <string name="title_confirm">Confirm</string>
+     <string name="dialog_sure">Are you sure?</string>
 
     <!-- BluetoothChat -->
     <string name="not_connected">You are not connected to a device</string>
@@ -61,5 +65,7 @@
     <!-- Options Menu -->
     <string name="connect">Connect a device</string>
     <string name="discoverable">Make discoverable</string>
+    <string name="choose_a_pokemon">Choose your first friend!</string>
+    <string name="choose_side">Pick a side!</string>
 
 </resources>

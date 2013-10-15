@@ -2,9 +2,11 @@ package it.pokefundroid.pokedroid;
 
 import it.pokefundroid.pokedroid.models.PersonalPokemon.PokemonSex;
 import it.pokefundroid.pokedroid.utils.LocationUtils;
+import it.pokefundroid.pokedroid.utils.StaticClass;
 import it.pokefundroid.pokedroid.utils.LocationUtils.ErrorType;
 import it.pokefundroid.pokedroid.utils.LocationUtils.ILocation;
 import it.pokefundroid.pokedroid.utils.LocationUtils.LocationType;
+import it.pokefundroid.pokedroid.utils.SharedPreferencesUtilities;
 import it.pokefundroid.pokedroid.viewUtils.ParcelableMonster;
 
 import java.io.Serializable;
@@ -32,11 +34,17 @@ public class Menu_Activity extends Activity implements ILocation {
 	private Button mExchange;
 	private LocationUtils mLocationUtils;
 	private ProgressDialog mProgressDialog;
+	private LocationType mLocationType;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_menu);
+
+		mLocationType = LocationType.GPS;
+		
+		if(StaticClass.dbpoke==null)
+			StaticClass.openBatabaseConection(getApplicationContext());
 
 		mViewPokemon = (Button) findViewById(R.id.button_pokemon);
 		mViewPokemon.setOnClickListener(new OnClickListener() {
@@ -53,8 +61,8 @@ public class Menu_Activity extends Activity implements ILocation {
 
 			@Override
 			public void onClick(View arg0) {
-				//TODO Debug
-				
+				// TODO Debug
+
 			}
 		});
 
@@ -70,7 +78,7 @@ public class Menu_Activity extends Activity implements ILocation {
 				// Menu_Activity.this);
 
 				mLocationUtils = new LocationUtils(Menu_Activity.this,
-						Menu_Activity.this, LocationType.NETWORK);
+						Menu_Activity.this, mLocationType);
 				mLocationUtils.setTimer(MAX_WAIT);
 				// TODO DEBUG PURPOSE
 				// SharedPreferencesUtilities.setUserHeight(this, 1.75f);
@@ -90,6 +98,18 @@ public class Menu_Activity extends Activity implements ILocation {
 		});
 
 	}
+	
+	
+
+	@Override
+	protected void onPostResume() {
+		super.onPostResume();
+		if(SharedPreferencesUtilities.isFirstStart(this)){
+			startActivity(new Intent(this,ChooseSide.class));
+		}
+	}
+
+
 
 	private void createProgressDialog() {
 		mProgressDialog = new ProgressDialog(this);
@@ -149,15 +169,31 @@ public class Menu_Activity extends Activity implements ILocation {
 		// chiedere all'utente di attivare il gpx ecc.
 		if (ex == ErrorType.TIME_FINISHED
 				|| ex == ErrorType.NOT_ENOUGH_ACCURACY) {
-			mProgressDialog.dismiss();
-			runOnUiThread(new Runnable() {
 
-				@Override
-				public void run() {
-					displayErrors(R.string.not_enough_accuracy_title,
-							R.string.not_enough_accuracy);
-				}
-			});
+			if (mLocationType == LocationType.GPS) {
+				mLocationType = LocationType.NETWORK;
+				mLocationUtils.close();
+				runOnUiThread(new Runnable() {
+
+					@Override
+					public void run() {
+						mLocationUtils = new LocationUtils(Menu_Activity.this,
+								Menu_Activity.this, mLocationType);
+					}
+				});
+				
+			} else {
+				mProgressDialog.dismiss();
+				runOnUiThread(new Runnable() {
+
+					@Override
+					public void run() {
+						displayErrors(R.string.not_enough_accuracy_title,
+								R.string.not_enough_accuracy);
+					}
+				});
+
+			}
 		} else {
 			Toast.makeText(this, provider, Toast.LENGTH_SHORT).show();
 		}

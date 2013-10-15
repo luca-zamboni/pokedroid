@@ -80,6 +80,10 @@ public class LocationUtils {
 	public float getMinDistance() {
 		return mMinDistance;
 	}
+	
+	public Location getLastKnownLocation(){
+		return mLocationManager.getLastKnownLocation("network");
+	}
 
 	/**
 	 * Replace the minimum valid distance to look for this number should be

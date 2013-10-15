@@ -86,7 +86,7 @@ public class AugmentedRealityActivity extends FragmentActivity implements
 	protected void onResume() {
 		super.onResume();
 		mBeyondarGLSurfaceView.onResume();
-		mLocationUtils = new LocationUtils(this, this, LocationType.NETWORK);
+		mLocationUtils = new LocationUtils(this, this, LocationType.GPS);
 		// This is needed, sometimes pokemons are behind the camera...
 		mCameraView.setVisibility(View.VISIBLE);
 	}
