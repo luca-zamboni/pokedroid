@@ -96,8 +96,11 @@ public class ChoosePokemonActivity extends Activity {
 					p = new PersonalPokemon(25, "Pika", ps, -1, -1, 5);
 					msg = "Pika-Pika!";
 				}
+				p.saveOnDatabase();
 				Toast.makeText(getApplicationContext(), msg,
 						Toast.LENGTH_SHORT).show();
+				saveAndExit();
+				break;
 			}
 		default:
 			return;
