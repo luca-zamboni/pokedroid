@@ -171,10 +171,6 @@ public class AugmentedRealityActivity extends FragmentActivity implements
 			Location.distanceBetween(mWorldCenter.getLatitude(),
 					mWorldCenter.getLongitude(), geoObject.getLatitude(),
 					geoObject.getLongitude(), results);
-			// TODO DEBUG
-			// if (results[0] <= FIGHT_PROXIMITY) {
-			// outPokemon.add(geoObject.getName());
-			// }
 			if (results[0] <= FIGHT_PROXIMITY
 					* (mWorldCenter.getAccuracy() / 2)) {
 				ParcelableMonster pm = new ParcelableMonster(
