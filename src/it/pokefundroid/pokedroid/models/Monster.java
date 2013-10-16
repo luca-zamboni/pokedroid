@@ -289,12 +289,7 @@ public class Monster {
 			Log.e("", id + "");
 			my_name = c.getString(c.getColumnIndex(BaseHelper.MY_NAME));
 			sex = c.getInt(c.getColumnIndex(BaseHelper.SEX));
-			if (sex == 1)
-				realSex = PokemonSex.MALE;
-			else if (sex == 2)
-				realSex = PokemonSex.FEMALE;
-			else
-				realSex = PokemonSex.GENDERLESS;
+			realSex = intToGender(sex);
 			found_x = c.getInt(c.getColumnIndex(BaseHelper.FOUND_X));
 			found_y = c.getInt(c.getColumnIndex(BaseHelper.FOUND_Y));
 
@@ -381,13 +376,7 @@ public class Monster {
 				+ BaseHelper.ATKEV + "," + BaseHelper.DEFEV + ","
 				+ BaseHelper.SATKEV + "," + BaseHelper.SDEFEV + ","
 				+ BaseHelper.SPDEV + "," + BaseHelper.MY_NAME + " ) ";
-		int sex;
-		if (this.sex == PokemonSex.MALE)
-			sex = 1;
-		else if (this.sex == PokemonSex.FEMALE)
-			sex = 2;
-		else
-			sex = 3;
+		int sex = Monster.genderToInt(this.sex);
 		insertPersonalPokemon += " VALUES ( " + id + "," + sex + "," + found_x
 				+ "," + found_y + "," + hpEv + "," + atkEv + "," + defEv + ","
 				+ sAtkEv + "," + sDefEv + "," + spdEv + "," + "'" + my_name
@@ -397,6 +386,14 @@ public class Monster {
 
 		StaticClass.dbpoke.executeSQL(insertPersonalPokemon);
 
+	}
+	
+	public void removeFromDatabase() {
+		String sql = "DELETE FROM "+BaseHelper.TABLE_PERSONAL_POKEMON+" WHERE "+
+				BaseHelper.BASE_POKEMON_ID+"="+id;
+		//TODO watch this things
+		//+" AND "+ BaseHelper.MY_ID +"="+dbId
+		StaticClass.dbpoke.executeSQL(sql);
 	}
 
 	// GETTER AND SETTERS
