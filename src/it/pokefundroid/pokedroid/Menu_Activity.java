@@ -1,13 +1,11 @@
 package it.pokefundroid.pokedroid;
 
-import it.pokefundroid.pokedroid.models.PersonalPokemon.PokemonSex;
 import it.pokefundroid.pokedroid.utils.LocationUtils;
-import it.pokefundroid.pokedroid.utils.StaticClass;
 import it.pokefundroid.pokedroid.utils.LocationUtils.ErrorType;
 import it.pokefundroid.pokedroid.utils.LocationUtils.ILocation;
 import it.pokefundroid.pokedroid.utils.LocationUtils.LocationType;
 import it.pokefundroid.pokedroid.utils.SharedPreferencesUtilities;
-import it.pokefundroid.pokedroid.viewUtils.ParcelableMonster;
+import it.pokefundroid.pokedroid.utils.StaticClass;
 
 import java.io.Serializable;
 
@@ -18,7 +16,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
-import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -44,7 +41,7 @@ public class Menu_Activity extends Activity implements ILocation {
 		mLocationType = LocationType.GPS;
 		
 		if(StaticClass.dbpoke==null)
-			StaticClass.openBatabaseConection(getApplicationContext());
+			StaticClass.openBatabaseConection(Menu_Activity.this);
 
 		mViewPokemon = (Button) findViewById(R.id.button_pokemon);
 		mViewPokemon.setOnClickListener(new OnClickListener() {
@@ -105,7 +102,10 @@ public class Menu_Activity extends Activity implements ILocation {
 	protected void onPostResume() {
 		super.onPostResume();
 		if(SharedPreferencesUtilities.isFirstStart(this)){
-			startActivity(new Intent(this,ChooseSide.class));
+			Intent i = new Intent(this,ChooseSide.class);
+			i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(new Intent(i));
+			finish();
 		}
 	}
 
