@@ -1,12 +1,13 @@
 package it.pokefundroid.pokedroid;
 
+import it.pokefundroid.pokedroid.models.Monster;
+import it.pokefundroid.pokedroid.models.Monster.PokemonSex;
+import it.pokefundroid.pokedroid.utils.SharedPreferencesUtilities;
+import it.pokefundroid.pokedroid.viewUtils.ImageAdapter;
+
 import java.io.IOException;
 import java.io.InputStream;
 
-import it.pokefundroid.pokedroid.models.PersonalPokemon;
-import it.pokefundroid.pokedroid.models.PersonalPokemon.PokemonSex;
-import it.pokefundroid.pokedroid.utils.SharedPreferencesUtilities;
-import it.pokefundroid.pokedroid.viewUtils.ImageAdapter;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -50,7 +51,7 @@ public class ChoosePokemonActivity extends Activity {
 			for (int i = 0; i < pkmnid.length; i++) {
 				// get input stream
 				InputStream ims = getAssets().open(
-						ImageAdapter.getPokemonFilename(pkmnid[i] + ""));
+						ImageAdapter.getMonsterFilename(pkmnid[i] + ""));
 				// load image as Drawable
 				Drawable d = Drawable.createFromStream(ims, null);
 				// set image to ImageView
@@ -62,26 +63,26 @@ public class ChoosePokemonActivity extends Activity {
 	}
 
 	public void choosePokemon(View v) {
-		PersonalPokemon p = null;
-		PokemonSex ps = PersonalPokemon.intToGender((int)((Math.random()*2)+1));
+		Monster p = null;
+		PokemonSex ps = Monster.intToGender((int)((Math.random()*2)+1));
 		switch (v.getId()) {
 		case R.id.choose_grass:
 			if(isBadGuy)
-				p = new PersonalPokemon(BAD_POKEMON_IDS[0], "Bellsprout", ps, -1, -1, 5);
+				p = new Monster(BAD_POKEMON_IDS[0], "Bellsprout", ps, -1, -1, 5);
 			else
-				p = new PersonalPokemon(GOOD_POKEMON_IDS[0], "Bulbasaur", ps, -1, -1, 5);
+				p = new Monster(GOOD_POKEMON_IDS[0], "Bulbasaur", ps, -1, -1, 5);
 			break;
 		case R.id.choose_fire:
 			if(isBadGuy)
-				p = new PersonalPokemon(BAD_POKEMON_IDS[1], "Vulpix", ps, -1, -1, 5);
+				p = new Monster(BAD_POKEMON_IDS[1], "Vulpix", ps, -1, -1, 5);
 			else
-			p = new PersonalPokemon(GOOD_POKEMON_IDS[1], "Charmender", ps, -1, -1, 5);
+			p = new Monster(GOOD_POKEMON_IDS[1], "Charmender", ps, -1, -1, 5);
 			break;
 		case R.id.choose_water:
 			if(isBadGuy)
-				p = new PersonalPokemon(BAD_POKEMON_IDS[2], "Poliwag", ps, -1, -1, 5);
+				p = new Monster(BAD_POKEMON_IDS[2], "Poliwag", ps, -1, -1, 5);
 			else
-			p = new PersonalPokemon(GOOD_POKEMON_IDS[2], "Squirtle", ps, -1, -1, 5);
+			p = new Monster(GOOD_POKEMON_IDS[2], "Squirtle", ps, -1, -1, 5);
 			break;
 			//TODO EASTER EGG to choose Eevee if your are team rocket or
 			// pickachu otherwise
@@ -90,11 +91,11 @@ public class ChoosePokemonActivity extends Activity {
 			if (mCont >= 5) {
 				String msg="";
 				if(isBadGuy){
-					p = new PersonalPokemon(133, "Eve", ps, -1, -1, 5);
+					p = new Monster(133, "Eve", ps, -1, -1, 5);
 					msg = "Eevee the best!";
 				}
 				else{
-					p = new PersonalPokemon(25, "Pika", ps, -1, -1, 5);
+					p = new Monster(25, "Pika", ps, -1, -1, 5);
 					msg = "Pika-Pika!";
 				}
 				p.saveOnDatabase();
@@ -117,7 +118,7 @@ public class ChoosePokemonActivity extends Activity {
 		ChoosePokemonActivity.this.finish();
 	}
 	
-	private void showConfirmDialog(final PersonalPokemon p) {
+	private void showConfirmDialog(final Monster p) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setTitle(R.string.title_confirm)
 				.setMessage(R.string.dialog_sure)

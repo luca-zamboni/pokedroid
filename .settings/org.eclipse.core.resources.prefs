@@ -1,4 +1,7 @@
+=\=\=\=\=\=\=
+<<<<<<<=HEAD
+>>>>>>>=309cd1e98f78792aaf3a9dc9773b542dac5fd447
 eclipse.preferences.version=1
-encoding//src/it/pokefundroid/pokedroid/models/PersonalPokemon.java=UTF-8
+encoding//src/it/pokefundroid/pokedroid/models/Monster.java=UTF-8
 encoding//src/it/pokefundroid/pokedroid/utils/StaticClass.java=UTF-8
-encoding//src/it/pokefundroid/pokedroid/viewUtils/PersonalPokemonAdapter.java=UTF-8
+encoding//src/it/pokefundroid/pokedroid/viewUtils/PersonalMonsterAdapter.java=UTF-8

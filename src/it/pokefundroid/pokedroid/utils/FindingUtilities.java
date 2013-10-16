@@ -1,19 +1,23 @@
 package it.pokefundroid.pokedroid.utils;
 
-import it.pokefundroid.pokedroid.models.Pokemon;
+import it.pokefundroid.pokedroid.models.Monster;
 
 import java.util.Random;
 
 import android.location.Location;
+import android.util.Log;
 
 public class FindingUtilities {
 
 	private final static int[] CHANCE = { 950, 800, 200, 30, 1, 0 };
 	// possibilita' su 1000 elementi di essere selezionati nel set;
 
-	private final static int[] FINDINGCHANCE = { 100, 80, 35, 15, 5, 1 };
+	private final static int[] FINDINGCHANCE = { 100, 80, 30, 15, 2, 1 };
 
-	public static int[] currentPkmnSet = null;
+	private final static int MIN_POKEMON = 3;
+	private final static int MAX_POKEMON = 5;
+
+	public static Monster[] currentPkmnSet = null;
 
 	/**
 	 * selectionRandom usato per scorrere tra tutti i pokemon, setRandom usato
@@ -27,31 +31,45 @@ public class FindingUtilities {
 	 */
 	public static long selectionSeed = 0;
 	public static long setSeed = 0;
-	private static int MAX_POKEMON_IN_RANGE = 20;
+	private static int MAX_POKEMON_IN_RANGE = 10;
 
 	/**
 	 * metodo che dato un array di interi estrae un elemento fra questi, ne
 	 * ricava la rarita' e avvia la procedura per vedere se il 'ritrovamento'
 	 * del pkmn ha avuto successo
 	 */
-	public static int findInPosition(double latitude, double longitude) {
+	public static Monster[] findInPosition(double latitude, double longitude,
+			int number) {
 		Random random = new Random(System.currentTimeMillis());
-		int ret = -1;
+		Monster[] ret = new Monster[number];
 		boolean changed = generateRandoms(latitude, longitude);
 		if (changed || currentPkmnSet == null) {
 			generateSet();
+			Log.d("FindingUtilities.generateRandoms()", latitude + "  "
+					+ longitude);
+			Log.d("FindingUtilities.generateRandoms()",
+					((long) latitude * 10 * 10) + "  "
+							+ ((long) longitude * 10 * 10));
 		}
-		int total = FINDINGCHANCE[Pokemon.getRarityFromId(currentPkmnSet[0])]
-				+ FINDINGCHANCE[Pokemon.getRarityFromId(currentPkmnSet[1])]
-				+ FINDINGCHANCE[Pokemon.getRarityFromId(currentPkmnSet[2])];
-		int tmp = random.nextInt(total);
-		if (tmp < FINDINGCHANCE[Pokemon.getRarityFromId(currentPkmnSet[0])]) {
-			ret = currentPkmnSet[0];
-		} else if (tmp < (total - FINDINGCHANCE[Pokemon.getRarityFromId(currentPkmnSet[2])])) {
-			ret = currentPkmnSet[1];
-		} else {
-			ret = currentPkmnSet[2];
+
+		int maxPoss = 0;
+		for (int i = 0; i < currentPkmnSet.length; i++) {
+			maxPoss += FINDINGCHANCE[currentPkmnSet[i].getRarity()];
 		}
+		for (int j = 0; j < number; j++) {
+			int rdm = random.nextInt(maxPoss);
+
+			int possibility = 0;
+			for (int i = 0; i < currentPkmnSet.length; i++) {
+				possibility += FINDINGCHANCE[currentPkmnSet[i].getRarity()];
+				if (rdm < possibility) {
+					ret[j] = currentPkmnSet[i];
+					break;
+				}
+			}
+
+		}
+
 		return ret;
 	}
 
@@ -65,44 +83,82 @@ public class FindingUtilities {
 		found = (random.nextInt(1000) < CHANCE[rarity]);
 		return found;
 	}
-	
-	
-	public static int generateHowManyPokemonInRange(double range){
+
+	public static Monster[] getPokemonSet() {
+		return currentPkmnSet;
+	}
+
+	public static int generateHowManyPokemonInRange(double range) {
 		Random random = new Random(System.currentTimeMillis());
-		return random.nextInt((int) (MAX_POKEMON_IN_RANGE*(range<10?range:15))+1);
+		return random.nextInt((int) (MAX_POKEMON_IN_RANGE * (range < 10 ? range
+				: 15)) + 1);
+	}
+
+	private static boolean existInSet(int id) {
+		boolean ret = false;
+
+		for (int i = 0; i < currentPkmnSet.length; i++) {
+			if (currentPkmnSet[i] == null)
+				break;
+			if (currentPkmnSet[i].getId() == id)
+				ret = true;
+		}
+
+		return ret;
 	}
 
 	private static void generateSet() {
-		currentPkmnSet = new int[3];
-		for (int i = 0; i < 3;) {
-			int id = selectionRandom.nextInt(151);
-			id = id+1;
-			boolean b = selectByRarity(Pokemon.getRarityFromId(id));
-			if (b)
-				currentPkmnSet[i++] = id;
+		int dim = setRandom.nextInt(MAX_POKEMON - (MIN_POKEMON - 1))
+				+ MIN_POKEMON;
+		Log.e("AAAAAAARGH", "" + dim);
+		currentPkmnSet = new Monster[dim];
+
+		for (int i = 0; i < dim; i++) {
+			currentPkmnSet[i] = null;
 		}
+
+		for (int i = 0; i < dim;) {
+			int id = selectionRandom.nextInt(151) + 1;
+			boolean b = selectByRarity(Monster.getRarityFromId(id));
+			if (b) {
+
+				if (!existInSet(id)) {
+					currentPkmnSet[i] = new Monster(id);
+					i++;
+				}
+			}
+		}
+		String log = "";
+		for (int i = 0; i < currentPkmnSet.length; i++) {
+			log += currentPkmnSet[i].getName() + "  ";
+		}
+
+		Log.d("FindingUtilities.generateSet()", log + "\n" + selectionSeed
+				+ "  " + setSeed);
 	}
 
 	private static boolean generateRandoms(double latitude, double longitude) {
 		// quadrati di 0,001 gradi, circa 111 metri all'equatore
 		boolean ret = false;
-		
-		//sposto di 3 cifre in sotto la virgola e taglio i decimali castando a long
-		latitude *= 10 ^ 3;
-		longitude *= 10 ^ 3;
+
+		// sposto di 3 cifre in sotto la virgola e taglio i decimali castando a
+		// long
+		latitude *= Math.pow(10, 2);
+		longitude *= Math.pow(10, 2);
 		long lat = (long) latitude;
 		long lon = (long) longitude;
-		
+
 		long tSelectionSeed = ((lat * lon) - (151 * lat));
 		long tSetSeed = ((lat * lon) - (270 * lon));
-		
+
+		// -21114 14400 schyter zubat caterpie 46446
+
 		if (tSelectionSeed != selectionSeed || tSetSeed != setSeed) {
 			selectionSeed = tSelectionSeed;
 			setSeed = tSetSeed;
 			ret = true;
 		}
-		
-		
+
 		selectionRandom = new Random(selectionSeed);
 		setRandom = new Random(setSeed);
 		return ret;
@@ -130,5 +186,6 @@ public class FindingUtilities {
 	    out.setLatitude(foundLatitude);
 	    out.setLongitude(foundLongitude);
 	    return out;
+
 	}
 }

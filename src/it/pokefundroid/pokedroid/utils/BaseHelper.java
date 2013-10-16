@@ -1,8 +1,5 @@
 package it.pokefundroid.pokedroid.utils;
 
-import it.pokefundroid.pokedroid.models.PersonalPokemon;
-import it.pokefundroid.pokedroid.models.PersonalPokemon.PokemonSex;
-
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -51,8 +48,8 @@ public class BaseHelper extends SQLiteOpenHelper{
     		BASE_POKEMON_ID + " integer not null," +
     		MY_NAME +" text null," +
     		SEX+" integer not null," +
-    		FOUND_X + " integer null, " +
-    		FOUND_Y + " integer null," +
+    		FOUND_X + " double null, " +
+    		FOUND_Y + " double null," +
 			HPEV + " short not null," +
 			ATKEV + " short not null," +
 			DEFEV + " short not null," +

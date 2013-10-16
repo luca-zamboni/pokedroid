@@ -1,10 +1,9 @@
 package it.pokefundroid.pokedroid.utils;
 
+import it.pokefundroid.pokedroid.models.Monster;
+
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import it.pokefundroid.pokedroid.models.PersonalPokemon;
-import it.pokefundroid.pokedroid.models.PersonalPokemon.PokemonSex;
 
 public class ExchangeProtocolUtils {
 
@@ -27,21 +26,21 @@ public class ExchangeProtocolUtils {
 	private static final String PKMN_Y = "foundY";
 	private static String PKMN_NAME = "name";
 
-	public static PersonalPokemon convertJSONToPersonalPokemon(JSONObject jsobj)
+	public static Monster convertJSONToMonster(JSONObject jsobj)
 			throws JSONException {
-		return new PersonalPokemon(jsobj.getInt(PKMN_ID),
-				jsobj.getString(PKMN_NAME), PersonalPokemon.intToGender(jsobj
+		return new Monster(jsobj.getInt(PKMN_ID),
+				jsobj.getString(PKMN_NAME), Monster.intToGender(jsobj
 						.getInt(PKMN_SEX)), jsobj.getDouble(PKMN_X),
 				jsobj.getDouble(PKMN_Y), jsobj.getInt(PKMN_LVL));
 	}
 	
-	public static JSONObject convertPersonalPokemonToJSON(PersonalPokemon p)
+	public static JSONObject convertMonsterToJSON(Monster p)
 			throws JSONException {
 		JSONObject out = new JSONObject();
 		out.put(PKMN_ID, p.getId());
 		out.put(PKMN_NAME, p.getName());
 		out.put(PKMN_LVL, p.getLevel());
-		out.put(PKMN_SEX, PersonalPokemon.genderToInt(p.getSex()));
+		out.put(PKMN_SEX, Monster.genderToInt(p.getSex()));
 		out.put(PKMN_X, p.getFound_x());
 		out.put(PKMN_Y, p.getFound_y());
 		return out;
@@ -52,16 +51,16 @@ public class ExchangeProtocolUtils {
 		return json.getString(COMMAND_FIELD);
 	}
 	
-	public static PersonalPokemon readSendJSON(JSONObject jsobj)
+	public static Monster readSendJSON(JSONObject jsobj)
 			throws JSONException {
-		return convertJSONToPersonalPokemon(jsobj.getJSONObject(PKMN_FIELD));
+		return convertJSONToMonster(jsobj.getJSONObject(PKMN_FIELD));
 	}
 
-	public static String createSendMessage(PersonalPokemon p)
+	public static String createSendMessage(Monster p)
 			throws JSONException {
 		JSONObject out = new JSONObject();
 		out.put(COMMAND_FIELD, SEND_COMMAND);
-		out.put(PKMN_FIELD, convertPersonalPokemonToJSON(p));
+		out.put(PKMN_FIELD, convertMonsterToJSON(p));
 		return out.toString();
 	}
 	

@@ -60,7 +60,7 @@ public class ImageAdapter extends BaseAdapter {
 		try {
 			imageView.setImageBitmap(BitmapFactory.decodeStream(mContext
 					.getAssets().open(
-							getPokemonFilename(mPokemonsIDs.get(position).getId()))));
+							getMonsterFilename(mPokemonsIDs.get(position).getId()))));
 		} catch (IOException e) {
 			imageView.setImageResource(R.drawable.creature_6);
 		}
@@ -74,7 +74,7 @@ public class ImageAdapter extends BaseAdapter {
 		return imageView;
 	}
 
-	public static String getPokemonFilename(String string) {
+	public static String getMonsterFilename(String string) {
 		int id = Integer.parseInt(string);
 		if (id < 10)
 			return "pkm/pkfrlg00" + id + ".png";

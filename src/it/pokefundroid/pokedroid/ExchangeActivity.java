@@ -16,17 +16,18 @@
 
 package it.pokefundroid.pokedroid;
 
-import java.io.IOException;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import it.pokefundroid.pokedroid.models.PersonalPokemon;
+import it.pokefundroid.pokedroid.models.Monster;
 import it.pokefundroid.pokedroid.utils.BluetoothChatService;
 import it.pokefundroid.pokedroid.utils.ExchangeProtocolUtils;
 import it.pokefundroid.pokedroid.utils.StaticClass;
 import it.pokefundroid.pokedroid.viewUtils.ImageAdapter;
 import it.pokefundroid.pokedroid.viewUtils.ParcelableMonster;
+
+import java.io.IOException;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -40,20 +41,11 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.Window;
-import android.view.inputmethod.EditorInfo;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -99,16 +91,16 @@ public class ExchangeActivity extends Activity {
     public static final String PASSED_MONSTER_KEY = "passedMonster";
 
 	private ParcelableMonster pm;
-	private TextView mMyPokemonName;
-	private ImageView mMyPokemonPicture;
-	private TextView mMyPokemonSex;
-	private TextView mMyPokemonLevel;
+	private TextView mMyMonsterName;
+	private ImageView mMyMonsterPicture;
+	private TextView mMyMonsterSex;
+	private TextView mMyMonsterLevel;
 	
-	private PersonalPokemon mOpponentPokemon;
-	private TextView mOpponentPokemonName;
-	private ImageView mOpponentPokemonPicture;
-	private TextView mOpponentPokemonSex;
-	private TextView mOpponentPokemonLevel;
+	private Monster mOpponentMonster;
+	private TextView mOpponentMonsterName;
+	private ImageView mOpponentMonsterPicture;
+	private TextView mOpponentMonsterSex;
+	private TextView mOpponentMonsterLevel;
 	
 	private STATUS mStatus =STATUS.SEND;
 	private int mAccepts,mACKs;
@@ -134,35 +126,35 @@ public class ExchangeActivity extends Activity {
         
         Bundle extras = getIntent().getExtras();
 		setupViews();
-		setMyPokemon(extras);
+		setMyMonster(extras);
     }
     
     private void setupViews() {
 		View myRow = findViewById(R.id.exchange_myPokemon);
 		
-		mMyPokemonName = (TextView) myRow.findViewById(R.id.pokemon_name);
-		mMyPokemonPicture = (ImageView) myRow.findViewById(R.id.pokemon_picture);
-		mMyPokemonSex = (TextView) myRow.findViewById(R.id.pokemon_sex);
-		mMyPokemonLevel = (TextView) myRow.findViewById(R.id.pokemon_level);
+		mMyMonsterName = (TextView) myRow.findViewById(R.id.pokemon_name);
+		mMyMonsterPicture = (ImageView) myRow.findViewById(R.id.pokemon_picture);
+		mMyMonsterSex = (TextView) myRow.findViewById(R.id.pokemon_sex);
+		mMyMonsterLevel = (TextView) myRow.findViewById(R.id.pokemon_level);
 		
 		View opponentRow = findViewById(R.id.exchange_opponentPokemon);
 		
-		mOpponentPokemonName = (TextView) opponentRow.findViewById(R.id.pokemon_name);
-		mOpponentPokemonPicture = (ImageView) opponentRow.findViewById(R.id.pokemon_picture);
-		mOpponentPokemonSex = (TextView) opponentRow.findViewById(R.id.pokemon_sex);
-		mOpponentPokemonLevel = (TextView) opponentRow.findViewById(R.id.pokemon_level);
+		mOpponentMonsterName = (TextView) opponentRow.findViewById(R.id.pokemon_name);
+		mOpponentMonsterPicture = (ImageView) opponentRow.findViewById(R.id.pokemon_picture);
+		mOpponentMonsterSex = (TextView) opponentRow.findViewById(R.id.pokemon_sex);
+		mOpponentMonsterLevel = (TextView) opponentRow.findViewById(R.id.pokemon_level);
 	}
 
-	private void setMyPokemon(Bundle extras) {
+	private void setMyMonster(Bundle extras) {
 		this.pm = (ParcelableMonster)extras.getParcelable(PASSED_MONSTER_KEY);
 		try {
-			mMyPokemonName.setText(pm.getName());
-			mMyPokemonLevel.setText(String.format(getString(R.string.pokemon_level), pm.getLevel()));
-			String sexChar=PersonalPokemon.getSexAsci(pm.getSex());
-			mMyPokemonSex.setText(sexChar);
-			mMyPokemonSex.setTextColor(StaticClass.getColorFromSexAsci(sexChar));
-			mMyPokemonPicture.setImageBitmap(BitmapFactory.decodeStream(getAssets()
-					.open(ImageAdapter.getPokemonFilename(pm.getId()))));
+			mMyMonsterName.setText(pm.getName());
+			mMyMonsterLevel.setText(String.format(getString(R.string.pokemon_level), pm.getLevel()));
+			String sexChar=Monster.getSexAsci(pm.getSex());
+			mMyMonsterSex.setText(sexChar);
+			mMyMonsterSex.setTextColor(StaticClass.getColorFromSexAsci(sexChar));
+			mMyMonsterPicture.setImageBitmap(BitmapFactory.decodeStream(getAssets()
+					.open(ImageAdapter.getMonsterFilename(pm.getId()))));
 		} catch (IOException e) {
 			// TODO nothing for now
 		}
@@ -279,7 +271,7 @@ public class ExchangeActivity extends Activity {
                 				mDialog.show();
                 			}
                 		});
-						ExchangeActivity.this.sendMessage(ExchangeProtocolUtils.createSendMessage(pm.toPersonalPokemon()));
+						ExchangeActivity.this.sendMessage(ExchangeProtocolUtils.createSendMessage(pm.toMonster()));
 					} catch (JSONException e) {
 						Toast.makeText(getApplicationContext(), getString(R.string.error), Toast.LENGTH_SHORT).show();
 						ExchangeActivity.this.finish();
@@ -359,9 +351,9 @@ public class ExchangeActivity extends Activity {
 			if(type.equals(ExchangeProtocolUtils.SEND_COMMAND)){
 				switch(mStatus){
 				case SEND:
-						mOpponentPokemon = ExchangeProtocolUtils.readSendJSON(new JSONObject(readMessage));
+						mOpponentMonster = ExchangeProtocolUtils.readSendJSON(new JSONObject(readMessage));
 						//TODO visualize pokemon
-						Log.i("exchange", "arrived: "+mOpponentPokemon.getName());
+						Log.i("exchange", "arrived: "+mOpponentMonster.getName());
 						mDialog.dismiss();
 						AlertDialog.Builder builder = new AlertDialog.Builder(ExchangeActivity.this);
 						builder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
@@ -372,12 +364,12 @@ public class ExchangeActivity extends Activity {
 								String msg;
 								try {
 									mAccepts+=1;
-									msg = ExchangeProtocolUtils.createAcceptMessage(mOpponentPokemon.getId());
+									msg = ExchangeProtocolUtils.createAcceptMessage(mOpponentMonster.getId());
 									sendMessage(msg);
 									Log.i("exchange", "sent accept");
 									dialog.dismiss();
 									mDialog = new ProgressDialog(ExchangeActivity.this);
-									((ProgressDialog)mDialog).setMessage("arrived"+mOpponentPokemon.getId());
+									((ProgressDialog)mDialog).setMessage("arrived"+mOpponentMonster.getId());
 								} catch (JSONException e) {
 									// TODO Auto-generated catch block
 									e.printStackTrace();
@@ -397,7 +389,7 @@ public class ExchangeActivity extends Activity {
 				mAccepts+=1;
 				switch(mStatus){
 				case ACCEPT:
-					if(mOpponentPokemon!=null){
+					if(mOpponentMonster!=null){
 						if(ExchangeProtocolUtils.verifyAcceptMessage(new JSONObject(readMessage),
 									Integer.parseInt(pm.getId()))){
 							((ProgressDialog)mDialog).setMessage("accepted"+pm.getId());
@@ -405,7 +397,7 @@ public class ExchangeActivity extends Activity {
 
 							if(mAccepts>=2){
 								mStatus= STATUS.ACK;
-								sendMessage(ExchangeProtocolUtils.createACKMessage(mOpponentPokemon.getId()));
+								sendMessage(ExchangeProtocolUtils.createACKMessage(mOpponentMonster.getId()));
 							}
 						}
 						else{
@@ -418,7 +410,7 @@ public class ExchangeActivity extends Activity {
 					Log.i("exchange", "reiceived accept");
 					if(mAccepts==2){
 						mStatus= STATUS.ACK;
-						sendMessage(ExchangeProtocolUtils.createACKMessage(mOpponentPokemon.getId()));
+						sendMessage(ExchangeProtocolUtils.createACKMessage(mOpponentMonster.getId()));
 					}
 					break;
 				default:
@@ -448,7 +440,7 @@ public class ExchangeActivity extends Activity {
 						mStatus= STATUS.ACK;
 						
 						Toast.makeText(this, "Faccio le operazioni", Toast.LENGTH_SHORT).show();
-						sendMessage(ExchangeProtocolUtils.createACKMessage(mOpponentPokemon.getId()));
+						sendMessage(ExchangeProtocolUtils.createACKMessage(mOpponentMonster.getId()));
 					}
 					break;		
 				default:

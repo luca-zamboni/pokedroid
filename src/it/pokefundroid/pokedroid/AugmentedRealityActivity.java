@@ -1,6 +1,7 @@
 package it.pokefundroid.pokedroid;
 
-import it.pokefundroid.pokedroid.models.PersonalPokemon.PokemonSex;
+import it.pokefundroid.pokedroid.models.Monster;
+import it.pokefundroid.pokedroid.models.Monster.PokemonSex;
 import it.pokefundroid.pokedroid.utils.FindingUtilities;
 import it.pokefundroid.pokedroid.utils.LocationUtils;
 import it.pokefundroid.pokedroid.utils.LocationUtils.ErrorType;
@@ -11,7 +12,6 @@ import it.pokefundroid.pokedroid.viewUtils.ImageAdapter;
 import it.pokefundroid.pokedroid.viewUtils.ImageAdapter.IPokemonSelection;
 import it.pokefundroid.pokedroid.viewUtils.ParcelableMonster;
 
-import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -21,20 +21,11 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.location.Location;
 import android.os.Bundle;
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
-import android.view.animation.AccelerateInterpolator;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
-import android.view.animation.AnimationSet;
-import android.view.animation.DecelerateInterpolator;
 import android.widget.GridView;
 import android.widget.Toast;
 
@@ -107,8 +98,6 @@ public class AugmentedRealityActivity extends FragmentActivity implements
 		mWorldCenter.setLatitude(loc[0]);
 		mWorldCenter.setLongitude(loc[1]);
 
-		// TODO DEBUG
-		Log.i(AugmentedRealityActivity.class.getName(), "accuracy: " + loc[3]);
 		mWorldCenter.setAccuracy((float) loc[3]);
 
 		setWorldAltitude(loc[2]);
@@ -124,16 +113,15 @@ public class AugmentedRealityActivity extends FragmentActivity implements
 
 		int many = FindingUtilities.generateHowManyPokemonInRange(loc[3]);
 
-		for (int i = 0; i < many; i++) {
+		// tmp.setAltitude(loc[2]);
+		Monster[] id = FindingUtilities.findInPosition(loc[0], loc[1], many);
 
-			Location tmp = FindingUtilities.getRandomLocation(loc[0], loc[1],
-					loc[3]);
-			// tmp.setAltitude(loc[2]);
-			int id = FindingUtilities.findInPosition(tmp.getLatitude(),
-					tmp.getLongitude());
-			if (id != -1) {
+		for (int i = 0; i < many; i++) {
+			if (id[i] != null) {
+				Location tmp = FindingUtilities.getRandomLocation(loc[0], loc[1],
+						loc[3]);
 				GeoObject go = new GeoObject(i);
-				fillObj(go, id, tmp);
+				fillObj(go, id[i].getId(), tmp);
 				w.addBeyondarObject(go);
 			}
 		}
@@ -264,6 +252,7 @@ public class AugmentedRealityActivity extends FragmentActivity implements
 			i.putExtra(CaptureActivity.PASSED_WILD_MONSTER_KEY, mSelected);
 			byte[] b = StaticClass.compressBitmap(StaticClass.fastBlur(picture,
 					3));
+
 			i.putExtra(CaptureActivity.PASSED_BACKGROUND_KEY, b);
 			startActivityForResult(i, CAPTURE_CODE);
 			mSelected = null;

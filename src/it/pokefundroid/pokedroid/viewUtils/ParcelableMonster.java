@@ -1,7 +1,7 @@
 package it.pokefundroid.pokedroid.viewUtils;
 
-import it.pokefundroid.pokedroid.models.PersonalPokemon;
-import it.pokefundroid.pokedroid.models.PersonalPokemon.PokemonSex;
+import it.pokefundroid.pokedroid.models.Monster;
+import it.pokefundroid.pokedroid.models.Monster.PokemonSex;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -92,7 +92,7 @@ public class ParcelableMonster implements Parcelable{
 		mFoundX=in.readDouble();
 		mFoundY=in.readDouble();
 		mLevel = in.readInt();
-		mSex = PersonalPokemon.intToGender(in.readInt());
+		mSex = Monster.intToGender(in.readInt());
 	}
 	
 	public static final Parcelable.Creator<ParcelableMonster> CREATOR = new Parcelable.Creator<ParcelableMonster>() {
@@ -118,12 +118,12 @@ public class ParcelableMonster implements Parcelable{
 		dest.writeDouble(mFoundX);
 		dest.writeDouble(mFoundY);
 		dest.writeInt(mLevel);
-		int sex = PersonalPokemon.genderToInt(mSex);
+		int sex = Monster.genderToInt(mSex);
 		dest.writeInt(sex);
 	}
 	
-	public PersonalPokemon toPersonalPokemon(){
-		return new PersonalPokemon(Integer.parseInt(id), mName, mSex, mFoundX, mFoundY, mLevel);
+	public Monster toMonster(){
+		return new Monster(Integer.parseInt(id), mName, mSex, mFoundX, mFoundY, mLevel);
 	}
 	
 }

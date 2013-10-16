@@ -3,9 +3,7 @@ package it.pokefundroid.pokedroid.viewUtils;
 import it.pokefundroid.pokedroid.ExchangeActivity;
 import it.pokefundroid.pokedroid.Menu_Activity;
 import it.pokefundroid.pokedroid.R;
-import it.pokefundroid.pokedroid.models.PersonalPokemon;
-import it.pokefundroid.pokedroid.models.Pokemon;
-import it.pokefundroid.pokedroid.models.PersonalPokemon.PokemonSex;
+import it.pokefundroid.pokedroid.models.Monster;
 import it.pokefundroid.pokedroid.utils.StaticClass;
 
 import java.util.ArrayList;
@@ -22,15 +20,14 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class PersonalPokemonAdapter extends ArrayAdapter<PersonalPokemon> {
+public class PersonalMonsterAdapter extends ArrayAdapter<Monster> {
 	private Context context;
-	private ArrayList<PersonalPokemon> pPokemon;
+	private ArrayList<Monster> mMonsters;
 
-	public PersonalPokemonAdapter(Context context,
-			ArrayList<PersonalPokemon> pPokemon) {
-		super(context, R.layout.row_team_pokemon, pPokemon);
+	public PersonalMonsterAdapter(Context context,ArrayList<Monster> monsters) {
+		super(context, R.layout.row_team_pokemon, monsters);
 		this.context = context;
-		this.pPokemon = pPokemon;
+		this.mMonsters = monsters;
 	}
 
 	@Override
@@ -41,34 +38,34 @@ public class PersonalPokemonAdapter extends ArrayAdapter<PersonalPokemon> {
 				false);
 		
 		//// find view
-		TextView pokemonName = (TextView) rowView.findViewById(R.id.pokemon_name);
-		ImageView pokemon_pictures = (ImageView) rowView
+		TextView monsterName = (TextView) rowView.findViewById(R.id.pokemon_name);
+		ImageView monster_pictures = (ImageView) rowView
 				.findViewById(R.id.pokemon_picture);
-		TextView pokemonSex = (TextView) rowView
+		TextView monsterSex = (TextView) rowView
 				.findViewById(R.id.pokemon_sex);
-		TextView pokemonLevel = (TextView) rowView
+		TextView monsterLevel = (TextView) rowView
 				.findViewById(R.id.pokemon_level);
 		
-		final PersonalPokemon mPoke = pPokemon.get(position);
+		final Monster mPoke = mMonsters.get(position);
 		
 
 		//// set text of pokemon
-		pokemonName.setText(mPoke.getName());
-		pokemonName.setTextColor(Color.BLACK);
+		monsterName.setText(mPoke.getName());
+		monsterName.setTextColor(Color.BLACK);
 		
 		//// set level of pokemon
-		pokemonLevel.setText("lv. "+mPoke.getLevel());
-		pokemonLevel.setTextColor(Color.BLACK); 
+		monsterLevel.setText("lv. "+mPoke.getLevel());
+		monsterLevel.setTextColor(Color.BLACK); 
 		
 		//// set image of pokemon
 		int id = mPoke.getId();
-		Bitmap pictures  = Pokemon.getImagBitmap(context, id);
-		pokemon_pictures.setImageBitmap(pictures);
+		Bitmap pictures  = Monster.getImagBitmap(context, id);
+		monster_pictures.setImageBitmap(pictures);
 		
 		/// set sex of pokemon
-		String sexChar = PersonalPokemon.getSexAsci(mPoke.getSex());
-		pokemonSex.setText(sexChar);
-		pokemonSex.setTextColor(StaticClass.getColorFromSexAsci(sexChar));
+		String sexChar = Monster.getSexAsci(mPoke.getSex());
+		monsterSex.setText(sexChar);
+		monsterSex.setTextColor(StaticClass.getColorFromSexAsci(sexChar));
 		
 		rowView.setOnClickListener(new View.OnClickListener() {
 			@Override

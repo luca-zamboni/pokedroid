@@ -1,13 +1,11 @@
 package it.pokefundroid.pokedroid;
 
-import it.pokefundroid.pokedroid.models.PersonalPokemon;
 import it.pokefundroid.pokedroid.utils.SharedPreferencesUtilities;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 
 public class ChooseSide extends Activity {
