@@ -103,13 +103,12 @@ public class AugmentedRealityActivity extends FragmentActivity implements
 		setWorldAltitude(loc[2]);
 
 		mWorld.setLocation(mWorldCenter);
-		fillPkmn(mWorld, mWorldCenter.getLatitude(),
-				mWorldCenter.getLongitude(), mWorldCenter.getAltitude(),
-				mWorldCenter.getAccuracy());
+		fillPkmn(mWorldCenter.getLatitude(), mWorldCenter.getLongitude(),
+				mWorldCenter.getAltitude(), mWorldCenter.getAccuracy());
 		mWorld.setDefaultBitmap(R.drawable.creature_6);
 	}
 
-	private void fillPkmn(World w, double... loc) {
+	private void fillPkmn(double... loc) {
 
 		int many = FindingUtilities.generateHowManyPokemonInRange(loc[3]);
 
@@ -118,11 +117,11 @@ public class AugmentedRealityActivity extends FragmentActivity implements
 
 		for (int i = 0; i < many; i++) {
 			if (id[i] != null) {
-				Location tmp = FindingUtilities.getRandomLocation(loc[0], loc[1],
-						loc[3]);
+				Location tmp = FindingUtilities.getRandomLocation(loc[0],
+						loc[1], loc[3]);
 				GeoObject go = new GeoObject(i);
 				fillObj(go, id[i].getId(), tmp);
-				w.addBeyondarObject(go);
+				mWorld.addBeyondarObject(go);
 			}
 		}
 	}
@@ -222,6 +221,13 @@ public class AugmentedRealityActivity extends FragmentActivity implements
 	@Override
 	public void onLocationChaged(Location location) {
 		// TODO spawn new pokemon
+		float[] results = new float[2];
+		Location.distanceBetween(mWorldCenter.getLatitude(),
+				mWorldCenter.getLongitude(), location.getLatitude(),
+				location.getLongitude(), results);
+		if (results[0] > mWorldCenter.getAccuracy() / 2)
+			fillPkmn(location.getLatitude(), location.getLongitude(),
+					location.getAltitude(), location.getAccuracy());
 		mWorldCenter = location;
 		mWorld.setLocation(mWorldCenter);
 	}

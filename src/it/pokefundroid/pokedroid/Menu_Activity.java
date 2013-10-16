@@ -28,7 +28,6 @@ public class Menu_Activity extends Activity implements ILocation {
 
 	private Button mViewPokemon;
 	private Button mExplore;
-	private Button mExchange;
 	private LocationUtils mLocationUtils;
 	private ProgressDialog mProgressDialog;
 	private LocationType mLocationType;
@@ -50,16 +49,6 @@ public class Menu_Activity extends Activity implements ILocation {
 			public void onClick(View arg0) {
 				startActivity(new Intent(getApplicationContext(),
 						View_team_activity.class));
-			}
-		});
-
-		mExchange = (Button) findViewById(R.id.button_exchange);
-		mExchange.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View arg0) {
-				// TODO Debug
-
 			}
 		});
 
