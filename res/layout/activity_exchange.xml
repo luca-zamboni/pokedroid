@@ -34,7 +34,7 @@
             android:id="@+id/exchange_opponentPokemon"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginLeft="5dp"
+            android:layout_marginTop="5dp"
             android:layout_weight="0.5"
             layout="@layout/row_team_pokemon"
             android:visibility="invisible" />
