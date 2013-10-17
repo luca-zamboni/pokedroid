@@ -484,12 +484,12 @@ public class ExchangeActivity extends Activity {
 			mACKs += 1;
 		}
 		if (mACKs >= 2) {
-			// TODO do operations
 			mMyMonster.removeFromDatabase();
 			mOpponentMonster.saveOnDatabase();
 			mStatus = STATUS.SEND;
 			mChatService.stop();
 			mDialog.dismiss();
+			this.finish();
 		}
 	}
 
