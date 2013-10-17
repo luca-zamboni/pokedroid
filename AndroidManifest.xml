@@ -57,8 +57,7 @@
         </activity>
         <activity
             android:name=".ExchangeActivity"
-            android:configChanges="orientation|keyboardHidden"
-            android:screenOrientation="landscape" >
+            android:configChanges="orientation|keyboardHidden" >
         </activity>
         <activity
             android:name=".DeviceListActivity"
