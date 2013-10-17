@@ -32,6 +32,7 @@ public class BaseHelper extends SQLiteOpenHelper{
     public static final String SEX = "sex";
     public static final String FOUND_X = "found_coordinate_x";
     public static final String FOUND_Y = "found_coordinate_y";
+    public static final String SEED = "seed";
     public static final String LEVEL = "level";
     public static final String HPEV = "hpEv";
     public static final String ATKEV = "atkEv";
@@ -50,6 +51,7 @@ public class BaseHelper extends SQLiteOpenHelper{
     		SEX+" integer not null," +
     		FOUND_X + " double null, " +
     		FOUND_Y + " double null," +
+			SEED + " int null," +
 			HPEV + " short not null," +
 			ATKEV + " short not null," +
 			DEFEV + " short not null," +
