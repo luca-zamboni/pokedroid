@@ -156,8 +156,7 @@ public class AugmentedRealityActivity extends FragmentActivity implements
 			return "assets://pkm/pkfrlg" + id + ".png";
 	}
 
-	private void showChoosePokemonDialog(
-			ArrayList<Monster> monstersIDs) {
+	private void showChoosePokemonDialog(ArrayList<Monster> monstersIDs) {
 		LayoutInflater inflater = getLayoutInflater();
 		View v = inflater.inflate(R.layout.dialog_choosepokemon, null, false);
 		GridView gv = (GridView) v.findViewById(R.id.dialog_pokemongridview);
@@ -165,13 +164,13 @@ public class AugmentedRealityActivity extends FragmentActivity implements
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(this).setTitle(
 				R.string.choose_pokemon_title).setView(v);
-		mDialog=builder.create();
+		mDialog = builder.create();
 		mDialog.show();
 	}
 
 	private void doAction(List<BeyondarObject> geoObjects) {
 		Iterator<BeyondarObject> iterator = geoObjects.iterator();
-		ArrayList<Monster>outMonster = new ArrayList<Monster>();
+		ArrayList<Monster> outMonster = new ArrayList<Monster>();
 		bo = new ArrayList<BeyondarObject>();
 		while (iterator.hasNext()) {
 			GeoObject geoObject = (GeoObject) iterator.next();
@@ -179,13 +178,26 @@ public class AugmentedRealityActivity extends FragmentActivity implements
 			Location.distanceBetween(mWorldCenter.getLatitude(),
 					mWorldCenter.getLongitude(), geoObject.getLatitude(),
 					geoObject.getLongitude(), results);
-			if (results[0] <= FIGHT_PROXIMITY
-					* (mWorldCenter.getAccuracy() / 2)) {
-				Monster pm = new Monster(
-						Integer.parseInt(geoObject.getName()), "", PokemonSex.FEMALE, geoObject.getLatitude(),
-						geoObject.getLongitude(), 20);
-				outMonster.add(pm);
-				bo.add(geoObject);
+			
+			//TODO better fix
+			int level = (int)(Math.random()*100+1);
+			PokemonSex sex = Monster.intToGender(((int)Math.random()*2+1));
+			Monster pm = new Monster(Integer.parseInt(geoObject.getName()), "",
+					sex, geoObject.getLatitude(),
+					geoObject.getLongitude(), level);
+			
+			if (StaticClass.DEBUG) {
+				if (results[0] <= FIGHT_PROXIMITY
+						* (mWorldCenter.getAccuracy() / 2)) {
+
+					outMonster.add(pm);
+					bo.add(geoObject);
+				}
+			} else {
+				if (results[0] <= FIGHT_PROXIMITY) {
+					outMonster.add(pm);
+					bo.add(geoObject);
+				}
 			}
 		}
 		if (outMonster.size() == 0)
@@ -272,10 +284,10 @@ public class AugmentedRealityActivity extends FragmentActivity implements
 	}
 
 	@Override
-	public void onPokemonSelected(Monster pm,int i) {
-		if(mDialog!=null)
+	public void onPokemonSelected(Monster pm, int i) {
+		if (mDialog != null)
 			mDialog.dismiss();
-		if(bo!=null){
+		if (bo != null) {
 			mSelectedBo = bo.get(i);
 			bo = null;
 		}
@@ -291,13 +303,12 @@ public class AugmentedRealityActivity extends FragmentActivity implements
 				String response = data
 						.getStringExtra(CaptureActivity.RESPONSE_KEY);
 				if (response != null && response.trim().length() > 0) {
-					if(mSelectedBo!=null)
+					if (mSelectedBo != null)
 						mWorld.remove(mSelectedBo);
 					Toast.makeText(this, response, Toast.LENGTH_SHORT).show();
 				}
 			}
 		}
 	}
-
 
 }

@@ -13,6 +13,9 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 
 public class StaticClass {
+	
+	public static final boolean DEBUG = true;
+	
 	public static BaseHelper dbpoke;
 
 	public static void openBatabaseConection(Context c) {
