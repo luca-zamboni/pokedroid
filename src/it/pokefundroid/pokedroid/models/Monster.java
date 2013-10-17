@@ -51,8 +51,6 @@ public class Monster {
 	private int sDefEv = 0;
 	private int spdEv = 0;
 
-	private static int nextDbId = 0;
-
 	public enum PokemonSex {
 		MALE, FEMALE, GENDERLESS
 	}
@@ -250,8 +248,6 @@ public class Monster {
 	public Monster(int id, String my_name, PokemonSex sex, double found_x,
 			double found_y, int level) {
 		this(id);
-
-		this.dbId = nextDbId++;
 		this.my_name = my_name;
 		this.sex = sex;
 		this.found_x = found_x;
@@ -285,8 +281,7 @@ public class Monster {
 		ArrayList<Monster> mPokemon = new ArrayList<Monster>();
 		while (c.moveToNext()) {
 			id = c.getInt(c.getColumnIndex(BaseHelper.BASE_POKEMON_ID));
-
-			Log.e("", id + "");
+			int myid = c.getInt(c.getColumnIndex(BaseHelper.MY_ID));
 			my_name = c.getString(c.getColumnIndex(BaseHelper.MY_NAME));
 			sex = c.getInt(c.getColumnIndex(BaseHelper.SEX));
 			realSex = intToGender(sex);
@@ -294,12 +289,18 @@ public class Monster {
 			found_y = c.getInt(c.getColumnIndex(BaseHelper.FOUND_Y));
 
 			// TODO remove hardcoded
-			mPokemon.add(new Monster(id, my_name, realSex, found_x, found_y, 20));
+			Monster m = new Monster(id, my_name, realSex, found_x, found_y, 20);
+			m.setDbId(myid);
+			mPokemon.add(m);
 		}
 
 		StaticClass.dbpoke.close();
 
 		return mPokemon;
+	}
+
+	private void setDbId(int myid) {
+		this.dbId = myid;
 	}
 
 	public static String getImagUri(int id) {
@@ -390,9 +391,7 @@ public class Monster {
 	
 	public void removeFromDatabase() {
 		String sql = "DELETE FROM "+BaseHelper.TABLE_PERSONAL_POKEMON+" WHERE "+
-				BaseHelper.BASE_POKEMON_ID+"="+id;
-		//TODO watch this things
-		//+" AND "+ BaseHelper.MY_ID +"="+dbId
+				BaseHelper.BASE_POKEMON_ID+"="+id +" AND "+ BaseHelper.MY_ID +"="+dbId;
 		StaticClass.dbpoke.executeSQL(sql);
 	}
 
