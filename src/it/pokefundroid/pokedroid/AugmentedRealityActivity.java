@@ -16,6 +16,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.location.Location;
@@ -52,6 +53,12 @@ public class AugmentedRealityActivity extends FragmentActivity implements
 	private int CAPTURE_CODE = 1;
 
 	private Monster mSelected;
+
+	private Dialog mDialog;
+
+	private ArrayList<BeyondarObject> bo;
+
+	private BeyondarObject mSelectedBo;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -158,12 +165,14 @@ public class AugmentedRealityActivity extends FragmentActivity implements
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(this).setTitle(
 				R.string.choose_pokemon_title).setView(v);
-		builder.create().show();
+		mDialog=builder.create();
+		mDialog.show();
 	}
 
 	private void doAction(List<BeyondarObject> geoObjects) {
 		Iterator<BeyondarObject> iterator = geoObjects.iterator();
-		ArrayList<Monster> outMonster = new ArrayList<Monster>();
+		ArrayList<Monster>outMonster = new ArrayList<Monster>();
+		bo = new ArrayList<BeyondarObject>();
 		while (iterator.hasNext()) {
 			GeoObject geoObject = (GeoObject) iterator.next();
 			float[] results = new float[2];
@@ -176,6 +185,7 @@ public class AugmentedRealityActivity extends FragmentActivity implements
 						Integer.parseInt(geoObject.getName()), "", PokemonSex.FEMALE, geoObject.getLatitude(),
 						geoObject.getLongitude(), 20);
 				outMonster.add(pm);
+				bo.add(geoObject);
 			}
 		}
 		if (outMonster.size() == 0)
@@ -185,6 +195,7 @@ public class AugmentedRealityActivity extends FragmentActivity implements
 			showChoosePokemonDialog(outMonster);
 		else {
 			mSelected = outMonster.get(0);
+			mSelectedBo = bo.get(0);
 			mCameraView.tackePicture(this);
 		}
 	}
@@ -261,7 +272,13 @@ public class AugmentedRealityActivity extends FragmentActivity implements
 	}
 
 	@Override
-	public void onPokemonSelected(Monster pm) {
+	public void onPokemonSelected(Monster pm,int i) {
+		if(mDialog!=null)
+			mDialog.dismiss();
+		if(bo!=null){
+			mSelectedBo = bo.get(i);
+			bo = null;
+		}
 		mSelected = pm;
 		mCameraView.tackePicture(this);
 	}
@@ -274,10 +291,13 @@ public class AugmentedRealityActivity extends FragmentActivity implements
 				String response = data
 						.getStringExtra(CaptureActivity.RESPONSE_KEY);
 				if (response != null && response.trim().length() > 0) {
+					if(mSelectedBo!=null)
+						mWorld.remove(mSelectedBo);
 					Toast.makeText(this, response, Toast.LENGTH_SHORT).show();
 				}
 			}
 		}
 	}
+
 
 }

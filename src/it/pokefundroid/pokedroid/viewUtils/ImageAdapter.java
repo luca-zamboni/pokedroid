@@ -19,7 +19,7 @@ import android.widget.ImageView;
 public class ImageAdapter extends BaseAdapter {
 	
 	public interface IPokemonSelection {
-		public void onPokemonSelected(Monster id);
+		public void onPokemonSelected(Monster id,int pos);
 	}
 
 	private Context mContext;
@@ -69,7 +69,7 @@ public class ImageAdapter extends BaseAdapter {
 			
 			@Override
 			public void onClick(View v) {
-				inter.onPokemonSelected(mPokemonsIDs.get(position));
+				inter.onPokemonSelected(mPokemonsIDs.get(position),position);
 			}
 		});
 		return imageView;
