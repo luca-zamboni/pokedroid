@@ -7,6 +7,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -266,6 +267,7 @@ public class Monster implements Serializable{
 		this.found_x = found_x;
 		this.found_y = found_y;
 		this.level = 20;
+		this.level = level;
 
 	}
 
@@ -287,8 +289,8 @@ public class Monster implements Serializable{
 			StaticClass.openBatabaseConection(ctx.getApplicationContext());
 		StaticClass.dbpoke.openDataBase();
 		Cursor c = StaticClass.dbpoke.dbpoke.rawQuery("SELECT * FROM "
-				+ BaseHelper.TABLE_PERSONAL_POKEMON, null);
-		int id, dbId, sex, found_x, found_y;
+				+ BaseHelper.TABLE_PERSONAL_POKEMON + " ORDER BY " + BaseHelper.ORDER, null);
+		int id, dbId, sex, found_x, found_y,level;
 		PokemonSex realSex;
 		String my_name;
 		ArrayList<Monster> mPokemon = new ArrayList<Monster>();
@@ -302,9 +304,11 @@ public class Monster implements Serializable{
 			realSex = intToGender(sex);
 			found_x = c.getInt(c.getColumnIndex(BaseHelper.FOUND_X));
 			found_y = c.getInt(c.getColumnIndex(BaseHelper.FOUND_Y));
+			
+			level = c.getInt(c.getColumnIndex(BaseHelper.LEVEL));
 
 			// TODO remove hardcoded level
-			Monster nuovo = new Monster(id, my_name, realSex, found_x, found_y, 20);
+			Monster nuovo = new Monster(id, my_name, realSex, found_x, found_y, level);
 			nuovo.setDbId(dbId);
 			
 			mPokemon.add(nuovo);
@@ -385,23 +389,32 @@ public class Monster implements Serializable{
 	}
 
 	public void saveOnDatabase() {
-		String insertPersonalPokemon = "INSERT INTO "
-				+ BaseHelper.TABLE_PERSONAL_POKEMON + " ";
-		insertPersonalPokemon += " ( " + BaseHelper.BASE_POKEMON_ID + ","
-				+ BaseHelper.SEX + "," + BaseHelper.FOUND_X + ","
-				+ BaseHelper.FOUND_Y + "," + BaseHelper.HPEV + ","
-				+ BaseHelper.ATKEV + "," + BaseHelper.DEFEV + ","
-				+ BaseHelper.SATKEV + "," + BaseHelper.SDEFEV + ","
-				+ BaseHelper.SPDEV + "," + BaseHelper.MY_NAME + " ) ";
 		int sex = Monster.genderToInt(this.sex);
-		insertPersonalPokemon += " VALUES ( " + id + "," + sex + "," + found_x
-				+ "," + found_y + "," + hpEv + "," + atkEv + "," + defEv + ","
-				+ sAtkEv + "," + sDefEv + "," + spdEv + "," + "'" + my_name
-				+ "'); ";
+		
+		ContentValues c = new ContentValues();
+		
+		c.put(BaseHelper.BASE_POKEMON_ID, id);
+		c.put(BaseHelper.SEX, sex);
+		c.put(BaseHelper.FOUND_X, found_x);
+		c.put(BaseHelper.FOUND_Y, found_y);
+		c.put(BaseHelper.LEVEL, level);
+		c.put(BaseHelper.HPEV, hpEv);
+		c.put(BaseHelper.ATKEV, atkEv);
+		c.put(BaseHelper.DEFEV, defEv);
+		c.put(BaseHelper.SATKEV, sAtkEv);
+		c.put(BaseHelper.SDEFEV, sDefEv);
+		c.put(BaseHelper.SPDEV, spdEv);
+		c.put(BaseHelper.MY_NAME, my_name);
 
-		Log.e("asd", insertPersonalPokemon);
+		StaticClass.dbpoke.openDataBase();
+		int dbId = (int) StaticClass.dbpoke.dbpoke.insertOrThrow(BaseHelper.TABLE_PERSONAL_POKEMON, null, c);
+		StaticClass.dbpoke.close();
+		
+		StaticClass.dbpoke.executeSQL("UPDATE "+BaseHelper.TABLE_PERSONAL_POKEMON+
+				" SET "+BaseHelper.ORDER+"="+dbId+" WHERE "+
+				BaseHelper.MY_ID + " = " + dbId);
 
-		StaticClass.dbpoke.executeSQL(insertPersonalPokemon);
+		//StaticClass.dbpoke.executeSQL(insertPersonalPokemon);
 
 	}
 	

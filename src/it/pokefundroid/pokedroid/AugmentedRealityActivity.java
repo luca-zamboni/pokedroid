@@ -37,7 +37,7 @@ import com.beyondar.android.world.objects.BeyondarObject;
 import com.beyondar.android.world.objects.GeoObject;
 
 public class AugmentedRealityActivity extends FragmentActivity implements
-		OnARTouchListener, ILocation, IPictureCallback, IPokemonSelection {
+		OnARTouchListener, ILocation, IPictureCallback, IPokemonSelection { 
 
 	public static final String RESULTS = "Results";
 
