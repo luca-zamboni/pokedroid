@@ -7,12 +7,16 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
 
+import javax.crypto.spec.IvParameterSpec;
+
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.os.SystemClock;
 import android.util.Log;
+import android.widget.SeekBar;
 
-public class Monster implements Serializable{
+public class Monster implements Serializable {
 
 	/**
 	 * 
@@ -42,7 +46,7 @@ public class Monster implements Serializable{
 	private short spdYield;
 
 	public String my_name;
-	private int dbId=0;
+	private int dbId = 0;
 	private PokemonSex sex;
 	private double found_x;
 	private double found_y;
@@ -55,15 +59,17 @@ public class Monster implements Serializable{
 	private int sAtkEv = 0;
 	private int sDefEv = 0;
 	private int spdEv = 0;
-	
-	//individual values initialized to 0, created when the db id get loaded
+
+	// individual values initialized to 0, created when the db id get loaded
+	private int ivSeed = 0;
+
 	private int hpIv = 0;
 	private int atkIv = 0;
 	private int defIv = 0;
 	private int sAtkIv = 0;
 	private int sDefIv = 0;
 	private int spdIv = 0;
-	
+
 	public enum PokemonSex {
 		MALE, FEMALE, GENDERLESS
 	}
@@ -185,16 +191,20 @@ public class Monster implements Serializable{
 			NONPRESENT,
 			SUBRARE,
 			NONPRESENT, // 2krabby, 2voltorb, 2exeggcute, 2cubone
-			SUBRARE, SUBRARE, SUBRARE, SUBRARE,
+			SUBRARE, SUBRARE,
+			SUBRARE,
+			SUBRARE,
 			NONPRESENT,
 			SUBRARE,
 			NONPRESENT, // 1hitmonlee, 1hitmonchan, 1lickitung, 2koffing,
 						// 2rhyhorn
-			RARE, RARE, SUBRARE, SUBRARE, NONPRESENT, COMMON, NONPRESENT,
+			RARE, RARE, SUBRARE, SUBRARE, NONPRESENT, COMMON,
+			NONPRESENT,
 			SUBRARE,
 			NONPRESENT, // 1chansey, 1tangela, 1kangaskhan, 2horsea, 2goldeen,
 						// 2staryu
-			RARE, RARE, RARE, RARE, RARE, RARE, SUBRARE, VERYCOMMON,
+			RARE, RARE, RARE, RARE, RARE, RARE, SUBRARE,
+			VERYCOMMON,
 			SUBRARE, // 1mime, 1scyther, 1jynx, 1electabuzz, 1magmar, 1pinsir,
 						// 1tauros, 2magikarp
 			SUBRARE, RARE, RARE, NONPRESENT, NONPRESENT, NONPRESENT, RARE,
@@ -293,7 +303,7 @@ public class Monster implements Serializable{
 		String my_name;
 		ArrayList<Monster> mPokemon = new ArrayList<Monster>();
 		while (c.moveToNext()) {
-			
+
 			dbId = c.getInt(c.getColumnIndex(BaseHelper.MY_ID));
 			id = c.getInt(c.getColumnIndex(BaseHelper.BASE_POKEMON_ID));
 			int myid = c.getInt(c.getColumnIndex(BaseHelper.MY_ID));
@@ -302,11 +312,14 @@ public class Monster implements Serializable{
 			realSex = intToGender(sex);
 			found_x = c.getInt(c.getColumnIndex(BaseHelper.FOUND_X));
 			found_y = c.getInt(c.getColumnIndex(BaseHelper.FOUND_Y));
+			int seed = c.getInt(c.getColumnIndex(BaseHelper.SEED));
 
 			// TODO remove hardcoded level
-			Monster nuovo = new Monster(id, my_name, realSex, found_x, found_y, 20);
+			Monster nuovo = new Monster(id, my_name, realSex, found_x, found_y,
+					20);
+			nuovo.setSeed(seed);
 			nuovo.setDbId(dbId);
-			
+
 			mPokemon.add(nuovo);
 		}
 
@@ -314,7 +327,7 @@ public class Monster implements Serializable{
 
 		return mPokemon;
 	}
-	
+
 	public int getDbId() {
 		return dbId;
 	}
@@ -385,6 +398,8 @@ public class Monster implements Serializable{
 	}
 
 	public void saveOnDatabase() {
+		int seed = this.ivSeed == 0 ? ((int) (this.id * this.level * SystemClock
+				.elapsedRealtime())) : this.ivSeed;
 		String insertPersonalPokemon = "INSERT INTO "
 				+ BaseHelper.TABLE_PERSONAL_POKEMON + " ";
 		insertPersonalPokemon += " ( " + BaseHelper.BASE_POKEMON_ID + ","
@@ -392,22 +407,23 @@ public class Monster implements Serializable{
 				+ BaseHelper.FOUND_Y + "," + BaseHelper.HPEV + ","
 				+ BaseHelper.ATKEV + "," + BaseHelper.DEFEV + ","
 				+ BaseHelper.SATKEV + "," + BaseHelper.SDEFEV + ","
-				+ BaseHelper.SPDEV + "," + BaseHelper.MY_NAME + " ) ";
+				+ BaseHelper.SPDEV + "," + BaseHelper.MY_NAME + ","
+				+ BaseHelper.SEED + " ) ";
 		int sex = Monster.genderToInt(this.sex);
 		insertPersonalPokemon += " VALUES ( " + id + "," + sex + "," + found_x
 				+ "," + found_y + "," + hpEv + "," + atkEv + "," + defEv + ","
 				+ sAtkEv + "," + sDefEv + "," + spdEv + "," + "'" + my_name
-				+ "'); ";
+				+ "'," + seed + "); ";
 
 		Log.e("asd", insertPersonalPokemon);
 
 		StaticClass.dbpoke.executeSQL(insertPersonalPokemon);
 
 	}
-	
+
 	public void removeFromDatabase() {
-		String sql = "DELETE FROM "+BaseHelper.TABLE_PERSONAL_POKEMON+" WHERE "+
-				BaseHelper.MY_ID+"="+dbId;
+		String sql = "DELETE FROM " + BaseHelper.TABLE_PERSONAL_POKEMON
+				+ " WHERE " + BaseHelper.MY_ID + "=" + dbId;
 		StaticClass.dbpoke.executeSQL(sql);
 	}
 
@@ -438,27 +454,33 @@ public class Monster implements Serializable{
 	}
 
 	public int getHp() {
-		return (int) ((((hpIv + 2 * this.baseHp + (hpEv / 4) + 100) * this.getLevel()) / 100 + 10));
+		return (int) ((((hpIv + 2 * this.baseHp + (hpEv / 4) + 100) * this
+				.getLevel()) / 100 + 10));
 	}
 
 	public int getAttack() {
-		return (int) ((((atkIv + 2 * this.baseAtk + (atkEv / 4)) * this.getLevel()) / 100 + 5));
+		return (int) ((((atkIv + 2 * this.baseAtk + (atkEv / 4)) * this
+				.getLevel()) / 100 + 5));
 	}
 
 	public int getDefence() {
-		return (int) ((((defIv + 2 * this.baseDef + (defEv / 4)) * this.getLevel()) / 100 + 5));
+		return (int) ((((defIv + 2 * this.baseDef + (defEv / 4)) * this
+				.getLevel()) / 100 + 5));
 	}
 
 	public int getSpecialAttack() {
-		return (int) ((((sAtkIv + 2 * this.baseSAtk + (sAtkEv / 4)) * this.getLevel()) / 100 + 5));
+		return (int) ((((sAtkIv + 2 * this.baseSAtk + (sAtkEv / 4)) * this
+				.getLevel()) / 100 + 5));
 	}
 
 	public int getSpecialDefence() {
-		return (int) ((((sDefIv + 2 * this.baseSDef + (sDefEv / 4)) * this.getLevel()) / 100 + 5));
+		return (int) ((((sDefIv + 2 * this.baseSDef + (sDefEv / 4)) * this
+				.getLevel()) / 100 + 5));
 	}
 
 	public int getSpeed() {
-		return (int) ((((spdIv + 2 * this.baseSpd + (spdEv / 4)) * this.getLevel()) / 100 + 5));
+		return (int) ((((spdIv + 2 * this.baseSpd + (spdEv / 4)) * this
+				.getLevel()) / 100 + 5));
 	}
 
 	public int getRarity() {
@@ -529,16 +551,23 @@ public class Monster implements Serializable{
 	public short getSpdYield() {
 		return spdYield;
 	}
-	
+
+	public void setSeed(int seed) {
+		this.ivSeed = seed;
+	}
+
 	public void setDbId(int dbId) {
 		this.dbId = dbId;
-		Random r = new Random(id * dbId);
+		Random r = new Random(ivSeed);
 		hpIv = r.nextInt(32);
 		atkIv = r.nextInt(32);
 		defIv = r.nextInt(32);
 		sAtkIv = r.nextInt(32);
 		sDefIv = r.nextInt(32);
 		spdIv = r.nextInt(32);
+		Log.i("Monster", this.name + " " + this.hpIv + " " + this.atkIv + " "
+				+ this.defIv + " " + this.sAtkIv + " " + this.sDefIv + " "
+				+ this.spdIv);
 	}
 
 	public static PokemonSex intToGender(int sex) {
