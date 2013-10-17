@@ -83,8 +83,8 @@ public class PersonalMonsterAdapter extends ArrayAdapter<Monster> {
 				thp.setText(""+mPoke.getHp());
 				tatt.setText(""+mPoke.getAttack());
 				tdef.setText(""+mPoke.getDefence());
-				tspatt.setText(""+mPoke.getAtkYield());
-				tspdef.setText(""+mPoke.getSpDefYield());
+				tspatt.setText(""+mPoke.getSpecialAttack());
+				tspdef.setText(""+mPoke.getSpecialDefence());
 				tspeed.setText(""+mPoke.getSpeed());
 				
 				builder.setTitle(R.string.title_dialog_viewstatpoke);
