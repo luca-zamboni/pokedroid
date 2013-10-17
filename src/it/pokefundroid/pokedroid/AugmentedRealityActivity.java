@@ -10,7 +10,6 @@ import it.pokefundroid.pokedroid.utils.LocationUtils.LocationType;
 import it.pokefundroid.pokedroid.utils.StaticClass;
 import it.pokefundroid.pokedroid.viewUtils.ImageAdapter;
 import it.pokefundroid.pokedroid.viewUtils.ImageAdapter.IPokemonSelection;
-import it.pokefundroid.pokedroid.viewUtils.ParcelableMonster;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -52,7 +51,7 @@ public class AugmentedRealityActivity extends FragmentActivity implements
 
 	private int CAPTURE_CODE = 1;
 
-	private ParcelableMonster mSelected;
+	private Monster mSelected;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -151,7 +150,7 @@ public class AugmentedRealityActivity extends FragmentActivity implements
 	}
 
 	private void showChoosePokemonDialog(
-			ArrayList<ParcelableMonster> monstersIDs) {
+			ArrayList<Monster> monstersIDs) {
 		LayoutInflater inflater = getLayoutInflater();
 		View v = inflater.inflate(R.layout.dialog_choosepokemon, null, false);
 		GridView gv = (GridView) v.findViewById(R.id.dialog_pokemongridview);
@@ -164,7 +163,7 @@ public class AugmentedRealityActivity extends FragmentActivity implements
 
 	private void doAction(List<BeyondarObject> geoObjects) {
 		Iterator<BeyondarObject> iterator = geoObjects.iterator();
-		ArrayList<ParcelableMonster> outMonster = new ArrayList<ParcelableMonster>();
+		ArrayList<Monster> outMonster = new ArrayList<Monster>();
 		while (iterator.hasNext()) {
 			GeoObject geoObject = (GeoObject) iterator.next();
 			float[] results = new float[2];
@@ -173,9 +172,9 @@ public class AugmentedRealityActivity extends FragmentActivity implements
 					geoObject.getLongitude(), results);
 			if (results[0] <= FIGHT_PROXIMITY
 					* (mWorldCenter.getAccuracy() / 2)) {
-				ParcelableMonster pm = new ParcelableMonster(
-						geoObject.getName(), "", geoObject.getLatitude(),
-						geoObject.getLongitude(), PokemonSex.FEMALE, 20);
+				Monster pm = new Monster(
+						Integer.parseInt(geoObject.getName()), "", PokemonSex.FEMALE, geoObject.getLatitude(),
+						geoObject.getLongitude(), 20);
 				outMonster.add(pm);
 			}
 		}
@@ -262,7 +261,7 @@ public class AugmentedRealityActivity extends FragmentActivity implements
 	}
 
 	@Override
-	public void onPokemonSelected(ParcelableMonster pm) {
+	public void onPokemonSelected(Monster pm) {
 		mSelected = pm;
 		mCameraView.tackePicture(this);
 	}

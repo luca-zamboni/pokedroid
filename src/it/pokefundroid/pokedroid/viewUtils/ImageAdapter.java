@@ -1,6 +1,7 @@
 package it.pokefundroid.pokedroid.viewUtils;
 
 import it.pokefundroid.pokedroid.R;
+import it.pokefundroid.pokedroid.models.Monster;
 
 import java.io.IOException;
 import java.util.List;
@@ -18,11 +19,11 @@ import android.widget.ImageView;
 public class ImageAdapter extends BaseAdapter {
 	
 	public interface IPokemonSelection {
-		public void onPokemonSelected(ParcelableMonster id);
+		public void onPokemonSelected(Monster id);
 	}
 
 	private Context mContext;
-	private List<ParcelableMonster> mPokemonsIDs;
+	private List<Monster> mPokemonsIDs;
 	private IPokemonSelection inter;
 
 	public ImageAdapter(IPokemonSelection inter,Context c, List pokemonsIDs) {
@@ -60,7 +61,7 @@ public class ImageAdapter extends BaseAdapter {
 		try {
 			imageView.setImageBitmap(BitmapFactory.decodeStream(mContext
 					.getAssets().open(
-							getMonsterFilename(mPokemonsIDs.get(position).getId()))));
+							getMonsterFilename(""+mPokemonsIDs.get(position).getId()))));
 		} catch (IOException e) {
 			imageView.setImageResource(R.drawable.creature_6);
 		}

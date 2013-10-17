@@ -19,10 +19,8 @@ package it.pokefundroid.pokedroid;
 import it.pokefundroid.pokedroid.models.Monster;
 import it.pokefundroid.pokedroid.utils.BluetoothChatService;
 import it.pokefundroid.pokedroid.utils.ExchangeProtocolUtils;
-import it.pokefundroid.pokedroid.utils.SharedPreferencesUtilities;
 import it.pokefundroid.pokedroid.utils.StaticClass;
 import it.pokefundroid.pokedroid.viewUtils.ImageAdapter;
-import it.pokefundroid.pokedroid.viewUtils.ParcelableMonster;
 
 import java.io.IOException;
 
@@ -30,12 +28,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -46,7 +42,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Checkable;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -90,7 +85,6 @@ public class ExchangeActivity extends Activity {
 
 	public static final String PASSED_MONSTER_KEY = "passedMonster";
 
-	private ParcelableMonster pm;
 	private Monster mMyMonster;
 	private TextView mMyMonsterName;
 	private ImageView mMyMonsterPicture;
@@ -112,7 +106,7 @@ public class ExchangeActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		setContentView(R.layout.exchange_activity);
+		setContentView(R.layout.activity_exchange);
 
 		// Get local Bluetooth adapter
 		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -152,19 +146,19 @@ public class ExchangeActivity extends Activity {
 	}
 
 	private void setMyMonster(Bundle extras) {
-		this.pm = (ParcelableMonster) extras.getParcelable(PASSED_MONSTER_KEY);
+		mMyMonster = (Monster) extras.getSerializable(PASSED_MONSTER_KEY);
 		try {
-			mMyMonster = pm.toMonster();
-			mMyMonsterName.setText(pm.getName());
+			mMyMonsterName.setText(mMyMonster.getName());
 			mMyMonsterLevel.setText(String.format(
-					getString(R.string.pokemon_level), pm.getLevel()));
-			String sexChar = Monster.getSexAsci(pm.getSex());
+					getString(R.string.pokemon_level), mMyMonster.getLevel()));
+			String sexChar = Monster.getSexAsci(mMyMonster.getSex());
 			mMyMonsterSex.setText(sexChar);
 			mMyMonsterSex
 					.setTextColor(StaticClass.getColorFromSexAsci(sexChar));
 			mMyMonsterPicture.setImageBitmap(BitmapFactory
 					.decodeStream(getAssets().open(
-							ImageAdapter.getMonsterFilename(pm.getId()))));
+							ImageAdapter.getMonsterFilename(mMyMonster.getId()
+									+ ""))));
 		} catch (IOException e) {
 			// TODO nothing for now
 		}
@@ -314,7 +308,7 @@ public class ExchangeActivity extends Activity {
 					try {
 						mDialog = new ProgressDialog(ExchangeActivity.this);
 						((ProgressDialog) mDialog).setMessage("send"
-								+ pm.getName());
+								+ mMyMonster.getName());
 						runOnUiThread(new Runnable() {
 
 							@Override
@@ -323,7 +317,7 @@ public class ExchangeActivity extends Activity {
 							}
 						});
 						ExchangeActivity.this.sendMessage(ExchangeProtocolUtils
-								.createSendMessage(pm.toMonster()));
+								.createSendMessage(mMyMonster));
 					} catch (JSONException e) {
 						Toast.makeText(getApplicationContext(),
 								getString(R.string.error), Toast.LENGTH_SHORT)
@@ -340,7 +334,7 @@ public class ExchangeActivity extends Activity {
 				case BluetoothChatService.STATE_NONE:
 					// TODO TOAST NOT CONNECTED + EXIT
 					mStatus = STATUS.SEND;
-					if(mDialog!=null && mDialog.isShowing())
+					if (mDialog != null && mDialog.isShowing())
 						mDialog.dismiss();
 					break;
 				}
@@ -404,52 +398,6 @@ public class ExchangeActivity extends Activity {
 		}
 	}
 
-	private void showConfirmDialog() {
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setTitle(R.string.title_confirm)
-				.setMessage(R.string.dialog_sure)
-				.setPositiveButton(android.R.string.ok,
-						new DialogInterface.OnClickListener() {
-
-							@Override
-							public void onClick(DialogInterface dialog,
-									int which) {
-								String msg;
-								try {
-									mAccepts += 1;
-									msg = ExchangeProtocolUtils
-											.createAcceptMessage(mOpponentMonster
-													.getId());
-									sendMessage(msg);
-									Log.i("exchange", "sent accept");
-									checkAccepts();
-									dialog.dismiss();
-									mDialog = new ProgressDialog(
-											ExchangeActivity.this);
-									((ProgressDialog) mDialog)
-											.setMessage("arrived"
-													+ mOpponentMonster.getId());
-									mDialog.show();
-								} catch (JSONException e) {
-									// TODO Auto-generated catch block
-									e.printStackTrace();
-								}
-
-							}
-						})
-				.setNeutralButton(android.R.string.cancel,
-						new DialogInterface.OnClickListener() {
-
-							@Override
-							public void onClick(DialogInterface dialog,
-									int which) {
-								dialog.dismiss();
-							}
-						});
-		mDialog = builder.create();
-		mDialog.show();
-	}
-
 	protected void doAction(String readMessage) {
 		try {
 			String type = ExchangeProtocolUtils.getMessageType(readMessage);
@@ -462,7 +410,7 @@ public class ExchangeActivity extends Activity {
 					Log.i("exchange", "arrived: " + mOpponentMonster.getName());
 					mDialog.dismiss();
 					mStatus = STATUS.ACCEPT;
-					showConfirmDialog();
+					toggleVisibility();
 					break;
 				default:
 					Toast.makeText(getApplicationContext(),
@@ -472,18 +420,13 @@ public class ExchangeActivity extends Activity {
 					break;
 				}
 			} else if (type.equals(ExchangeProtocolUtils.ACCEPT_COMMAND)) {
-				mAccepts += 1;
 				switch (mStatus) {
 				case ACCEPT:
 
 					if (mOpponentMonster != null) {
 						if (ExchangeProtocolUtils.verifyAcceptMessage(
-								new JSONObject(readMessage),
-								Integer.parseInt(pm.getId()))) {
-							// ((ProgressDialog) mDialog).setMessage("accepted"
-							// + pm.getId());
-							// mDialog.show();
-
+								new JSONObject(readMessage),mMyMonster.getId())) {
+							mAccepts += 1;
 							checkAccepts();
 						} else {
 							mStatus = STATUS.SEND;
@@ -494,15 +437,7 @@ public class ExchangeActivity extends Activity {
 						}
 					}
 					break;
-				// case SEND:
-				// if (mAccepts == 2) {
-				// mStatus = STATUS.ACK;
-				// sendMessage(ExchangeProtocolUtils
-				// .createACKMessage(mOpponentMonster.getId()));
-				// }
-				// break;
 				case ACK:
-					mACKs += 1;
 					checkAcks(readMessage);
 					break;
 				default:
@@ -539,20 +474,21 @@ public class ExchangeActivity extends Activity {
 		}
 	}
 
-	private void checkAcks(String readMessage) throws NumberFormatException, JSONException {
-		if (mACKs >= 2)
-			// TODO do operations
-			mDialog.dismiss();
+	private void checkAcks(String readMessage) throws NumberFormatException,
+			JSONException {
 
-			if (ExchangeProtocolUtils.verifyACKMessage(new JSONObject(
-					readMessage), Integer.parseInt(pm.getId()))) {
-				// Toast.makeText(this, "Faccio le operazioni",
-				// Toast.LENGTH_SHORT).show();
-				mMyMonster.removeFromDatabase();
-				mOpponentMonster.saveOnDatabase();
-				mStatus = STATUS.SEND;
-				mChatService.stop();
-			}
+		if (ExchangeProtocolUtils.verifyACKMessage(new JSONObject(readMessage),
+				mMyMonster.getId())) {
+			mACKs += 1;
+		}
+		if (mACKs >= 2) {
+			// TODO do operations
+			mMyMonster.removeFromDatabase();
+			mOpponentMonster.saveOnDatabase();
+			mStatus = STATUS.SEND;
+			mChatService.stop();
+			mDialog.dismiss();
+		}
 	}
 
 	private void checkAccepts() throws JSONException {
@@ -563,8 +499,52 @@ public class ExchangeActivity extends Activity {
 			// // Toast.LENGTH_SHORT).show();
 			// mMyMonster.removeFromDatabase();
 			// mOpponentMonster.saveOnDatabase();
-			sendMessage(ExchangeProtocolUtils
-					.createACKMessage(mOpponentMonster.getId()));
+			sendMessage(ExchangeProtocolUtils.createACKMessage(mOpponentMonster
+					.getId()));
+		}
+	}
+
+	private void toggleVisibility() {
+		View v = findViewById(R.id.accept_buttons);
+		if (v.isShown()) {
+			findViewById(R.id.exchange_label).setVisibility(View.INVISIBLE);
+			v.setVisibility(View.INVISIBLE);
+		} else {
+			findViewById(R.id.exchange_label).setVisibility(View.VISIBLE);
+			v.setVisibility(View.VISIBLE);
+		}
+	}
+
+	protected void exchange(View v) {
+		toggleVisibility();
+		if (v.getId() == R.id.exchange_no_btn) {
+			try {
+				mAccepts += 1;
+				String msg = ExchangeProtocolUtils
+						.createAcceptMessage(mOpponentMonster.getId());
+				sendMessage(msg);
+				Log.i("exchange", "sent accept");
+				checkAccepts();
+				if (mDialog != null && mDialog.isShowing())
+					mDialog.dismiss();
+				mDialog = new ProgressDialog(ExchangeActivity.this);
+				((ProgressDialog) mDialog)
+						.setMessage(getString(R.string.wait_answer));
+				mDialog.show();
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} else if (v.getId() == R.id.exchange_no_btn) {
+			try {
+				String msg = ExchangeProtocolUtils.createAcceptMessage(-1);
+				sendMessage(msg);
+				if (mDialog != null && mDialog.isShowing())
+					mDialog.dismiss();
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 

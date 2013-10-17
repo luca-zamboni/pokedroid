@@ -98,8 +98,8 @@ public class PersonalMonsterAdapter extends ArrayAdapter<Monster> {
 			public boolean onLongClick(View v) {
 				Intent i = new Intent(getContext(), ExchangeActivity.class);
 				i.putExtra(ExchangeActivity.PASSED_MONSTER_KEY,
-						new ParcelableMonster(mPoke.getId()+"", mPoke.getName(), mPoke.getFound_x(), mPoke.getFound_y(),
-								mPoke.getSex(), mPoke.getLevel()));
+						new Monster(mPoke.getId(), mPoke.getName(),mPoke.getSex(), mPoke.getFound_x(), mPoke.getFound_y(),
+								 mPoke.getLevel()));
 				getContext().startActivity(i);
 				return true;
 			}

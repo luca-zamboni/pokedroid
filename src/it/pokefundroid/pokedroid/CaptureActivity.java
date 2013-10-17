@@ -1,14 +1,10 @@
 package it.pokefundroid.pokedroid;
 
+import it.pokefundroid.pokedroid.models.Monster;
+import it.pokefundroid.pokedroid.viewUtils.ImageAdapter;
+
 import java.io.IOException;
 import java.util.List;
-
-import it.pokefundroid.pokedroid.models.Monster;
-import it.pokefundroid.pokedroid.models.Monster.PokemonSex;
-import it.pokefundroid.pokedroid.viewUtils.ImageAdapter;
-import it.pokefundroid.pokedroid.viewUtils.ParcelableMonster;
-
-import java.io.IOException;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -31,7 +27,7 @@ public class CaptureActivity extends Activity {
 	private ImageView mWildPokemon;
 	private ImageView mMyPokemon;
 	private Button mCapture;
-	private ParcelableMonster pm;
+	private Monster pm;
 	private List<Monster> mTeam;
 
 	@Override
@@ -49,13 +45,7 @@ public class CaptureActivity extends Activity {
 
 			@Override
 			public void onClick(View v) {
-				int sex = (int) ((Math.random() * 2) + 1);
-				PokemonSex realSex = Monster.intToGender(sex);
-
-				Monster pkmn = new Monster(Integer.parseInt(pm.getId()), "Lol",
-						realSex, pm.getFoundX(), pm.getFoundY(), 13);
-				pkmn.saveOnDatabase();
-
+				pm.saveOnDatabase();
 				// TODO no string!
 				exit("Captured!");
 			}
@@ -85,11 +75,11 @@ public class CaptureActivity extends Activity {
 	}
 
 	private void setWildPokemon(Bundle extras) {
-		this.pm = (ParcelableMonster) extras
-				.getParcelable(PASSED_WILD_MONSTER_KEY);
+		this.pm = (Monster) extras
+				.getSerializable(PASSED_WILD_MONSTER_KEY);
 		try {
 			mWildPokemon.setImageBitmap(BitmapFactory.decodeStream(getAssets()
-					.open(ImageAdapter.getMonsterFilename(pm.getId()))));
+					.open(ImageAdapter.getMonsterFilename(pm.getId()+""))));
 		} catch (IOException e) {
 			// TODO nothing for now
 		}

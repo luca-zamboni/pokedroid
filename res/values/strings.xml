@@ -52,9 +52,11 @@
     
     <!-- ExchangeActivity -->
     <string name="pokemon_level">lvl. %1$s</string>
+    <string name="would_exchange">Would you like to exchange?</string>
+     <string name="wait_answer">Wait the other answer&#8230;</string>
 
     <!-- DeviceListActivity -->
-    <string name="scanning">scanning for devices &#8230;</string>
+    <string name="scanning">scanning for devices&#8230;</string>
     <string name="select_device">select a device to connect</string>
     <string name="none_paired">No devices have been paired</string>
     <string name="none_found">No devices found</string>

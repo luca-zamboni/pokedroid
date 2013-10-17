@@ -3,6 +3,7 @@ package it.pokefundroid.pokedroid.models;
 import it.pokefundroid.pokedroid.utils.BaseHelper;
 import it.pokefundroid.pokedroid.utils.StaticClass;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -11,8 +12,12 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.util.Log;
 
-public class Monster {
+public class Monster implements Serializable{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7653177864738700016L;
 	private int id;
 	private String name;
 
@@ -248,8 +253,6 @@ public class Monster {
 	public Monster(int id, String my_name, PokemonSex sex, double found_x,
 			double found_y, int level) {
 		this(id);
-
-		//this.dbId = 1;///////TODO
 		this.my_name = my_name;
 		this.sex = sex;
 		this.found_x = found_x;
@@ -285,8 +288,7 @@ public class Monster {
 			
 			dbId = c.getInt(c.getColumnIndex(BaseHelper.MY_ID));
 			id = c.getInt(c.getColumnIndex(BaseHelper.BASE_POKEMON_ID));
-
-			Log.e("", id + "");
+			int myid = c.getInt(c.getColumnIndex(BaseHelper.MY_ID));
 			my_name = c.getString(c.getColumnIndex(BaseHelper.MY_NAME));
 			sex = c.getInt(c.getColumnIndex(BaseHelper.SEX));
 			realSex = intToGender(sex);
@@ -402,9 +404,6 @@ public class Monster {
 	public void removeFromDatabase() {
 		String sql = "DELETE FROM "+BaseHelper.TABLE_PERSONAL_POKEMON+" WHERE "+
 				BaseHelper.MY_ID+"="+dbId;
-		Log.e("", "dbid : " +dbId);
-		//TODO watch this things
-		//+" AND "+ BaseHelper.MY_ID +"="+dbId
 		StaticClass.dbpoke.executeSQL(sql);
 	}
 
