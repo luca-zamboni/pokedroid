@@ -484,12 +484,12 @@ public class ExchangeActivity extends Activity {
 			mACKs += 1;
 		}
 		if (mACKs >= 2) {
-			// TODO do operations
 			mMyMonster.removeFromDatabase();
 			mOpponentMonster.saveOnDatabase();
 			mStatus = STATUS.SEND;
 			mChatService.stop();
 			mDialog.dismiss();
+			this.finish();
 		}
 	}
 
@@ -520,7 +520,7 @@ public class ExchangeActivity extends Activity {
 
 	public void exchange(View v) {
 		toggleVisibility();
-		if (v.getId() == R.id.exchange_no_btn) {
+		if (v.getId() == R.id.exchange_yes_btn) {
 			try {
 				mAccepts += 1;
 				String msg = ExchangeProtocolUtils
