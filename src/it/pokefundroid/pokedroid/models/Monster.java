@@ -399,7 +399,7 @@ public class Monster implements Serializable {
 
 	public void saveOnDatabase() {
 		int seed = this.ivSeed == 0 ? ((int) (this.id * this.level * SystemClock
-				.elapsedRealtime())) : this.ivSeed;
+				.elapsedRealtimeNanos())) : this.ivSeed;
 		String insertPersonalPokemon = "INSERT INTO "
 				+ BaseHelper.TABLE_PERSONAL_POKEMON + " ";
 		insertPersonalPokemon += " ( " + BaseHelper.BASE_POKEMON_ID + ","
