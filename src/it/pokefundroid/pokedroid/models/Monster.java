@@ -317,7 +317,7 @@ public class Monster implements Serializable {
 
 			// TODO remove hardcoded level
 			Monster nuovo = new Monster(id, my_name, realSex, found_x, found_y,
-					20);
+					level);
 			nuovo.setSeed(seed);
 			nuovo.setDbId(dbId);
 
