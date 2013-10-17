@@ -518,7 +518,7 @@ public class ExchangeActivity extends Activity {
 	}
 
 
-	protected void exchange(View v) {
+	public void exchange(View v) {
 		toggleVisibility();
 		if (v.getId() == R.id.exchange_no_btn) {
 			try {
