@@ -212,7 +212,7 @@ public class Monster implements Serializable {
 																			// 3
 																			// legendary
 																			// birds
-			RARE, NONPRESENT, NONPRESENT, VERYRARE, VERYCOMMON // 3dratini,
+			RARE, NONPRESENT, NONPRESENT, VERYRARE, VERYRARE // 3dratini,
 																// mewtwo, mew
 	};
 
