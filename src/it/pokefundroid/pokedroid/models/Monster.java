@@ -315,6 +315,7 @@ public class Monster implements Serializable{
 		this.dbId = dbId;
 	}
 
+
 	public static String getImagUri(int id) {
 		if (id < 10)
 			return "assets://pkm/pkfrlg00" + id + ".png";

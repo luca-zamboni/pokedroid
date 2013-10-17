@@ -96,6 +96,7 @@ public class ExchangeActivity extends Activity {
 	private ImageView mOpponentMonsterPicture;
 	private TextView mOpponentMonsterSex;
 	private TextView mOpponentMonsterLevel;
+	
 
 	private STATUS mStatus = STATUS.SEND;
 	private int mAccepts, mACKs;
@@ -426,6 +427,7 @@ public class ExchangeActivity extends Activity {
 					if (mOpponentMonster != null) {
 						if (ExchangeProtocolUtils.verifyAcceptMessage(
 								new JSONObject(readMessage),mMyMonster.getId())) {
+
 							mAccepts += 1;
 							checkAccepts();
 						} else {
@@ -515,6 +517,7 @@ public class ExchangeActivity extends Activity {
 		}
 	}
 
+
 	protected void exchange(View v) {
 		toggleVisibility();
 		if (v.getId() == R.id.exchange_no_btn) {
@@ -535,6 +538,7 @@ public class ExchangeActivity extends Activity {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+
 		} else if (v.getId() == R.id.exchange_no_btn) {
 			try {
 				String msg = ExchangeProtocolUtils.createAcceptMessage(-1);
