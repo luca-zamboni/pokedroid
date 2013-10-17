@@ -405,42 +405,6 @@ public class ExchangeActivity extends Activity {
 		}
 	}
 
-	private void showConfirmDialog() {
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setTitle(R.string.title_confirm)
-				.setMessage(R.string.dialog_sure)
-				.setPositiveButton(android.R.string.ok,
-						new DialogInterface.OnClickListener() {
-
-							@Override
-							public void onClick(DialogInterface dialog,
-									int which) {
-								String msg;
-								
-
-							}
-						})
-				.setNeutralButton(android.R.string.cancel,
-						new DialogInterface.OnClickListener() {
-
-							@Override
-							public void onClick(DialogInterface dialog,
-									int which) {
-								try {
-									String msg = ExchangeProtocolUtils
-											.createAcceptMessage(-1);
-									sendMessage(msg);
-								} catch (JSONException e) {
-									// TODO Auto-generated catch block
-									e.printStackTrace();
-								}
-								dialog.dismiss();
-							}
-						});
-		mDialog = builder.create();
-		mDialog.show();
-	}
-
 	protected void doAction(String readMessage) {
 		try {
 			String type = ExchangeProtocolUtils.getMessageType(readMessage);
@@ -560,7 +524,8 @@ public class ExchangeActivity extends Activity {
 		}
 	}
 	
-	private void exchange(View v) {
+	protected void exchange(View v) {
+		toggleVisibility();
 		if(v.getId()==R.id.exchange_no_btn){
 			try {
 				mAccepts += 1;
@@ -583,7 +548,16 @@ public class ExchangeActivity extends Activity {
 			}
 		}
 		else if(v.getId()==R.id.exchange_no_btn){
-			
+			try {
+				String msg = ExchangeProtocolUtils
+						.createAcceptMessage(-1);
+				sendMessage(msg);
+				if(mDialog!=null && mDialog.isShowing())
+					mDialog.dismiss();
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 
