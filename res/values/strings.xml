@@ -33,9 +33,9 @@
     <!-- Dialog poke stat viewver -->
     <string name="title_dialog_viewstatpoke">Pokemon Stats</string>
     <string name="hp">hp</string>
-    <string name="att">Attak</string>
+    <string name="att">Attack</string>
     <string name="def">Defense</string>
-    <string name="spatt">S. Attak</string>
+    <string name="spatt">S. Attack</string>
     <string name="spdef">S. Defense</string>
     <string name="speed">Speed</string>
     
