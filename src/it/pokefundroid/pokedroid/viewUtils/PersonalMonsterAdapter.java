@@ -1,7 +1,5 @@
 package it.pokefundroid.pokedroid.viewUtils;
 
-import it.pokefundroid.pokedroid.ExchangeActivity;
-import it.pokefundroid.pokedroid.Menu_Activity;
 import it.pokefundroid.pokedroid.R;
 import it.pokefundroid.pokedroid.models.Monster;
 import it.pokefundroid.pokedroid.utils.StaticClass;
@@ -10,7 +8,6 @@ import java.util.ArrayList;
 
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.view.LayoutInflater;
@@ -25,8 +22,7 @@ public class PersonalMonsterAdapter extends ArrayAdapter<Monster> {
 	private Context context;
 	private ArrayList<Monster> mMonsters;
 
-	public PersonalMonsterAdapter(Context context,
-			ArrayList<Monster> monsters) {
+	public PersonalMonsterAdapter(Context context, ArrayList<Monster> monsters) {
 		super(context, R.layout.row_team_pokemon, monsters);
 		this.context = context;
 		this.mMonsters = monsters;
@@ -55,7 +51,10 @@ public class PersonalMonsterAdapter extends ArrayAdapter<Monster> {
 		monsterName.setTextColor(Color.BLACK);
 
 		// // set level of pokemon
-		monsterLevel.setText("lv. " + mPoke.getLevel());
+		String lvl = String.format(
+				getContext().getString(R.string.pokemon_level),
+				mPoke.getLevel());
+		monsterLevel.setText(lvl);
 		monsterLevel.setTextColor(Color.BLACK);
 
 		// // set image of pokemon
@@ -94,16 +93,6 @@ public class PersonalMonsterAdapter extends ArrayAdapter<Monster> {
 				builder.setTitle(R.string.title_dialog_viewstatpoke);
 				builder.setView(m);
 				builder.create().show();
-			}
-		});
-		rowView.setOnLongClickListener(new View.OnLongClickListener() {
-
-			@Override
-			public boolean onLongClick(View v) {
-				 Intent i = new Intent(getContext(), ExchangeActivity.class);
-				 i.putExtra(ExchangeActivity.PASSED_MONSTER_KEY,mPoke);
-				 getContext().startActivity(i);
-				return true;
 			}
 		});
 		return rowView;

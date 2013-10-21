@@ -11,7 +11,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.util.Log;
 
 public class Monster implements Serializable {
 
@@ -304,7 +303,6 @@ public class Monster implements Serializable {
 
 			dbId = c.getInt(c.getColumnIndex(BaseHelper.MY_ID));
 			id = c.getInt(c.getColumnIndex(BaseHelper.BASE_POKEMON_ID));
-			int myid = c.getInt(c.getColumnIndex(BaseHelper.MY_ID));
 			my_name = c.getString(c.getColumnIndex(BaseHelper.MY_NAME));
 			sex = c.getInt(c.getColumnIndex(BaseHelper.SEX));
 			realSex = intToGender(sex);
@@ -379,13 +377,13 @@ public class Monster implements Serializable {
 		// phisical)
 		// damage case
 		int finalDamage = 0;
-		double rawDamage;
+		//double rawDamage;
 		int randomNumber = (new Random()).nextInt(26) + 85;
 		double effectivness = 1.0;
 		double stab = (atk.getFirstType() == move.getType() || atk
 				.getSecndType() == move.getType()) ? 1.5 : 1.0;
 		int power = move.getPower();
-		double nature = 1.0;
+		//double nature = 1.0;
 		double additional = 1.0;
 
 		int attack = atk.getAttack();
@@ -572,9 +570,6 @@ public class Monster implements Serializable {
 		sAtkIv = r.nextInt(32);
 		sDefIv = r.nextInt(32);
 		spdIv = r.nextInt(32);
-		Log.i("Monster", this.name + " " + this.hpIv + " " + this.atkIv + " "
-				+ this.defIv + " " + this.sAtkIv + " " + this.sDefIv + " "
-				+ this.spdIv);
 	}
 
 	public static PokemonSex intToGender(int sex) {

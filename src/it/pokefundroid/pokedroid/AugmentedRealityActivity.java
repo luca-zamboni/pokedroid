@@ -179,9 +179,8 @@ public class AugmentedRealityActivity extends FragmentActivity implements
 					mWorldCenter.getLongitude(), geoObject.getLatitude(),
 					geoObject.getLongitude(), results);
 			
-			//TODO better fix
-			int level = (int)(Math.random()*100+1);
-			PokemonSex sex = Monster.intToGender(((int)Math.random()*2+1));
+			int level = (int)((Math.random()*194)+6);
+			PokemonSex sex =  Monster.intToGender((int)((Math.random()*2)+1));
 			Monster pm = new Monster(Integer.parseInt(geoObject.getName()), "",
 					sex, geoObject.getLatitude(),
 					geoObject.getLongitude(), level);

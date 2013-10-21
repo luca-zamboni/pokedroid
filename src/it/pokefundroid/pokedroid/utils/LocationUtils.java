@@ -152,7 +152,7 @@ public class LocationUtils {
 
 		@Override
 		public void onLocationChanged(Location location) {
-			if (/*location.getAccuracy() <= mMinDistance*/true) {
+			if (location.getAccuracy() <= mMinDistance) {
 				mLocationInterface.onLocationChaged(location);
 			}
 			else{

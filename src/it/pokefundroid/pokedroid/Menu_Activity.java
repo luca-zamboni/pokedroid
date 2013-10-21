@@ -64,9 +64,10 @@ public class Menu_Activity extends Activity implements ILocation {
 				if (lastKonwn != null) {
 					mLocationUtils.close();
 					onLocationChaged(lastKonwn);
+				} else {
+					createProgressDialog();
+					mLocationUtils.setTimer(MAX_WAIT);
 				}
-				createProgressDialog();
-				mLocationUtils.setTimer(MAX_WAIT);
 			}
 		});
 
@@ -82,7 +83,7 @@ public class Menu_Activity extends Activity implements ILocation {
 			finish();
 		}
 	}
-	
+
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
@@ -111,8 +112,6 @@ public class Menu_Activity extends Activity implements ILocation {
 		mProgressDialog.show();
 	}
 
-
-
 	private void displayErrors(int titleRes, int descRes) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this)
 				.setTitle(titleRes)
@@ -132,9 +131,9 @@ public class Menu_Activity extends Activity implements ILocation {
 
 	@Override
 	public void onLocationChaged(Location location) {
-		if(mProgressDialog!=null && mProgressDialog.isShowing())
+		if (mProgressDialog != null && mProgressDialog.isShowing())
 			mProgressDialog.dismiss();
-		if(mLocationUtils!=null)
+		if (mLocationUtils != null)
 			mLocationUtils.close();
 		Intent newActivity = new Intent(Menu_Activity.this,
 				AugmentedRealityActivity.class);
