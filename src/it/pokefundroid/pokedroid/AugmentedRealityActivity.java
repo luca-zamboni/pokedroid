@@ -119,7 +119,7 @@ public class AugmentedRealityActivity extends FragmentActivity implements
 		int many = FindingUtilities.generateHowManyPokemonInRange(loc[3]);
 
 		// tmp.setAltitude(loc[2]);
-		Monster[] id = FindingUtilities.findInPosition(loc[0], loc[1], many);
+		Monster[] id = FindingUtilities.findInPosition(loc[0], loc[1], loc[3],  many);
 
 		for (int i = 0; i < many; i++) {
 			if (id[i] != null) {

@@ -9,10 +9,11 @@ import android.util.Log;
 
 public class FindingUtilities {
 
-	private final static int[] CHANCE = { 950, 800, 200, 30, 1, 0 };
 	// possibilita' su 1000 elementi di essere selezionati nel set;
+	private final static int[] CHANCE = { 950, 800, 300, 60, 4, 0 };
 
-	private final static int[] FINDINGCHANCE = { 100, 80, 30, 15, 2, 1 };
+	//possibilita' su 100 di essere pescato
+	private final static int[] FINDINGCHANCE = { 60, 47, 37, 19, 13, 8};
 
 	private final static int MIN_POKEMON = 3;
 	private final static int MAX_POKEMON = 5;
@@ -39,10 +40,11 @@ public class FindingUtilities {
 	 * del pkmn ha avuto successo
 	 */
 	public static Monster[] findInPosition(double latitude, double longitude,
-			int number) {
+			double accuracy, int number) {
 		Random random = new Random(System.currentTimeMillis());
 		Monster[] ret = new Monster[number];
 		boolean changed = generateRandoms(latitude, longitude);
+		
 		if (changed || currentPkmnSet == null) {
 			generateSet();
 			Log.d("FindingUtilities.generateRandoms()", latitude + "  "
@@ -51,21 +53,14 @@ public class FindingUtilities {
 					((long) latitude * 10 * 10) + "  "
 							+ ((long) longitude * 10 * 10));
 		}
-
-		int maxPoss = 0;
-		for (int i = 0; i < currentPkmnSet.length; i++) {
-			maxPoss += FINDINGCHANCE[currentPkmnSet[i].getRarity()];
-		}
+		
 		for (int j = 0; j < number; j++) {
-			int rdm = random.nextInt(maxPoss);
-
-			int possibility = 0;
-			for (int i = 0; i < currentPkmnSet.length; i++) {
-				possibility += FINDINGCHANCE[currentPkmnSet[i].getRarity()];
-				if (rdm < possibility) {
-					ret[j] = currentPkmnSet[i];
-					break;
-				}
+			int rdm = random.nextInt(100);
+			ret[j] = null;
+			int selection = random.nextInt(currentPkmnSet.length);
+			int possibility = FINDINGCHANCE[currentPkmnSet[selection].getRarity()];
+			if(rdm<possibility) {
+				ret[j] = currentPkmnSet[selection];
 			}
 
 		}
@@ -151,8 +146,6 @@ public class FindingUtilities {
 		long tSelectionSeed = ((lat * lon) - (151 * lat));
 		long tSetSeed = ((lat * lon) - (270 * lon));
 
-		// -21114 14400 schyter zubat caterpie 46446
-
 		if (tSelectionSeed != selectionSeed || tSetSeed != setSeed) {
 			selectionSeed = tSelectionSeed;
 			setSeed = tSetSeed;
@@ -163,29 +156,29 @@ public class FindingUtilities {
 		setRandom = new Random(setSeed);
 		return ret;
 	}
-	
+
 	public static Location getRandomLocation(double x0, double y0, double radius) {
-	    Random random = new Random();
+		Random random = new Random();
 
-	    // Convert radius from meters to degrees
-	    double radiusInDegrees = radius / 111000f;
+		// Convert radius from meters to degrees
+		double radiusInDegrees = radius / 111000f;
 
-	    double u = random.nextDouble();
-	    double v = random.nextDouble();
-	    double w = radiusInDegrees * Math.sqrt(u);
-	    double t = 2 * Math.PI * v;
-	    double x = w * Math.cos(t);
-	    double y = w * Math.sin(t);
+		double u = random.nextDouble();
+		double v = random.nextDouble();
+		double w = radiusInDegrees * Math.sqrt(u);
+		double t = 2 * Math.PI * v;
+		double x = w * Math.cos(t);
+		double y = w * Math.sin(t);
 
-	    // Adjust the x-coordinate for the shrinking of the east-west distances
-	    double new_x = x / Math.cos(y0);
+		// Adjust the x-coordinate for the shrinking of the east-west distances
+		double new_x = x / Math.cos(y0);
 
-	    double foundLongitude = new_x + y0;
-	    double foundLatitude = y + x0;
-	    Location out = new Location("randomize");
-	    out.setLatitude(foundLatitude);
-	    out.setLongitude(foundLongitude);
-	    return out;
+		double foundLongitude = new_x + y0;
+		double foundLatitude = y + x0;
+		Location out = new Location("randomize");
+		out.setLatitude(foundLatitude);
+		out.setLongitude(foundLongitude);
+		return out;
 
 	}
 }
