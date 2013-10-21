@@ -341,9 +341,9 @@ public class ExchangeActivity extends Activity {
 				}
 				break;
 			case MESSAGE_WRITE:
-				byte[] writeBuf = (byte[]) msg.obj;
+				//byte[] writeBuf = (byte[]) msg.obj;
 				// construct a string from the buffer
-				String writeMessage = new String(writeBuf);
+				//String writeMessage = new String(writeBuf);
 				break;
 			case MESSAGE_READ:
 				byte[] readBuf = (byte[]) msg.obj;

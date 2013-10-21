@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 
 public class SharedPreferencesUtilities {
-	private SharedPreferences sp;
 	
 	private static final String USER_HEIGHT_KEY = "userheight";
 	private static final String FIRST_START = "firststart";

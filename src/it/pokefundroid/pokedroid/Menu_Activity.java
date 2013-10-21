@@ -14,6 +14,7 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.location.Location;
 import android.os.Bundle;
 import android.view.View;
@@ -38,8 +39,8 @@ public class Menu_Activity extends Activity implements ILocation {
 		setContentView(R.layout.activity_menu);
 
 		mLocationType = LocationType.GPS;
-		
-		if(StaticClass.dbpoke==null)
+
+		if (StaticClass.dbpoke == null)
 			StaticClass.openBatabaseConection(Menu_Activity.this);
 
 		mViewPokemon = (Button) findViewById(R.id.button_pokemon);
@@ -57,48 +58,36 @@ public class Menu_Activity extends Activity implements ILocation {
 
 			@Override
 			public void onClick(View v) {
-				createProgressDialog();
-
-				// TODO DEBUG
-				// mLocationUtils = new LocationUtils(Menu_Activity.this,
-				// Menu_Activity.this);
-
 				mLocationUtils = new LocationUtils(Menu_Activity.this,
 						Menu_Activity.this, mLocationType);
-				mLocationUtils.setTimer(MAX_WAIT);
-				// TODO DEBUG PURPOSE
-				// SharedPreferencesUtilities.setUserHeight(this, 1.75f);
-				// Location location = new Location("network");
-				// // MY house
-				// // location.setLatitude(45.4103907616809d);
-				// // location.setLongitude(10.985591523349285d);
-				// // julia's place
-				// location.setLatitude(45.33497882075608d);
-				// location.setLongitude(11.242532143369317d);
-				// //trento
-				// location.setLatitude(46.04688826482743);
-				// location.setLongitude(11.134816808626056);
-				// location.setAccuracy(10.0f);
-
+				Location lastKonwn = mLocationUtils.getLastKnownLocation();
+				if (lastKonwn != null) {
+					mLocationUtils.close();
+					onLocationChaged(lastKonwn);
+				} else {
+					createProgressDialog();
+					mLocationUtils.setTimer(MAX_WAIT);
+				}
 			}
 		});
 
 	}
-	
-	
 
 	@Override
 	protected void onPostResume() {
 		super.onPostResume();
-		if(SharedPreferencesUtilities.isFirstStart(this)){
-			Intent i = new Intent(this,ChooseSide.class);
+		if (SharedPreferencesUtilities.isFirstStart(this)) {
+			Intent i = new Intent(this, ChooseSide.class);
 			i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(new Intent(i));
 			finish();
 		}
 	}
 
-
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		super.onConfigurationChanged(newConfig);
+	}
 
 	private void createProgressDialog() {
 		mProgressDialog = new ProgressDialog(this);
@@ -142,8 +131,10 @@ public class Menu_Activity extends Activity implements ILocation {
 
 	@Override
 	public void onLocationChaged(Location location) {
-		mProgressDialog.dismiss();
-		mLocationUtils.close();
+		if (mProgressDialog != null && mProgressDialog.isShowing())
+			mProgressDialog.dismiss();
+		if (mLocationUtils != null)
+			mLocationUtils.close();
 		Intent newActivity = new Intent(Menu_Activity.this,
 				AugmentedRealityActivity.class);
 		newActivity.putExtra("loc",
@@ -170,7 +161,7 @@ public class Menu_Activity extends Activity implements ILocation {
 								Menu_Activity.this, mLocationType);
 					}
 				});
-				
+
 			} else {
 				mProgressDialog.dismiss();
 				runOnUiThread(new Runnable() {

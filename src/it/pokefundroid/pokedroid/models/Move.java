@@ -1,8 +1,6 @@
 package it.pokefundroid.pokedroid.models;
 
-import it.pokefundroid.pokedroid.utils.BaseHelper;
 import it.pokefundroid.pokedroid.utils.StaticClass;
-import android.widget.BaseAdapter;
 
 public class Move {
 	

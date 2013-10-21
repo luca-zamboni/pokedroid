@@ -26,7 +26,7 @@ public class ImageAdapter extends BaseAdapter {
 	private List<Monster> mPokemonsIDs;
 	private IPokemonSelection inter;
 
-	public ImageAdapter(IPokemonSelection inter,Context c, List pokemonsIDs) {
+	public ImageAdapter(IPokemonSelection inter,Context c, List<Monster> pokemonsIDs) {
 		mContext = c;
 		this.mPokemonsIDs = pokemonsIDs;
 		this.inter=inter;
