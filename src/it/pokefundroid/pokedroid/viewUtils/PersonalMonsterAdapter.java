@@ -6,7 +6,6 @@ import it.pokefundroid.pokedroid.utils.StaticClass;
 
 import java.util.ArrayList;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -67,34 +66,6 @@ public class PersonalMonsterAdapter extends ArrayAdapter<Monster> {
 		monsterSex.setText(sexChar);
 		monsterSex.setTextColor(StaticClass.getColorFromSexAsci(sexChar));
 
-		rowView.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				LayoutInflater inflate = (LayoutInflater) context
-						.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-				View m = inflate.inflate(R.layout.dialog_stat_viewer, null,
-						false);
-				AlertDialog.Builder builder = new AlertDialog.Builder(context);
-				TextView thp = (TextView) m.findViewById(R.id.poke_hp);
-				TextView tatt = (TextView) m.findViewById(R.id.poke_attak);
-				TextView tdef = (TextView) m.findViewById(R.id.poke_defense);
-				TextView tspatt = (TextView) m.findViewById(R.id.poke_spattak);
-				TextView tspdef = (TextView) m
-						.findViewById(R.id.poke_spdefense);
-				TextView tspeed = (TextView) m.findViewById(R.id.poke_speed);
-
-				thp.setText("" + mPoke.getHp());
-				tatt.setText("" + mPoke.getAttack());
-				tdef.setText("" + mPoke.getDefence());
-				tspatt.setText("" + mPoke.getSpecialAttack());
-				tspdef.setText("" + mPoke.getSpecialDefence());
-				tspeed.setText("" + mPoke.getSpeed());
-
-				builder.setTitle(R.string.title_dialog_viewstatpoke);
-				builder.setView(m);
-				builder.create().show();
-			}
-		});
 		return rowView;
 	}
 }
