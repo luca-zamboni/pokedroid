@@ -27,9 +27,9 @@ import android.widget.TextView;
 public class View_team_activity extends Activity implements
 		OnItemLongClickListener, OnItemClickListener {
 
-	private ListView poke_list;
+	private ListView mMonstersListView;
 	protected ActionMode mActionMode;
-	private ArrayList<Monster> poke;
+	private ArrayList<Monster> mMonsters;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -37,17 +37,18 @@ public class View_team_activity extends Activity implements
 		setContentView(R.layout.activity_view_team_activity);
 		setTitle("Your Team");
 
-		poke_list = (ListView) findViewById(R.id.pokemon_list_view);
+		mMonstersListView = (ListView) findViewById(R.id.pokemon_list_view);
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		poke = Monster.getAllPersonaPokemon(this);
-		PersonalMonsterAdapter adapter = new PersonalMonsterAdapter(this, poke);
-		poke_list.setAdapter(adapter);
-		poke_list.setOnItemClickListener(this);
-		poke_list.setOnItemLongClickListener(this);
+		mMonsters = Monster.getAllPersonaPokemon(this);
+		PersonalMonsterAdapter adapter = new PersonalMonsterAdapter(this, mMonsters);
+		mMonstersListView.setAdapter(adapter);
+		mMonstersListView.setOnItemClickListener(this);
+		//mMonstersListView.setLongClickable(true);
+		mMonstersListView.setOnItemLongClickListener(this);
 	}
 
 	private ActionMode.Callback mActionModeCallback = new ActionMode.Callback() {
@@ -88,7 +89,7 @@ public class View_team_activity extends Activity implements
 	@Override
 	public void onItemClick(AdapterView<?> parent, View clicked, int position,
 			long id) {
-		Monster m = poke.get(position);
+		Monster m = mMonsters.get(position);
 		LayoutInflater inflate = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		View v = inflate.inflate(R.layout.dialog_stat_viewer, null, false);
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -115,7 +116,7 @@ public class View_team_activity extends Activity implements
 	public boolean onItemLongClick(AdapterView<?> parent, View clicked,
 			int position, long id) {
 		Log.d("position", position+"");
-		Monster m = poke.get(position);
+		Monster m = mMonsters.get(position);
 		Intent i = new Intent(this, ExchangeActivity.class);
 		i.putExtra(ExchangeActivity.PASSED_MONSTER_KEY, m);
 		startActivity(i);

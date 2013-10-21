@@ -294,7 +294,7 @@ public class Monster implements Serializable {
 			StaticClass.openBatabaseConection(ctx.getApplicationContext());
 		StaticClass.dbpoke.openDataBase();
 		Cursor c = StaticClass.dbpoke.dbpoke.rawQuery("SELECT * FROM "
-				+ BaseHelper.TABLE_PERSONAL_POKEMON + " ORDER BY " + BaseHelper.ORDER, null);
+				+ BaseHelper.TABLE_PERSONAL_POKEMON + " ORDER BY " + BaseHelper.ORDER + " LIMIT 6", null);
 		int id, dbId, sex, found_x, found_y,level;
 		PokemonSex realSex;
 		String my_name;
