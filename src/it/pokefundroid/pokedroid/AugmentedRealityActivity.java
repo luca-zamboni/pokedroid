@@ -42,8 +42,6 @@ public class AugmentedRealityActivity extends FragmentActivity implements
 
 	public static final String RESULTS = "Results";
 
-	private static final int FIGHT_PROXIMITY = 10;
-
 	private BeyondarGLSurfaceView mBeyondarGLSurfaceView;
 	private CameraView mCameraView;
 	private World mWorld;
@@ -119,7 +117,7 @@ public class AugmentedRealityActivity extends FragmentActivity implements
 		int many = FindingUtilities.generateHowManyPokemonInRange(loc[3]);
 
 		// tmp.setAltitude(loc[2]);
-		Monster[] id = FindingUtilities.findInPosition(loc[0], loc[1], many);
+		Monster[] id = FindingUtilities.findInPosition(loc[0], loc[1], loc[3],  many);
 
 		for (int i = 0; i < many; i++) {
 			if (id[i] != null) {
@@ -186,14 +184,14 @@ public class AugmentedRealityActivity extends FragmentActivity implements
 					geoObject.getLongitude(), level);
 			
 			if (StaticClass.DEBUG) {
-				if (results[0] <= FIGHT_PROXIMITY
+				if (results[0] <= FindingUtilities.FIGHT_PROXIMITY
 						* (mWorldCenter.getAccuracy() / 2)) {
 
 					outMonster.add(pm);
 					bo.add(geoObject);
 				}
 			} else {
-				if (results[0] <= FIGHT_PROXIMITY) {
+				if (results[0] <= FindingUtilities.FIGHT_PROXIMITY) {
 					outMonster.add(pm);
 					bo.add(geoObject);
 				}
