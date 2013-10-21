@@ -15,6 +15,8 @@ public class FindingUtilities {
 	//possibilita' su 100 di essere pescato
 	private final static int[] FINDINGCHANCE = { 60, 47, 37, 19, 13, 8};
 
+	public static final int FIGHT_PROXIMITY = 10;
+
 	private final static int MIN_POKEMON = 3;
 	private final static int MAX_POKEMON = 5;
 
@@ -162,16 +164,21 @@ public class FindingUtilities {
 
 		// Convert radius from meters to degrees
 		double radiusInDegrees = radius / 111000f;
+		double minimumRadius = (FIGHT_PROXIMITY / 2.0) / 111000f;
 
 		double u = random.nextDouble();
 		double v = random.nextDouble();
-		double w = radiusInDegrees * Math.sqrt(u);
-		double t = 2 * Math.PI * v;
-		double x = w * Math.cos(t);
-		double y = w * Math.sin(t);
+		double w = radiusInDegrees * Math.sqrt(u) *0;
+		double t = 1 * Math.PI * v;
+		double x = (w + minimumRadius) * Math.cos(t);
+		double y = (w + minimumRadius) * Math.sin(t);
+		
+		
 
 		// Adjust the x-coordinate for the shrinking of the east-west distances
 		double new_x = x / Math.cos(y0);
+		
+		
 
 		double foundLongitude = new_x + y0;
 		double foundLatitude = y + x0;
