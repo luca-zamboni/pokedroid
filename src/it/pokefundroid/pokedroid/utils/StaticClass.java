@@ -1,8 +1,11 @@
 package it.pokefundroid.pokedroid.utils;
 
+import it.pokefundroid.pokedroid.models.Monster;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 
 import android.content.Context;
 import android.content.res.AssetManager;
@@ -15,6 +18,8 @@ public class StaticClass {
 	public static final boolean DEBUG = false;
 	
 	public static BaseHelper dbpoke;
+	
+	public static ArrayList<Monster> sTeam ; 
 
 	public static void openBatabaseConection(Context c) {
 		dbpoke = new BaseHelper(c);
