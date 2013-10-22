@@ -6,6 +6,8 @@ import it.pokefundroid.pokedroid.viewUtils.PersonalMonsterAdapter;
 
 import java.util.ArrayList;
 
+import com.tjerkw.slideexpandable.library.SlideExpandableListAdapter;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -50,6 +52,13 @@ public class View_team_activity extends Activity implements
 		PersonalMonsterAdapter adapter = new PersonalMonsterAdapter(this,
 				StaticClass.sTeam);
 		mMonstersListView.setAdapter(adapter);
+		mMonstersListView.setAdapter(
+	            new SlideExpandableListAdapter(
+	                adapter,
+	                R.id.expandable_toggle_button,
+	                R.id.expandable
+	            )
+	        );
 		mMonstersListView.setOnItemClickListener(this);
 		mMonstersListView.setOnItemLongClickListener(this);
 	}

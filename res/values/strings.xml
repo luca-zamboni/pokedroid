@@ -58,7 +58,13 @@
     <string name="title_connecting">connecting&#8230;</string>
     <string name="title_connected_to">connected: </string>
     <string name="title_not_connected">not connected</string>
-
+    
+    <!-- View team activity -->
+    <string name="pokemon_exchange">Exchange</string>
+	<string name="pokemon_stats">Stats</string>
+    <string name="pokemon_free">Free</string>
+	
+	
     <!-- ExchangeActivity -->
     <string name="pokemon_level">lvl. %1$s</string>
     <string name="would_exchange">Would you like to exchange?</string>
