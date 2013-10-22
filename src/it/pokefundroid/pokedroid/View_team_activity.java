@@ -1,6 +1,7 @@
 package it.pokefundroid.pokedroid;
 
 import it.pokefundroid.pokedroid.models.Monster;
+import it.pokefundroid.pokedroid.utils.StaticClass;
 import it.pokefundroid.pokedroid.viewUtils.PersonalMonsterAdapter;
 
 import java.util.ArrayList;
@@ -31,7 +32,6 @@ public class View_team_activity extends Activity implements
 
 	private ListView mMonstersListView;
 	protected ActionMode mActionMode;
-	private ArrayList<Monster> mMonsters;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -43,10 +43,14 @@ public class View_team_activity extends Activity implements
 	}
 
 	@Override
-	protected void onResume() {
-		super.onResume();
-		mMonsters = Monster.getAllPersonaPokemon(this);
-		PersonalMonsterAdapter adapter = new PersonalMonsterAdapter(this, mMonsters);
+	protected void onPostResume() {
+		super.onPostResume();
+		if(StaticClass.sTeam==null){
+			startActivity(new Intent(this,Splash_activity.class));
+			this.finish();
+		}
+		PersonalMonsterAdapter adapter = new PersonalMonsterAdapter(this,
+				StaticClass.sTeam);
 		mMonstersListView.setAdapter(adapter);
 		mMonstersListView.setAdapter(
 	            new SlideExpandableListAdapter(
@@ -56,7 +60,6 @@ public class View_team_activity extends Activity implements
 	            )
 	        );
 		mMonstersListView.setOnItemClickListener(this);
-		//mMonstersListView.setLongClickable(true);
 		mMonstersListView.setOnItemLongClickListener(this);
 	}
 
@@ -98,7 +101,7 @@ public class View_team_activity extends Activity implements
 	@Override
 	public void onItemClick(AdapterView<?> parent, View clicked, int position,
 			long id) {
-		Monster m = mMonsters.get(position);
+		Monster m = StaticClass.sTeam.get(position);
 		LayoutInflater inflate = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		View v = inflate.inflate(R.layout.dialog_stat_viewer, null, false);
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -124,8 +127,8 @@ public class View_team_activity extends Activity implements
 	@Override
 	public boolean onItemLongClick(AdapterView<?> parent, View clicked,
 			int position, long id) {
-		Log.d("position", position+"");
-		Monster m = mMonsters.get(position);
+		Log.d("position", position + "");
+		Monster m = StaticClass.sTeam.get(position);
 		Intent i = new Intent(this, ExchangeActivity.class);
 		i.putExtra(ExchangeActivity.PASSED_MONSTER_KEY, m);
 		startActivity(i);

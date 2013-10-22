@@ -1,6 +1,7 @@
 package it.pokefundroid.pokedroid;
 
 import it.pokefundroid.pokedroid.models.Monster;
+import it.pokefundroid.pokedroid.utils.StaticClass;
 import it.pokefundroid.pokedroid.viewUtils.ImageAdapter;
 
 import java.io.IOException;
@@ -28,7 +29,6 @@ public class CaptureActivity extends Activity {
 	private ImageView mMyPokemon;
 	private Button mCapture;
 	private Monster pm;
-	private List<Monster> mTeam;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -46,11 +46,14 @@ public class CaptureActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				pm.saveOnDatabase();
+				if(StaticClass.sTeam.size()<6){
+					StaticClass.sTeam.clear();
+					StaticClass.sTeam = Monster.getAllPersonaPokemon(CaptureActivity.this,Monster.TEAM);
+				}
 				// TODO no string!
 				exit("Captured!");
 			}
 		});
-		mTeam = Monster.getAllPersonaPokemon(this);
 		Bundle extras = getIntent().getExtras();
 		setBackground(extras);
 		setWildPokemon(extras);
@@ -59,8 +62,7 @@ public class CaptureActivity extends Activity {
 
 	private void setMyPokemon(Bundle extras) {
 		// TODO get him from the team classe
-		mTeam = Monster.getAllPersonaPokemon(this);
-		Monster m = mTeam.get((int) (Math.random() * mTeam.size()));
+		Monster m = StaticClass.sTeam.get((int) (Math.random() * StaticClass.sTeam.size()));
 		try {
 			mMyPokemon.setImageBitmap(BitmapFactory.decodeStream(getAssets()
 					.open(getRearPokemonFilename(m.getId() + ""))));
@@ -75,11 +77,10 @@ public class CaptureActivity extends Activity {
 	}
 
 	private void setWildPokemon(Bundle extras) {
-		this.pm = (Monster) extras
-				.getSerializable(PASSED_WILD_MONSTER_KEY);
+		this.pm = (Monster) extras.getSerializable(PASSED_WILD_MONSTER_KEY);
 		try {
 			mWildPokemon.setImageBitmap(BitmapFactory.decodeStream(getAssets()
-					.open(ImageAdapter.getMonsterFilename(pm.getId()+""))));
+					.open(ImageAdapter.getMonsterFilename(pm.getId() + ""))));
 		} catch (IOException e) {
 			// TODO nothing for now
 		}
@@ -87,9 +88,11 @@ public class CaptureActivity extends Activity {
 
 	private void setBackground(Bundle extras) {
 		byte[] byteArray = extras.getByteArray(PASSED_BACKGROUND_KEY);
-		mBitmapBackground = BitmapFactory.decodeByteArray(byteArray, 0,
-				byteArray.length);
-		mBackground.setImageBitmap(mBitmapBackground);
+		if (byteArray != null) {
+			mBitmapBackground = BitmapFactory.decodeByteArray(byteArray, 0,
+					byteArray.length);
+			mBackground.setImageBitmap(mBitmapBackground);
+		}
 	}
 
 	private void exit(String response) {

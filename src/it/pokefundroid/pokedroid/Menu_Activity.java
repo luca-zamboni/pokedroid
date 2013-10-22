@@ -44,8 +44,10 @@ public class Menu_Activity extends Activity implements ILocation {
 
 		mLocationType = LocationType.GPS;
 
-		if (StaticClass.dbpoke == null)
-			StaticClass.openBatabaseConection(Menu_Activity.this);
+		if(StaticClass.sTeam==null || StaticClass.dbpoke==null){
+			startActivity(new Intent(this,Splash_activity.class));
+			this.finish();
+		}
 
 		mViewPokemon = (Button) findViewById(R.id.button_pokemon);
 		mViewPokemon.setOnClickListener(new OnClickListener() {
