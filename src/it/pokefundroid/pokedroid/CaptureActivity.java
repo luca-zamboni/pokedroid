@@ -48,7 +48,7 @@ public class CaptureActivity extends Activity {
 				pm.saveOnDatabase();
 				if(StaticClass.sTeam.size()<6){
 					StaticClass.sTeam.clear();
-					StaticClass.sTeam = Monster.getAllPersonaPokemon(CaptureActivity.this,Monster.TEAM);
+					StaticClass.sTeam = Monster.getTeamMonsters(CaptureActivity.this);
 				}
 				// TODO no string!
 				exit("Captured!");
