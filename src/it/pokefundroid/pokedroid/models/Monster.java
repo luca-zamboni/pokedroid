@@ -77,8 +77,8 @@ public class Monster implements Serializable {
 	public final static int COMMON = 1;
 	public final static int SUBRARE = 2;
 	public final static int RARE = 3;
-	public final static int VERYRARE = 4;
-	public final static int NONPRESENT = 5;
+	public final static int VERYRARE = 3;
+	public final static int NONPRESENT = 3;
 
 	// stat id
 	public final static int HEALTPOINT = 1;
