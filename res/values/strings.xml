@@ -18,7 +18,7 @@
     <string name="title_dialog_set_home">Do you want to set this as your home?</string>
     <string name="title_dialog_choose_set_home">In order to perform some actions in the game you\'ll need to set an home</string>
     
-    <string name="menu_reset_home">Reset Home</string>
+    <string name="menu_reset_home">Change my home location</string>
 
     <!-- Augmented Reality Activity -->
     <string name="pokemon_too_far">The pokemon is too far, please get closer</string>
