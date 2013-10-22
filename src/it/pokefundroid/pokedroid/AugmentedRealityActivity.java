@@ -22,6 +22,7 @@ import android.graphics.Bitmap;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -208,7 +209,7 @@ public class AugmentedRealityActivity extends FragmentActivity implements
 			try{
 				mCameraView.tackePicture(this);
 			}catch(Exception e){
-				
+				Log.e(AugmentedRealityActivity.class.getName(), e.toString());
 			}
 		}
 	}
@@ -292,7 +293,6 @@ public class AugmentedRealityActivity extends FragmentActivity implements
 			bo = null;
 		}
 		mSelected = pm;
-		onPictureTaken(null);
 		mCameraView.tackePicture(this);
 		
 	}

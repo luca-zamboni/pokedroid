@@ -35,6 +35,7 @@ public class Menu_Activity extends Activity implements ILocation {
 	private LocationUtils mLocationUtils;
 	private ProgressDialog mProgressDialog;
 	private boolean setHome=false;
+	private boolean isHomeDialogShowing=false;
 	private LocationType mLocationType;
 
 	@Override
@@ -92,8 +93,9 @@ public class Menu_Activity extends Activity implements ILocation {
 			finish();
 		}
 		Location l = SharedPreferencesUtilities.getHomeLocation(this);
-		if(l==null){
+		if(l==null && !setHome && !isHomeDialogShowing){
 			displaySetHome();
+			isHomeDialogShowing=true;
 		}
 	}
 
@@ -107,8 +109,12 @@ public class Menu_Activity extends Activity implements ILocation {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if(item.getItemId() == R.id.reset_home){
-			displaySetHome();
-			return true;
+			if(SharedPreferencesUtilities.canSetHome(Menu_Activity.this)){
+				setHome=true;
+				return true;
+			}
+			else
+				displayErrors(R.string.title_dialog_reset_home_err,R.string.title_dialog_reset_home_msg);
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -147,6 +153,8 @@ public class Menu_Activity extends Activity implements ILocation {
 					public void onClick(DialogInterface dialog,
 							int which) {
 						setHome=true;
+						isHomeDialogShowing=false;
+						dialog.dismiss();
 					}
 				}) 
 				.setNeutralButton(getString(android.R.string.cancel),
@@ -157,6 +165,7 @@ public class Menu_Activity extends Activity implements ILocation {
 							public void onClick(DialogInterface dialog,
 									int which) {
 								dialog.dismiss();
+								isHomeDialogShowing=false;
 							}
 						});
 		builder.create().show();
@@ -190,6 +199,10 @@ public class Menu_Activity extends Activity implements ILocation {
 		newActivity.putExtra("loc",
 				new double[] { location.getLatitude(), location.getLongitude(),
 						location.getAltitude(), location.getAccuracy() });
+		if(setHome){
+			SharedPreferencesUtilities.setHome(this, location);
+			setHome=false;
+		}
 		startActivityForResult(newActivity, AUGMENTED_REALITY_CODE);
 	}
 
