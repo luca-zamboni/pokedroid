@@ -88,6 +88,18 @@ public class Monster implements Serializable {
 	public final static int SPDEFENCE = 5;
 	public final static int SPEED = 6;
 
+	// status id (in team or out of team)
+	public final static int TEAM = 10;
+	public final static int BOX = 11;
+
+	// query by status
+	private final static String TEAMQUERY = "SELECT * FROM "
+			+ BaseHelper.TABLE_PERSONAL_POKEMON + " ORDER BY "
+			+ BaseHelper.ORDER + " LIMIT 6";
+	private final static String BOXQUERY = "SELECT * FROM "
+			+ BaseHelper.TABLE_PERSONAL_POKEMON + " ORDER BY "
+			+ BaseHelper.ORDER + " LIMIT 6, 100000";
+
 	// commento in fondo il numero delle evoluzioni/pokemon seguito dalla prima
 	// forma
 	public final static int[] RARITY = {
@@ -277,24 +289,27 @@ public class Monster implements Serializable {
 	}
 
 	// /// static metod
-	
-	public static void scambiaOrdineMonster(int idDb1, int idDb2){
-		String temp1,temp2;
-		int tempint1,tempint2;
-		temp1 = StaticClass.dbpoke.oneRowOnColumnQuery(BaseHelper.TABLE_PERSONAL_POKEMON,
-				BaseHelper.ORDER, BaseHelper.MY_ID +" = "+ idDb1);
+
+	public static void scambiaOrdineMonster(int idDb1, int idDb2) {
+		String temp1, temp2;
+		int tempint1, tempint2;
+		temp1 = StaticClass.dbpoke.oneRowOnColumnQuery(
+				BaseHelper.TABLE_PERSONAL_POKEMON, BaseHelper.ORDER,
+				BaseHelper.MY_ID + " = " + idDb1);
 		tempint1 = Integer.parseInt(temp1);
-		temp2 = StaticClass.dbpoke.oneRowOnColumnQuery(BaseHelper.TABLE_PERSONAL_POKEMON,
-				BaseHelper.ORDER, BaseHelper.MY_ID +" = "+ idDb2);
+		temp2 = StaticClass.dbpoke.oneRowOnColumnQuery(
+				BaseHelper.TABLE_PERSONAL_POKEMON, BaseHelper.ORDER,
+				BaseHelper.MY_ID + " = " + idDb2);
 		tempint2 = Integer.parseInt(temp2);
-		StaticClass.dbpoke.executeSQL("UPDATE " + BaseHelper.TABLE_PERSONAL_POKEMON + 
-				" SET " + BaseHelper.ORDER + " = " + tempint1 +
-				" WHERE " + BaseHelper.MY_ID + " = " + idDb2);
-		StaticClass.dbpoke.executeSQL("UPDATE " + BaseHelper.TABLE_PERSONAL_POKEMON + 
-				" SET " + BaseHelper.ORDER + " = " + tempint2 +
-				" WHERE " + BaseHelper.MY_ID + " = " + idDb1);
-		
-		
+		StaticClass.dbpoke.executeSQL("UPDATE "
+				+ BaseHelper.TABLE_PERSONAL_POKEMON + " SET "
+				+ BaseHelper.ORDER + " = " + tempint1 + " WHERE "
+				+ BaseHelper.MY_ID + " = " + idDb2);
+		StaticClass.dbpoke.executeSQL("UPDATE "
+				+ BaseHelper.TABLE_PERSONAL_POKEMON + " SET "
+				+ BaseHelper.ORDER + " = " + tempint2 + " WHERE "
+				+ BaseHelper.MY_ID + " = " + idDb1);
+
 	}
 
 	public static String getSexAsci(PokemonSex sex) {
@@ -308,13 +323,22 @@ public class Monster implements Serializable {
 		return s;
 	}
 
-	public static ArrayList<Monster> getAllPersonaPokemon(Context ctx) {
+	public static ArrayList<Monster> getAllPersonaPokemon(Context ctx,
+			int status) {
+		String query;
+		if (status == TEAM) {
+			query = TEAMQUERY;
+		} else if (status == BOX) {
+			query = BOXQUERY;
+		} else {
+			return null;
+		}
+
 		if (StaticClass.dbpoke == null)
 			StaticClass.openBatabaseConection(ctx.getApplicationContext());
 		StaticClass.dbpoke.openDataBase();
-		Cursor c = StaticClass.dbpoke.dbpoke.rawQuery("SELECT * FROM "
-				+ BaseHelper.TABLE_PERSONAL_POKEMON + " ORDER BY " + BaseHelper.ORDER + " LIMIT 6", null);
-		int id, dbId, sex, found_x, found_y,level;
+		Cursor c = StaticClass.dbpoke.dbpoke.rawQuery(query, null);
+		int id, dbId, sex, found_x, found_y, level;
 		PokemonSex realSex;
 		String my_name;
 		ArrayList<Monster> mPokemon = new ArrayList<Monster>();
@@ -327,7 +351,7 @@ public class Monster implements Serializable {
 			realSex = intToGender(sex);
 			found_x = c.getInt(c.getColumnIndex(BaseHelper.FOUND_X));
 			found_y = c.getInt(c.getColumnIndex(BaseHelper.FOUND_Y));
-			
+
 			level = c.getInt(c.getColumnIndex(BaseHelper.LEVEL));
 
 			int seed = c.getInt(c.getColumnIndex(BaseHelper.SEED));
@@ -396,13 +420,13 @@ public class Monster implements Serializable {
 		// phisical)
 		// damage case
 		int finalDamage = 0;
-		//double rawDamage;
+		// double rawDamage;
 		int randomNumber = (new Random()).nextInt(26) + 85;
 		double effectivness = 1.0;
 		double stab = (atk.getFirstType() == move.getType() || atk
 				.getSecndType() == move.getType()) ? 1.5 : 1.0;
 		int power = move.getPower();
-		//double nature = 1.0;
+		// double nature = 1.0;
 		double additional = 1.0;
 
 		int attack = atk.getAttack();
@@ -417,9 +441,9 @@ public class Monster implements Serializable {
 
 	public void saveOnDatabase() {
 		int sex = Monster.genderToInt(this.sex);
-		
+
 		ContentValues c = new ContentValues();
-		
+
 		c.put(BaseHelper.BASE_POKEMON_ID, id);
 		c.put(BaseHelper.SEX, sex);
 		c.put(BaseHelper.FOUND_X, found_x);
@@ -434,14 +458,16 @@ public class Monster implements Serializable {
 		c.put(BaseHelper.MY_NAME, my_name);
 
 		StaticClass.dbpoke.openDataBase();
-		int dbId = (int) StaticClass.dbpoke.dbpoke.insertOrThrow(BaseHelper.TABLE_PERSONAL_POKEMON, null, c);
+		int dbId = (int) StaticClass.dbpoke.dbpoke.insertOrThrow(
+				BaseHelper.TABLE_PERSONAL_POKEMON, null, c);
 		StaticClass.dbpoke.close();
-		
-		StaticClass.dbpoke.executeSQL("UPDATE "+BaseHelper.TABLE_PERSONAL_POKEMON+
-				" SET "+BaseHelper.ORDER+"="+dbId+" WHERE "+
-				BaseHelper.MY_ID + " = " + dbId);
 
-		//StaticClass.dbpoke.executeSQL(insertPersonalPokemon);
+		StaticClass.dbpoke.executeSQL("UPDATE "
+				+ BaseHelper.TABLE_PERSONAL_POKEMON + " SET "
+				+ BaseHelper.ORDER + "=" + dbId + " WHERE " + BaseHelper.MY_ID
+				+ " = " + dbId);
+
+		// StaticClass.dbpoke.executeSQL(insertPersonalPokemon);
 
 	}
 

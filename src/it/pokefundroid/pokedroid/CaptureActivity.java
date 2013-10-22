@@ -1,6 +1,7 @@
 package it.pokefundroid.pokedroid;
 
 import it.pokefundroid.pokedroid.models.Monster;
+import it.pokefundroid.pokedroid.utils.StaticClass;
 import it.pokefundroid.pokedroid.viewUtils.ImageAdapter;
 
 import java.io.IOException;
@@ -28,7 +29,6 @@ public class CaptureActivity extends Activity {
 	private ImageView mMyPokemon;
 	private Button mCapture;
 	private Monster pm;
-	private List<Monster> mTeam;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +50,6 @@ public class CaptureActivity extends Activity {
 				exit("Captured!");
 			}
 		});
-		mTeam = Monster.getAllPersonaPokemon(this);
 		Bundle extras = getIntent().getExtras();
 		setBackground(extras);
 		setWildPokemon(extras);
@@ -59,8 +58,7 @@ public class CaptureActivity extends Activity {
 
 	private void setMyPokemon(Bundle extras) {
 		// TODO get him from the team classe
-		mTeam = Monster.getAllPersonaPokemon(this);
-		Monster m = mTeam.get((int) (Math.random() * mTeam.size()));
+		Monster m = StaticClass.sTeam.get((int) (Math.random() * StaticClass.sTeam.size()));
 		try {
 			mMyPokemon.setImageBitmap(BitmapFactory.decodeStream(getAssets()
 					.open(getRearPokemonFilename(m.getId() + ""))));

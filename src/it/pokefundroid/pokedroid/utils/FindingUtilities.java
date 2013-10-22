@@ -13,9 +13,9 @@ public class FindingUtilities {
 	private final static int[] CHANCE = { 950, 800, 300, 60, 4, 0 };
 
 	//possibilita' su 100 di essere pescato
-	private final static int[] FINDINGCHANCE = { 60, 47, 37, 19, 13, 8};
+	private final static int[] FINDINGCHANCE = { 40, 33, 25, 15, 9, 5};
 
-	public static final int FIGHT_PROXIMITY = 10;
+	public static final int FIGHT_PROXIMITY = 15;
 
 	private final static int MIN_POKEMON = 3;
 	private final static int MAX_POKEMON = 5;
@@ -164,7 +164,7 @@ public class FindingUtilities {
 
 		// Convert radius from meters to degrees
 		double radiusInDegrees = radius / 111300f;
-		double minimumRadius = (FIGHT_PROXIMITY / 1.5) / 111300f;
+		double minimumRadius = (FIGHT_PROXIMITY / 2.0) / 111300f;
 
 		double u = random.nextDouble();
 		double v = random.nextDouble();
