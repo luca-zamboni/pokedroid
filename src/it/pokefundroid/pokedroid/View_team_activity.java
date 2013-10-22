@@ -5,6 +5,8 @@ import it.pokefundroid.pokedroid.viewUtils.PersonalMonsterAdapter;
 
 import java.util.ArrayList;
 
+import com.tjerkw.slideexpandable.library.SlideExpandableListAdapter;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -46,6 +48,13 @@ public class View_team_activity extends Activity implements
 		mMonsters = Monster.getAllPersonaPokemon(this);
 		PersonalMonsterAdapter adapter = new PersonalMonsterAdapter(this, mMonsters);
 		mMonstersListView.setAdapter(adapter);
+		mMonstersListView.setAdapter(
+	            new SlideExpandableListAdapter(
+	                adapter,
+	                R.id.expandable_toggle_button,
+	                R.id.expandable
+	            )
+	        );
 		mMonstersListView.setOnItemClickListener(this);
 		//mMonstersListView.setLongClickable(true);
 		mMonstersListView.setOnItemLongClickListener(this);
