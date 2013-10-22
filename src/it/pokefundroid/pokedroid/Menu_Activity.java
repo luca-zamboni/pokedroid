@@ -96,10 +96,10 @@ public class Menu_Activity extends Activity implements ILocation {
 	}
 
 	@Override
-	public boolean onPrepareOptionsMenu(Menu menu) {
+	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.menu_menu, menu);
-		return super.onPrepareOptionsMenu(menu);
+		return true;
 	}
 	
 	@Override
