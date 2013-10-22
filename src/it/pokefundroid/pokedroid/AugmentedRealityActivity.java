@@ -177,7 +177,7 @@ public class AugmentedRealityActivity extends FragmentActivity implements
 					mWorldCenter.getLongitude(), geoObject.getLatitude(),
 					geoObject.getLongitude(), results);
 			
-			int level = (int)((Math.random()*194)+6);
+			int level = (int)((Math.random()*95)+5);
 			PokemonSex sex =  Monster.intToGender((int)((Math.random()*2)+1));
 			Monster pm = new Monster(Integer.parseInt(geoObject.getName()), "",
 					sex, geoObject.getLatitude(),
@@ -205,7 +205,11 @@ public class AugmentedRealityActivity extends FragmentActivity implements
 		else {
 			mSelected = outMonster.get(0);
 			mSelectedBo = bo.get(0);
-			mCameraView.tackePicture(this);
+			try{
+				mCameraView.tackePicture(this);
+			}catch(Exception e){
+				
+			}
 		}
 	}
 

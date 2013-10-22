@@ -222,7 +222,7 @@ public class ExchangeActivity extends Activity {
 				// Start the Bluetooth chat services
 				mChatService.start();
 			}
-		} else {
+		} else if(mBluetoothAdapter!=null && mBluetoothAdapter.isEnabled()) {
 			mChatService = new BluetoothChatService(this, mHandler);
 			mChatService.start();
 		}

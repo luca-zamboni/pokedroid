@@ -277,6 +277,25 @@ public class Monster implements Serializable {
 	}
 
 	// /// static metod
+	
+	public static void scambiaOrdineMonster(int idDb1, int idDb2){
+		String temp1,temp2;
+		int tempint1,tempint2;
+		temp1 = StaticClass.dbpoke.oneRowOnColumnQuery(BaseHelper.TABLE_PERSONAL_POKEMON,
+				BaseHelper.ORDER, BaseHelper.MY_ID +" = "+ idDb1);
+		tempint1 = Integer.parseInt(temp1);
+		temp2 = StaticClass.dbpoke.oneRowOnColumnQuery(BaseHelper.TABLE_PERSONAL_POKEMON,
+				BaseHelper.ORDER, BaseHelper.MY_ID +" = "+ idDb2);
+		tempint2 = Integer.parseInt(temp2);
+		StaticClass.dbpoke.executeSQL("UPDATE " + BaseHelper.TABLE_PERSONAL_POKEMON + 
+				" SET " + BaseHelper.ORDER + " = " + tempint1 +
+				" WHERE " + BaseHelper.MY_ID + " = " + idDb2);
+		StaticClass.dbpoke.executeSQL("UPDATE " + BaseHelper.TABLE_PERSONAL_POKEMON + 
+				" SET " + BaseHelper.ORDER + " = " + tempint2 +
+				" WHERE " + BaseHelper.MY_ID + " = " + idDb1);
+		
+		
+	}
 
 	public static String getSexAsci(PokemonSex sex) {
 		String s = " ";
