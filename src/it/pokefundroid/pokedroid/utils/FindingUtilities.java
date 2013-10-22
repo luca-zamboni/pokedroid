@@ -163,24 +163,24 @@ public class FindingUtilities {
 		Random random = new Random();
 
 		// Convert radius from meters to degrees
-		double radiusInDegrees = radius / 111000f;
-		double minimumRadius = (FIGHT_PROXIMITY / 2.0) / 111000f;
+		double radiusInDegrees = radius / 111300f;
+		double minimumRadius = (FIGHT_PROXIMITY / 1.5) / 111300f;
 
 		double u = random.nextDouble();
 		double v = random.nextDouble();
-		double w = radiusInDegrees * Math.sqrt(u) *0;
-		double t = 1 * Math.PI * v;
+		double w = radiusInDegrees * Math.sqrt(u);
+		double t = 2 * Math.PI * v;
 		double x = (w + minimumRadius) * Math.cos(t);
 		double y = (w + minimumRadius) * Math.sin(t);
 		
 		
 
 		// Adjust the x-coordinate for the shrinking of the east-west distances
-		double new_x = x / Math.cos(y0);
+		//double new_x = x / Math.cos(y0); probably not needed
 		
 		
 
-		double foundLongitude = new_x + y0;
+		double foundLongitude = /*new_*/x + y0;
 		double foundLatitude = y + x0;
 		Location out = new Location("randomize");
 		out.setLatitude(foundLatitude);
