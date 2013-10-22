@@ -15,6 +15,10 @@
     <string name="title_activity_view_team_activity">View team</string>
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_sprite_">Sprite_Activity</string>
+    <string name="title_dialog_set_home">Do you want to set this as your home?</string>
+    <string name="title_dialog_choose_set_home">In order to perform some actions in the game you\'ll need to set an home</string>
+    
+    <string name="menu_reset_home">Change my home location</string>
 
     <!-- Augmented Reality Activity -->
     <string name="pokemon_too_far">The pokemon is too far, please get closer</string>
@@ -38,10 +42,10 @@
     <string name="spatt">S. Attack</string>
     <string name="spdef">S. Defense</string>
     <string name="speed">Speed</string>
-    
+
     <!-- Dialog confirm pokemon -->
-     <string name="title_confirm">Confirm</string>
-     <string name="dialog_sure">Are you sure?</string>
+    <string name="title_confirm">Confirm</string>
+    <string name="dialog_sure">Are you sure?</string>
 
     <!-- BluetoothChat -->
     <string name="not_connected">You are not connected to a device</string>
@@ -49,11 +53,11 @@
     <string name="title_connecting">connecting&#8230;</string>
     <string name="title_connected_to">connected: </string>
     <string name="title_not_connected">not connected</string>
-    
+
     <!-- ExchangeActivity -->
     <string name="pokemon_level">lvl. %1$s</string>
     <string name="would_exchange">Would you like to exchange?</string>
-     <string name="wait_answer">Wait the other answer&#8230;</string>
+    <string name="wait_answer">Wait the other answer&#8230;</string>
 
     <!-- DeviceListActivity -->
     <string name="scanning">scanning for devices&#8230;</string>

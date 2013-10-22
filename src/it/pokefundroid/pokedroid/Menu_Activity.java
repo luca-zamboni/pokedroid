@@ -17,6 +17,9 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.location.Location;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -31,6 +34,7 @@ public class Menu_Activity extends Activity implements ILocation {
 	private Button mExplore;
 	private LocationUtils mLocationUtils;
 	private ProgressDialog mProgressDialog;
+	private boolean setHome=false;
 	private LocationType mLocationType;
 
 	@Override
@@ -58,10 +62,13 @@ public class Menu_Activity extends Activity implements ILocation {
 
 			@Override
 			public void onClick(View v) {
+				if(setHome){
+					mLocationType=LocationType.NETWORK;
+				}
 				mLocationUtils = new LocationUtils(Menu_Activity.this,
 						Menu_Activity.this, mLocationType);
 				Location lastKonwn = mLocationUtils.getLastKnownLocation();
-				if (lastKonwn != null) {
+				if (lastKonwn != null && !setHome) {
 					mLocationUtils.close();
 					onLocationChaged(lastKonwn);
 				} else {
@@ -82,11 +89,26 @@ public class Menu_Activity extends Activity implements ILocation {
 			startActivity(new Intent(i));
 			finish();
 		}
+		Location l = SharedPreferencesUtilities.getHomeLocation(this);
+		if(l==null){
+			displaySetHome();
+		}
 	}
 
 	@Override
-	public void onConfigurationChanged(Configuration newConfig) {
-		super.onConfigurationChanged(newConfig);
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.menu_menu, menu);
+		return true;
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		if(item.getItemId() == R.id.reset_home){
+			displaySetHome();
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
 	}
 
 	private void createProgressDialog() {
@@ -110,6 +132,32 @@ public class Menu_Activity extends Activity implements ILocation {
 					}
 				});
 		mProgressDialog.show();
+	}
+	
+	private void displaySetHome() {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this)
+				.setTitle(R.string.title_dialog_set_home)
+				.setMessage(R.string.title_dialog_choose_set_home)
+				.setCancelable(true)
+				.setPositiveButton(getString(android.R.string.ok),new DialogInterface.OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface dialog,
+							int which) {
+						setHome=true;
+					}
+				}) 
+				.setNeutralButton(getString(android.R.string.cancel),
+						
+						new DialogInterface.OnClickListener() {
+
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+								dialog.dismiss();
+							}
+						});
+		builder.create().show();
 	}
 
 	private void displayErrors(int titleRes, int descRes) {
