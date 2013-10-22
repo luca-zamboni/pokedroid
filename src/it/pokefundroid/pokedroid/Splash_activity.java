@@ -28,7 +28,7 @@ public class Splash_activity extends Activity {
 		
 		// Connessionae database all' inizio del progrmma nn cancellare
 		StaticClass.openBatabaseConection(getApplicationContext());
-		StaticClass.sTeam = Monster.getAllPersonaPokemon(this, Monster.TEAM);
+		StaticClass.sTeam = Monster.getTeamMonsters(this);
 		startActivity(new Intent(Splash_activity.this, Menu_Activity.class));
 		this.finish();
 	}

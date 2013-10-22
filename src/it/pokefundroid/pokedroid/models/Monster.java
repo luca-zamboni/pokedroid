@@ -89,8 +89,8 @@ public class Monster implements Serializable {
 	public final static int SPEED = 6;
 
 	// status id (in team or out of team)
-	public final static int TEAM = 10;
-	public final static int BOX = 11;
+	private final static int TEAM = 10;
+	private final static int BOX = 11;
 
 	// query by status
 	private final static String TEAMQUERY = "SELECT * FROM "
@@ -322,8 +322,16 @@ public class Monster implements Serializable {
 		}
 		return s;
 	}
+	
+	public static ArrayList<Monster> getTeamMonsters(Context ctx) {
+		return getAllPersonaPokemon(ctx, TEAM);
+	}
+	
+	public static ArrayList<Monster> getBoxMonsters(Context ctx) {
+		return getAllPersonaPokemon(ctx, BOX);
+	}
 
-	public static ArrayList<Monster> getAllPersonaPokemon(Context ctx,
+	private static ArrayList<Monster> getAllPersonaPokemon(Context ctx,
 			int status) {
 		String query;
 		if (status == TEAM) {
