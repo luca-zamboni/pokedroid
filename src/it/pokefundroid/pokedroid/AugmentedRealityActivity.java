@@ -277,7 +277,6 @@ public class AugmentedRealityActivity extends FragmentActivity implements
 			i.putExtra(CaptureActivity.PASSED_WILD_MONSTER_KEY, mSelected);
 			byte[] b = StaticClass.compressBitmap(StaticClass.fastBlur(picture,
 					3));
-
 			i.putExtra(CaptureActivity.PASSED_BACKGROUND_KEY, b);
 			startActivityForResult(i, CAPTURE_CODE);
 			mSelected = null;
@@ -293,7 +292,9 @@ public class AugmentedRealityActivity extends FragmentActivity implements
 			bo = null;
 		}
 		mSelected = pm;
+		onPictureTaken(null);
 		mCameraView.tackePicture(this);
+		
 	}
 
 	@Override

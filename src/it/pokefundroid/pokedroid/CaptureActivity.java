@@ -46,6 +46,10 @@ public class CaptureActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				pm.saveOnDatabase();
+				if(StaticClass.sTeam.size()<6){
+					StaticClass.sTeam.clear();
+					StaticClass.sTeam = Monster.getAllPersonaPokemon(CaptureActivity.this,Monster.TEAM);
+				}
 				// TODO no string!
 				exit("Captured!");
 			}
@@ -73,11 +77,10 @@ public class CaptureActivity extends Activity {
 	}
 
 	private void setWildPokemon(Bundle extras) {
-		this.pm = (Monster) extras
-				.getSerializable(PASSED_WILD_MONSTER_KEY);
+		this.pm = (Monster) extras.getSerializable(PASSED_WILD_MONSTER_KEY);
 		try {
 			mWildPokemon.setImageBitmap(BitmapFactory.decodeStream(getAssets()
-					.open(ImageAdapter.getMonsterFilename(pm.getId()+""))));
+					.open(ImageAdapter.getMonsterFilename(pm.getId() + ""))));
 		} catch (IOException e) {
 			// TODO nothing for now
 		}
@@ -85,9 +88,11 @@ public class CaptureActivity extends Activity {
 
 	private void setBackground(Bundle extras) {
 		byte[] byteArray = extras.getByteArray(PASSED_BACKGROUND_KEY);
-		mBitmapBackground = BitmapFactory.decodeByteArray(byteArray, 0,
-				byteArray.length);
-		mBackground.setImageBitmap(mBitmapBackground);
+		if (byteArray != null) {
+			mBitmapBackground = BitmapFactory.decodeByteArray(byteArray, 0,
+					byteArray.length);
+			mBackground.setImageBitmap(mBitmapBackground);
+		}
 	}
 
 	private void exit(String response) {

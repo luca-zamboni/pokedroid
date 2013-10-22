@@ -45,7 +45,8 @@
         </activity>
         <activity
             android:name="it.pokefundroid.pokedroid.Menu_Activity"
-            android:label="@string/title_activity_menu_" >
+            android:label="@string/title_activity_menu_"
+            android:configChanges="orientation|screenSize" >
         </activity>
         <activity
             android:name="it.pokefundroid.pokedroid.CaptureActivity"
