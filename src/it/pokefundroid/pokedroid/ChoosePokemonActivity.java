@@ -3,6 +3,7 @@ package it.pokefundroid.pokedroid;
 import it.pokefundroid.pokedroid.models.Monster;
 import it.pokefundroid.pokedroid.models.Monster.PokemonSex;
 import it.pokefundroid.pokedroid.utils.SharedPreferencesUtilities;
+import it.pokefundroid.pokedroid.utils.StaticClass;
 import it.pokefundroid.pokedroid.viewUtils.ImageAdapter;
 
 import java.io.IOException;
@@ -31,7 +32,6 @@ public class ChoosePokemonActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_choose_pokemon);
 		isBadGuy = SharedPreferencesUtilities.isBadGuy(this);
-
 		loadPokemonImages();
 	}
 
@@ -127,6 +127,7 @@ public class ChoosePokemonActivity extends Activity {
 							public void onClick(DialogInterface dialog,
 									int which) {
 								p.saveOnDatabase();
+								StaticClass.sTeam.add(p);
 								dialog.dismiss();
 								saveAndExit();
 							}

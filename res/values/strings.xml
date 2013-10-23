@@ -25,6 +25,7 @@
     <string name="menu_reset_home">Change my home location</string>
     <string name="title_dialog_reset_home_err">Can\'t set a new home location</string>
     <string name="title_dialog_reset_home_msg">You have to wait at least a day </string>
+    <string name="toast_set_home">It\'ll be set in the next exploration</string>
 
     <!-- Augmented Reality Activity -->
     <string name="pokemon_too_far">The pokemon is too far, please get closer</string>

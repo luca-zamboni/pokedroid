@@ -89,9 +89,13 @@ public class SharedPreferencesUtilities {
 	public static boolean isAtHome(Context ctx, Location l) {
 		Location home = getHomeLocation(ctx);
 		float[] results = new float[1];
-		Location.distanceBetween(l.getLatitude(), l.getLongitude(),
-				home.getLatitude(), home.getLongitude(), results);
-		return results[0] <= home.getAccuracy();
+		if (home != null) {
+			Location.distanceBetween(l.getLatitude(), l.getLongitude(),
+					home.getLatitude(), home.getLongitude(), results);
+			return results[0] <= home.getAccuracy();
+		}
+		return false;
+
 	}
 
 	public static boolean canSetHome(Context ctx) {
