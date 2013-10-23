@@ -322,11 +322,11 @@ public class Monster implements Serializable {
 		}
 		return s;
 	}
-	
+
 	public static ArrayList<Monster> getTeamMonsters(Context ctx) {
 		return getAllPersonaPokemon(ctx, TEAM);
 	}
-	
+
 	public static ArrayList<Monster> getBoxMonsters(Context ctx) {
 		return getAllPersonaPokemon(ctx, BOX);
 	}
@@ -372,9 +372,8 @@ public class Monster implements Serializable {
 
 			mPokemon.add(nuovo);
 		}
-
+		c.close();
 		StaticClass.dbpoke.close();
-
 		return mPokemon;
 	}
 

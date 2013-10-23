@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item android:id="@+id/team_menu_box"
+        android:title="@string/team_menu_box"/>
+    <item android:id="@+id/team_menu_team"
+        android:title="@string/team_menu_team"
+        android:visible="false"/>
+</menu>
