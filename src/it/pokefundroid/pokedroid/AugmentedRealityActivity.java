@@ -108,8 +108,7 @@ public class AugmentedRealityActivity extends FragmentActivity implements
 		setWorldAltitude(loc[2]);
 
 		mWorld.setLocation(mWorldCenter);
-		fillPkmn(mWorldCenter.getLatitude(), mWorldCenter.getLongitude(),
-				mWorldCenter.getAltitude(), mWorldCenter.getAccuracy());
+		
 		mWorld.setDefaultBitmap(R.drawable.creature_6);
 	}
 
@@ -212,6 +211,15 @@ public class AugmentedRealityActivity extends FragmentActivity implements
 				Log.e(AugmentedRealityActivity.class.getName(), e.toString());
 			}
 		}
+	}
+	
+	
+
+	@Override
+	protected void onPostResume() {
+		super.onPostResume();
+		fillPkmn(mWorldCenter.getLatitude(), mWorldCenter.getLongitude(),
+				mWorldCenter.getAltitude(), mWorldCenter.getAccuracy());
 	}
 
 	@Override

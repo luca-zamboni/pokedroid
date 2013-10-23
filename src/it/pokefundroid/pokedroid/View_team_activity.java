@@ -6,6 +6,7 @@ import it.pokefundroid.pokedroid.models.Monster;
 import it.pokefundroid.pokedroid.utils.LocationUtils;
 import it.pokefundroid.pokedroid.utils.LocationUtils.ErrorType;
 import it.pokefundroid.pokedroid.utils.LocationUtils.LocationType;
+import it.pokefundroid.pokedroid.utils.SharedPreferencesUtilities;
 import it.pokefundroid.pokedroid.utils.StaticClass;
 import it.pokefundroid.pokedroid.utils.LocationUtils.ILocation;
 import it.pokefundroid.pokedroid.viewUtils.PersonalMonsterAdapter;
@@ -80,7 +81,7 @@ public class View_team_activity extends ActionBarActivity implements
 							if (mLocationUtils != null) {
 								mLocationUtils.close();
 							}
-							if(mLoadTask!=null){
+							if (mLoadTask != null) {
 								mLoadTask.cancel(true);
 							}
 							dialog.dismiss();
@@ -143,8 +144,10 @@ public class View_team_activity extends ActionBarActivity implements
 			if (!mProgressDialog.isShowing())
 				mProgressDialog.show();
 			mLocationUtils = new LocationUtils(this, this, LocationType.NETWORK);
-		} else
+		} else if (mLocation != null
+				&& SharedPreferencesUtilities.isAtHome(this, mLocation)) {
 			mLoadTask.execute();
+		}
 		// TODO set actions on box pokemons =)
 		// mMonstersListView.setOnItemClickListener(this);
 		// mMonstersListView.setOnItemLongClickListener(this);
@@ -238,8 +241,13 @@ public class View_team_activity extends ActionBarActivity implements
 	public void onLocationChaged(Location l) {
 		mLocation = l;
 		mLocationUtils.close();
-		if (mLoadTask != null) {
+		if (mLoadTask != null
+				&& SharedPreferencesUtilities.isAtHome(View_team_activity.this,
+						l)) {
 			mLoadTask.execute();
+		}
+		else if(mProgressDialog!=null && mProgressDialog.isShowing()){
+			mProgressDialog.dismiss();
 		}
 	}
 
