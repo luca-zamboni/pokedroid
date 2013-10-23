@@ -71,7 +71,7 @@ public class SharedPreferencesUtilities {
 		if (out.getLatitude() == -1)
 			return null;
 		out.setLongitude(sp.getFloat(USER_HOME_LONGITUDE, -1));
-		out.setLatitude(sp.getFloat(USER_HOME_LATITUDE, -1));
+		out.setAccuracy(sp.getFloat(USER_HOME_ACCURACY, -1));
 		return out;
 	}
 

@@ -245,8 +245,9 @@ public class View_team_activity extends ActionBarActivity implements
 				&& SharedPreferencesUtilities.isAtHome(View_team_activity.this,
 						l)) {
 			mLoadTask.execute();
-		}
-		else if(mProgressDialog!=null && mProgressDialog.isShowing()){
+		} else if (mProgressDialog != null && mProgressDialog.isShowing()) {
+			Toast.makeText(View_team_activity.this,
+					getString(R.string.not_at_home), Toast.LENGTH_SHORT).show();
 			mProgressDialog.dismiss();
 		}
 	}

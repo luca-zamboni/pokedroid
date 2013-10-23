@@ -67,7 +67,7 @@
     <string name="team_menu_box">View Out Monster</string>
     <string name="team_menu_team">View Team </string>
     <string name="progress_msg_box">Calling all your monsters outside&#8230;</string>
-    <string name="progress_msg_box">Calling all your monsters outside&#8230;</string>
+    <string name="not_at_home">You\'re not at home</string>
     
     
     <!-- ExchangeActivity -->
