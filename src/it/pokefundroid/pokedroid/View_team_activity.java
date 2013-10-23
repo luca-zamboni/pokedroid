@@ -6,6 +6,7 @@ import it.pokefundroid.pokedroid.viewUtils.PersonalMonsterAdapter;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.view.ActionMode;
@@ -63,16 +64,29 @@ public class View_team_activity extends Activity implements
 		
 		mMonstersListView.setItemActionListener(new OnActionClickListener() {
 			@Override
-			public void onClick(View itemView, View clickedView, int position) {
+			public void onClick(View itemView, View clickedView, final int position) {
 				
 				if(clickedView.getId() == R.id.pokemon_free){
-					Monster temp = StaticClass.sTeam.get(position);
-					temp.removeFromDatabase();
-					StaticClass.sTeam = Monster.getTeamMonsters(context);
 					/////addare animazioni fighe stupide
-					Intent intent = getIntent();
-					finish();
-					startActivity(intent);
+					AlertDialog.Builder builder = new AlertDialog.Builder(context);
+					builder.setTitle(R.string.title_confirm)
+							.setMessage(R.string.dialog_sure)
+							.setPositiveButton(android.R.string.ok,
+									new DialogInterface.OnClickListener() {
+
+										@Override
+										public void onClick(DialogInterface dialog,
+												int which) {
+											Monster temp = StaticClass.sTeam.get(position);
+											temp.removeFromDatabase();
+											StaticClass.sTeam = Monster.getTeamMonsters(context);
+											Intent intent = getIntent();
+											finish();
+											startActivity(intent);
+										}
+									})
+							.setNeutralButton(android.R.string.cancel,null);
+					builder.create().show();
 				}
 				
 				if(clickedView.getId() == R.id.pokemon_exchange){
@@ -107,6 +121,7 @@ public class View_team_activity extends Activity implements
 			}
 			
 		},R.id.pokemon_exchange, R.id.pokemon_free, R.id.pokemon_stats);
+		
 		
 	}
 

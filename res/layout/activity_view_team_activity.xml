@@ -8,6 +8,6 @@
     <com.tjerkw.slideexpandable.library.ActionSlideExpandableListView 
         android1:id="@+id/pokemon_list_view"
         android1:layout_width="match_parent" 
-        android1:layout_height="wrap_content" />
+        android1:layout_height="fill_parent" />
 
 </LinearLayout>
