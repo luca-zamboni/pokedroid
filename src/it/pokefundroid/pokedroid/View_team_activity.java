@@ -30,20 +30,21 @@ import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.tjerkw.slideexpandable.library.ActionSlideExpandableListView;
+import com.tjerkw.slideexpandable.library.ActionSlideExpandableListView.OnActionClickListener;
 import com.tjerkw.slideexpandable.library.SlideExpandableListAdapter;
 
-public class View_team_activity extends ActionBarActivity implements
-		OnItemLongClickListener, OnItemClickListener, ILocation {
+public class View_team_activity extends ActionBarActivity implements ILocation,
+		OnActionClickListener {
 
 	private enum VIEW_STATUS {
 		BOX, TEAM
 	}
 
-	private ListView mMonstersListView;
+	private ActionSlideExpandableListView mMonstersListView;
 	private VIEW_STATUS mViewing;
 	private AsyncTask<Object, Void, ArrayList<Monster>> mLoadTask;
 	private ProgressDialog mProgressDialog;
@@ -56,7 +57,7 @@ public class View_team_activity extends ActionBarActivity implements
 		setContentView(R.layout.activity_view_team_activity);
 		setTitle("Your Team");
 		mViewing = VIEW_STATUS.TEAM;
-		mMonstersListView = (ListView) findViewById(R.id.pokemon_list_view);
+		mMonstersListView = (ActionSlideExpandableListView) findViewById(R.id.pokemon_list_view);
 	}
 
 	@Override
@@ -97,8 +98,10 @@ public class View_team_activity extends ActionBarActivity implements
 		mMonstersListView.setAdapter(adapter);
 		mMonstersListView.setAdapter(new SlideExpandableListAdapter(adapter,
 				R.id.expandable_toggle_button, R.id.expandable));
-		mMonstersListView.setOnItemClickListener(this);
-		mMonstersListView.setOnItemLongClickListener(this);
+
+		mMonstersListView.setItemActionListener(this, R.id.pokemon_exchange,
+				R.id.pokemon_free, R.id.pokemon_stats);
+
 	}
 
 	private void setBoxAdapter() {
@@ -195,42 +198,6 @@ public class View_team_activity extends ActionBarActivity implements
 	}
 
 	@Override
-	public void onItemClick(AdapterView<?> parent, View clicked, int position,
-			long id) {
-		Monster m = StaticClass.sTeam.get(position);
-		LayoutInflater inflate = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		View v = inflate.inflate(R.layout.dialog_stat_viewer, null, false);
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		TextView thp = (TextView) v.findViewById(R.id.poke_hp);
-		TextView tatt = (TextView) v.findViewById(R.id.poke_attak);
-		TextView tdef = (TextView) v.findViewById(R.id.poke_defense);
-		TextView tspatt = (TextView) v.findViewById(R.id.poke_spattak);
-		TextView tspdef = (TextView) v.findViewById(R.id.poke_spdefense);
-		TextView tspeed = (TextView) v.findViewById(R.id.poke_speed);
-
-		thp.setText("" + m.getHp());
-		tatt.setText("" + m.getAttack());
-		tdef.setText("" + m.getDefence());
-		tspatt.setText("" + m.getSpecialAttack());
-		tspdef.setText("" + m.getSpecialDefence());
-		tspeed.setText("" + m.getSpeed());
-
-		builder.setTitle(R.string.title_dialog_viewstatpoke);
-		builder.setView(v);
-		builder.create().show();
-	}
-
-	@Override
-	public boolean onItemLongClick(AdapterView<?> parent, View clicked,
-			int position, long id) {
-		Monster m = StaticClass.sTeam.get(position);
-		Intent i = new Intent(this, ExchangeActivity.class);
-		i.putExtra(ExchangeActivity.PASSED_MONSTER_KEY, m);
-		startActivity(i);
-		return true;
-	}
-
-	@Override
 	protected void onPause() {
 		if (mLoadTask != null)
 			mLoadTask.cancel(true);
@@ -267,6 +234,67 @@ public class View_team_activity extends ActionBarActivity implements
 	public void onStatusChanged(String provider, boolean isActive) {
 		Toast.makeText(View_team_activity.this, getString(R.string.gps_off),
 				Toast.LENGTH_SHORT).show();
+	}
+
+	@Override
+	public void onClick(View itemView, View clickedView, final int position) {
+
+		if (clickedView.getId() == R.id.pokemon_free) {
+			// ///addare animazioni fighe stupide
+			AlertDialog.Builder builder = new AlertDialog.Builder(
+					View_team_activity.this);
+			builder.setTitle(R.string.title_confirm)
+					.setMessage(R.string.dialog_sure)
+					.setPositiveButton(android.R.string.ok,
+							new DialogInterface.OnClickListener() {
+
+								@Override
+								public void onClick(DialogInterface dialog,
+										int which) {
+									Monster temp = StaticClass.sTeam
+											.get(position);
+									temp.removeFromDatabase();
+									StaticClass.sTeam = Monster
+											.getTeamMonsters(View_team_activity.this);
+									Intent intent = getIntent();
+									finish();
+									startActivity(intent);
+								}
+							}).setNeutralButton(android.R.string.cancel, null);
+			builder.create().show();
+		}
+
+		if (clickedView.getId() == R.id.pokemon_exchange) {
+			Log.d("position", position + "");
+			Monster m = StaticClass.sTeam.get(position);
+			Intent i = new Intent(View_team_activity.this,
+					ExchangeActivity.class);
+			i.putExtra(ExchangeActivity.PASSED_MONSTER_KEY, m);
+			startActivity(i);
+		}
+
+		if (clickedView.getId() == R.id.pokemon_stats) {
+			Monster m = StaticClass.sTeam.get(position);
+			LayoutInflater inflate = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			View v1 = inflate.inflate(R.layout.dialog_stat_viewer, null, false);
+			AlertDialog.Builder builder = new AlertDialog.Builder(
+					View_team_activity.this);
+			TextView thp = (TextView) v1.findViewById(R.id.poke_hp);
+			TextView tatt = (TextView) v1.findViewById(R.id.poke_attak);
+			TextView tdef = (TextView) v1.findViewById(R.id.poke_defense);
+			TextView tspatt = (TextView) v1.findViewById(R.id.poke_spattak);
+			TextView tspdef = (TextView) v1.findViewById(R.id.poke_spdefense);
+			TextView tspeed = (TextView) v1.findViewById(R.id.poke_speed);
+			thp.setText("" + m.getHp());
+			tatt.setText("" + m.getAttack());
+			tdef.setText("" + m.getDefence());
+			tspatt.setText("" + m.getSpecialAttack());
+			tspdef.setText("" + m.getSpecialDefence());
+			tspeed.setText("" + m.getSpeed());
+			builder.setTitle(R.string.title_dialog_viewstatpoke);
+			builder.setView(v1);
+			builder.create().show();
+		}
 	}
 
 }

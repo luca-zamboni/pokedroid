@@ -61,34 +61,12 @@
       
     </LinearLayout>
 
-    <LinearLayout
+    <include
         android:id="@+id/expandable"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:background="#000000"
-        android:orientation="horizontal" >
-
-        <Button
-            android:id="@+id/pokemon_stats"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_weight="0.5"
-            android:background="@color/grey_background"
-            android:text="@string/pokemon_stats" />
-        <Button
-            android:id="@+id/pokemon_exchange"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_weight="0.5"
-            android:background="@color/grey_background"
-            android:text="@string/pokemon_exchange" />
-        <Button
-            android:id="@+id/pokemon_free"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_weight="0.5"
-            android:background="@color/grey_background"
-            android:text="@string/pokemon_free" />
-    </LinearLayout>
+        android:orientation="horizontal"
+        layout="@layout/sub_row_team_pokemon" />
 
 </LinearLayout>

@@ -2,6 +2,7 @@ package com.tjerkw.slideexpandable.library;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 import android.util.SparseIntArray;
 import android.view.View;
 import android.view.ViewGroup;
@@ -220,13 +221,8 @@ public abstract class AbstractSlideExpandableListAdapter extends WrapperListAdap
 	private void updateExpandable(View target, int position) {
 
 		final LinearLayout.LayoutParams params = (LinearLayout.LayoutParams)target.getLayoutParams();
-		if(openItems.get(position)) {
-			target.setVisibility(View.VISIBLE);
-			params.bottomMargin = 0;
-		} else {
 			target.setVisibility(View.GONE);
 			params.bottomMargin = 0-viewHeights.get(position);
-		}
 	}
 
 	/**
