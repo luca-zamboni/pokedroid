@@ -3,15 +3,9 @@ package it.pokefundroid.pokedroid;
 import it.pokefundroid.pokedroid.models.Monster;
 import it.pokefundroid.pokedroid.utils.StaticClass;
 import it.pokefundroid.pokedroid.viewUtils.PersonalMonsterAdapter;
-
-import java.util.ArrayList;
-
-import com.tjerkw.slideexpandable.library.SlideExpandableListAdapter;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.view.ActionMode;
@@ -24,14 +18,18 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
-import android.widget.ListView;
 import android.widget.TextView;
+
+import com.tjerkw.slideexpandable.library.ActionSlideExpandableListView;
+import com.tjerkw.slideexpandable.library.ActionSlideExpandableListView.OnActionClickListener;
+import com.tjerkw.slideexpandable.library.SlideExpandableListAdapter;
 
 public class View_team_activity extends Activity implements
 		OnItemLongClickListener, OnItemClickListener {
 
-	private ListView mMonstersListView;
+	private ActionSlideExpandableListView mMonstersListView;
 	protected ActionMode mActionMode;
+	private Context context;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +37,8 @@ public class View_team_activity extends Activity implements
 		setContentView(R.layout.activity_view_team_activity);
 		setTitle("Your Team");
 
-		mMonstersListView = (ListView) findViewById(R.id.pokemon_list_view);
+		mMonstersListView = (ActionSlideExpandableListView) findViewById(R.id.pokemon_list_view);
+		context = View_team_activity.this;
 	}
 
 	@Override
@@ -61,6 +60,54 @@ public class View_team_activity extends Activity implements
 	        );
 		mMonstersListView.setOnItemClickListener(this);
 		mMonstersListView.setOnItemLongClickListener(this);
+		
+		mMonstersListView.setItemActionListener(new OnActionClickListener() {
+			@Override
+			public void onClick(View itemView, View clickedView, int position) {
+				
+				if(clickedView.getId() == R.id.pokemon_free){
+					Monster temp = StaticClass.sTeam.get(position);
+					temp.removeFromDatabase();
+					StaticClass.sTeam = Monster.getTeamMonsters(context);
+					/////addare animazioni fighe stupide
+					Intent intent = getIntent();
+					finish();
+					startActivity(intent);
+				}
+				
+				if(clickedView.getId() == R.id.pokemon_exchange){
+					Log.d("position", position + "");
+					Monster m = StaticClass.sTeam.get(position);
+					Intent i = new Intent(context, ExchangeActivity.class);
+					i.putExtra(ExchangeActivity.PASSED_MONSTER_KEY, m);
+					startActivity(i);
+				}
+				
+				if(clickedView.getId() == R.id.pokemon_stats){
+					Monster m = StaticClass.sTeam.get(position);
+					LayoutInflater inflate = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+					View v1 = inflate.inflate(R.layout.dialog_stat_viewer, null, false);
+					AlertDialog.Builder builder = new AlertDialog.Builder(context);
+					TextView thp = (TextView) v1.findViewById(R.id.poke_hp);
+					TextView tatt = (TextView) v1.findViewById(R.id.poke_attak);
+					TextView tdef = (TextView) v1.findViewById(R.id.poke_defense);
+					TextView tspatt = (TextView) v1.findViewById(R.id.poke_spattak);
+					TextView tspdef = (TextView) v1.findViewById(R.id.poke_spdefense);
+					TextView tspeed = (TextView) v1.findViewById(R.id.poke_speed);
+					thp.setText("" + m.getHp());
+					tatt.setText("" + m.getAttack());
+					tdef.setText("" + m.getDefence());
+					tspatt.setText("" + m.getSpecialAttack());
+					tspdef.setText("" + m.getSpecialDefence());
+					tspeed.setText("" + m.getSpeed());
+					builder.setTitle(R.string.title_dialog_viewstatpoke);
+					builder.setView(v1);
+					builder.create().show();
+				}
+			}
+			
+		},R.id.pokemon_exchange, R.id.pokemon_free, R.id.pokemon_stats);
+		
 	}
 
 	private ActionMode.Callback mActionModeCallback = new ActionMode.Callback() {
@@ -99,40 +146,18 @@ public class View_team_activity extends Activity implements
 	};
 
 	@Override
-	public void onItemClick(AdapterView<?> parent, View clicked, int position,
-			long id) {
-		Monster m = StaticClass.sTeam.get(position);
-		LayoutInflater inflate = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		View v = inflate.inflate(R.layout.dialog_stat_viewer, null, false);
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		TextView thp = (TextView) v.findViewById(R.id.poke_hp);
-		TextView tatt = (TextView) v.findViewById(R.id.poke_attak);
-		TextView tdef = (TextView) v.findViewById(R.id.poke_defense);
-		TextView tspatt = (TextView) v.findViewById(R.id.poke_spattak);
-		TextView tspdef = (TextView) v.findViewById(R.id.poke_spdefense);
-		TextView tspeed = (TextView) v.findViewById(R.id.poke_speed);
-
-		thp.setText("" + m.getHp());
-		tatt.setText("" + m.getAttack());
-		tdef.setText("" + m.getDefence());
-		tspatt.setText("" + m.getSpecialAttack());
-		tspdef.setText("" + m.getSpecialDefence());
-		tspeed.setText("" + m.getSpeed());
-
-		builder.setTitle(R.string.title_dialog_viewstatpoke);
-		builder.setView(v);
-		builder.create().show();
+	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
-	public boolean onItemLongClick(AdapterView<?> parent, View clicked,
-			int position, long id) {
-		Log.d("position", position + "");
-		Monster m = StaticClass.sTeam.get(position);
-		Intent i = new Intent(this, ExchangeActivity.class);
-		i.putExtra(ExchangeActivity.PASSED_MONSTER_KEY, m);
-		startActivity(i);
-		return true;
+	public boolean onItemLongClick(AdapterView<?> arg0, View arg1, int arg2,
+			long arg3) {
+		// TODO Auto-generated method stub
+		return false;
 	}
+
+
 
 }
