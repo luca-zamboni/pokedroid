@@ -254,11 +254,17 @@ public class View_team_activity extends ActionBarActivity implements ILocation,
 									Monster temp = StaticClass.sTeam
 											.get(position);
 									temp.removeFromDatabase();
-									StaticClass.sTeam = Monster
-											.getTeamMonsters(View_team_activity.this);
-									Intent intent = getIntent();
-									finish();
-									startActivity(intent);
+									if (mViewing == VIEW_STATUS.TEAM) {
+										StaticClass.sTeam = Monster
+												.getTeamMonsters(View_team_activity.this);
+										Intent intent = getIntent();
+										finish();
+										startActivity(intent);
+									} else
+										Toast.makeText(
+												View_team_activity.this,
+												getString(R.string.no_exchange_from_box),
+												Toast.LENGTH_SHORT).show();
 								}
 							}).setNeutralButton(android.R.string.cancel, null);
 			builder.create().show();

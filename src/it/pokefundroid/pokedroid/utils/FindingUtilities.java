@@ -13,7 +13,7 @@ public class FindingUtilities {
 	private final static int[] CHANCE = { 950, 800, 300, 60, 4, 0 };
 
 	//possibilita' su 100 di essere pescato
-	private final static int[] FINDINGCHANCE = { 40, 33, 25, 15, 9, 5};
+	private final static int[] FINDINGCHANCE = { 65, 50, 35, 20, 13, 8};
 
 	public static final int FIGHT_PROXIMITY = 15;
 
