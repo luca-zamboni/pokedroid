@@ -39,7 +39,7 @@ import com.beyondar.android.world.objects.BeyondarObject;
 import com.beyondar.android.world.objects.GeoObject;
 
 public class AugmentedRealityActivity extends FragmentActivity implements
-		OnARTouchListener, ILocation, IPictureCallback, IPokemonSelection { 
+		OnARTouchListener, ILocation, IPictureCallback, IPokemonSelection {
 
 	public static final String RESULTS = "Results";
 
@@ -70,9 +70,10 @@ public class AugmentedRealityActivity extends FragmentActivity implements
 		mCameraView = (CameraView) findViewById(R.id.camera);
 
 		// We create the world and set it in to the view
-		createWorld();
+		mWorld = new World(this);
+		
 		mBeyondarGLSurfaceView.setWorld(mWorld);
-
+		
 		// set listener for the geoObjects
 		mBeyondarGLSurfaceView.setOnARTouchListener(this);
 
@@ -85,6 +86,7 @@ public class AugmentedRealityActivity extends FragmentActivity implements
 		mLocationUtils = new LocationUtils(this, this, LocationType.GPS);
 		// This is needed, sometimes pokemons are behind the camera...
 		mCameraView.setVisibility(View.VISIBLE);
+		createWorld();
 	}
 
 	@Override
@@ -95,7 +97,6 @@ public class AugmentedRealityActivity extends FragmentActivity implements
 	}
 
 	private void createWorld() {
-		mWorld = new World(this);
 
 		double[] loc = getIntent().getExtras().getDoubleArray("loc");
 
@@ -106,10 +107,12 @@ public class AugmentedRealityActivity extends FragmentActivity implements
 		mWorldCenter.setAccuracy((float) loc[3]);
 
 		setWorldAltitude(loc[2]);
-
-		mWorld.setLocation(mWorldCenter);
+		
 		fillPkmn(mWorldCenter.getLatitude(), mWorldCenter.getLongitude(),
 				mWorldCenter.getAltitude(), mWorldCenter.getAccuracy());
+
+		mWorld.setLocation(mWorldCenter);
+
 		mWorld.setDefaultBitmap(R.drawable.creature_6);
 	}
 
@@ -118,7 +121,8 @@ public class AugmentedRealityActivity extends FragmentActivity implements
 		int many = FindingUtilities.generateHowManyPokemonInRange(loc[3]);
 
 		// tmp.setAltitude(loc[2]);
-		Monster[] id = FindingUtilities.findInPosition(loc[0], loc[1], loc[3],  many);
+		Monster[] id = FindingUtilities.findInPosition(loc[0], loc[1], loc[3],
+				many);
 
 		for (int i = 0; i < many; i++) {
 			if (id[i] != null) {
@@ -177,13 +181,14 @@ public class AugmentedRealityActivity extends FragmentActivity implements
 			Location.distanceBetween(mWorldCenter.getLatitude(),
 					mWorldCenter.getLongitude(), geoObject.getLatitude(),
 					geoObject.getLongitude(), results);
-			
-			int level = (int)((Math.random()*95)+5);
-			PokemonSex sex =  Monster.intToGender((int)((Math.random()*2)+1));
+
+			int level = (int) ((Math.random() * 95) + 5);
+			PokemonSex sex = Monster
+					.intToGender((int) ((Math.random() * 2) + 1));
 			Monster pm = new Monster(Integer.parseInt(geoObject.getName()), "",
-					sex, geoObject.getLatitude(),
-					geoObject.getLongitude(), level);
-			
+					sex, geoObject.getLatitude(), geoObject.getLongitude(),
+					level);
+
 			if (StaticClass.DEBUG) {
 				if (results[0] <= FindingUtilities.FIGHT_PROXIMITY
 						* (mWorldCenter.getAccuracy() / 2)) {
@@ -206,9 +211,9 @@ public class AugmentedRealityActivity extends FragmentActivity implements
 		else {
 			mSelected = outMonster.get(0);
 			mSelectedBo = bo.get(0);
-			try{
+			try {
 				mCameraView.tackePicture(this);
-			}catch(Exception e){
+			} catch (Exception e) {
 				Log.e(AugmentedRealityActivity.class.getName(), e.toString());
 			}
 		}
@@ -294,7 +299,7 @@ public class AugmentedRealityActivity extends FragmentActivity implements
 		}
 		mSelected = pm;
 		mCameraView.tackePicture(this);
-		
+
 	}
 
 	@Override

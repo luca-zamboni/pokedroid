@@ -71,7 +71,7 @@ public class SharedPreferencesUtilities {
 		if (out.getLatitude() == -1)
 			return null;
 		out.setLongitude(sp.getFloat(USER_HOME_LONGITUDE, -1));
-		out.setLatitude(sp.getFloat(USER_HOME_LATITUDE, -1));
+		out.setAccuracy(sp.getFloat(USER_HOME_ACCURACY, -1));
 		return out;
 	}
 
@@ -80,10 +80,22 @@ public class SharedPreferencesUtilities {
 		Editor editor = getEditor(ctx);
 		editor.putFloat(USER_HOME_LATITUDE, (float) l.getLatitude());
 		editor.putFloat(USER_HOME_LONGITUDE, (float) l.getLongitude());
-		editor.putFloat(USER_HOME_LATITUDE, (float) l.getLongitude());
+		editor.putFloat(USER_HOME_ACCURACY, (float) l.getAccuracy());
 		editor.putString(USER_HOME_SET_DATE, formatter.format(today));
 		editor.commit();
 		return;
+	}
+
+	public static boolean isAtHome(Context ctx, Location l) {
+		Location home = getHomeLocation(ctx);
+		float[] results = new float[1];
+		if (home != null) {
+			Location.distanceBetween(l.getLatitude(), l.getLongitude(),
+					home.getLatitude(), home.getLongitude(), results);
+			return results[0] <= home.getAccuracy();
+		}
+		return false;
+
 	}
 
 	public static boolean canSetHome(Context ctx) {

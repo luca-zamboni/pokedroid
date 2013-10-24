@@ -15,14 +15,15 @@ public class SlideExpandableListAdapter extends AbstractSlideExpandableListAdapt
 	private int toggle_button_id;
 	private int expandable_view_id;
 
-	public SlideExpandableListAdapter(ListAdapter wrapped, int toggle_button_id, int expandable_view_id) {
-		super(wrapped);
+	public SlideExpandableListAdapter(ListAdapter wrapped, int toggle_button_id, int expandable_view_id,OnLongListener listener) {
+		super(wrapped,listener);
 		this.toggle_button_id = toggle_button_id;
 		this.expandable_view_id = expandable_view_id;
+		this.listener = listener;
 	}
 
-	public SlideExpandableListAdapter(ListAdapter wrapped) {
-		this(wrapped, R.id.expandable_toggle_button, R.id.expandable);
+	public SlideExpandableListAdapter(ListAdapter wrapped, OnLongListener listener) {
+		this(wrapped, R.id.expandable_toggle_button, R.id.expandable, listener);
 	}
 
 	@Override
