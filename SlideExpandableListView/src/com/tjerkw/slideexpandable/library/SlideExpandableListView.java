@@ -1,12 +1,13 @@
 package com.tjerkw.slideexpandable.library;
 
+import android.content.Context;
 import android.os.Parcelable;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.content.Context;
+import com.tjerkw.*;
 
 /**
  * Simple subclass of listview which does nothing more than wrap
@@ -39,8 +40,8 @@ class SlideExpandableListView extends ListView {
 		return false;
 	}
 
-	public void setAdapter(ListAdapter adapter) {
-		this.adapter = new SlideExpandableListAdapter(adapter);
+	public void setAdapter(ListAdapter adapter, OnLongListener listener) {
+		this.adapter = new SlideExpandableListAdapter(adapter,listener);
 		super.setAdapter(this.adapter);
 	}
 

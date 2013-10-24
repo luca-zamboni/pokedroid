@@ -2,6 +2,7 @@ package com.tjerkw.slideexpandable.library;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListAdapter;
@@ -36,6 +37,7 @@ public class ActionSlideExpandableListView extends SlideExpandableListView {
 		this.listener = listener;
 		this.buttonIds = buttonIds;
 	}
+	
 
 	/**
 	 * Interface for callback to be invoked whenever an action is clicked in
@@ -51,6 +53,7 @@ public class ActionSlideExpandableListView extends SlideExpandableListView {
 		 */
 		public void onClick(View itemView, View clickedView, int position);
 	}
+	
 
 	public void setAdapter(ListAdapter adapter) {
 		super.setAdapter(new WrapperListAdapterImpl(adapter) {

@@ -1,16 +1,17 @@
 package com.tjerkw.slideexpandable.library;
 
+import java.util.BitSet;
+
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
 import android.util.SparseIntArray;
 import android.view.View;
+import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
-
-import java.util.BitSet;
 
 /**
  * Wraps a ListAdapter to give it expandable list view functionality.
@@ -21,6 +22,9 @@ import java.util.BitSet;
  * @date 6/9/12 4:41 PM
  */
 public abstract class AbstractSlideExpandableListAdapter extends WrapperListAdapterImpl {
+	
+	static boolean nnsidovrebbefare = true;
+	
 	/**
 	 * Reference to the last expanded list item.
 	 * Since lists are recycled this might be null if
@@ -55,8 +59,11 @@ public abstract class AbstractSlideExpandableListAdapter extends WrapperListAdap
 	 */
 	private final SparseIntArray viewHeights = new SparseIntArray(10);
 
-	public AbstractSlideExpandableListAdapter(ListAdapter wrapped) {
+	public OnLongListener listener;
+	
+	public AbstractSlideExpandableListAdapter(ListAdapter wrapped,OnLongListener listener) {
 		super(wrapped);
+		this.listener = listener;
 	}
 
 	@Override
@@ -66,58 +73,14 @@ public abstract class AbstractSlideExpandableListAdapter extends WrapperListAdap
 		return view;
 	}
 
-	/**
-	 * This method is used to get the Button view that should
-	 * expand or collapse the Expandable View.
-	 * <br/>
-	 * Normally it will be implemented as:
-	 * <pre>
-	 * return parent.findViewById(R.id.expand_toggle_button)
-	 * </pre>
-	 *
-	 * A listener will be attached to the button which will
-	 * either expand or collapse the expandable view
-	 *
-	 * @see #getExpandableView(View)
-	 * @param parent the list view item
-	 * @ensure return!=null
-	 * @return a child of parent which is a button
-	 */
 	public abstract View getExpandToggleButton(View parent);
 
-	/**
-	 * This method is used to get the view that will be hidden
-	 * initially and expands or collapse when the ExpandToggleButton
-	 * is pressed @see getExpandToggleButton
-	 * <br/>
-	 * Normally it will be implemented as:
-	 * <pre>
-	 * return parent.findViewById(R.id.expandable)
-	 * </pre>
-	 *
-	 * @see #getExpandToggleButton(View)
-	 * @param parent the list view item
-	 * @ensure return!=null
-	 * @return a child of parent which is a view (or often ViewGroup)
-	 *  that can be collapsed and expanded
-	 */
 	public abstract View getExpandableView(View parent);
 
-	/**
-	 * Gets the duration of the collapse animation in ms.
-	 * Default is 330ms. Override this method to change the default.
-	 *
-	 * @return the duration of the anim in ms
-	 */
 	public int getAnimationDuration() {
 		return animationDuration;
 	}
-	/**
-	 * Set's the Animation duration for the Expandable animation
-	 * 
-	 * @param duration The duration as an integer in MS (duration > 0)
-	 * @exception IllegalArgumentException if parameter is less than zero
-	 */
+ 
 	public void setAnimationDuration(int duration) {
 		if(duration < 0) {
 			throw new IllegalArgumentException("Duration is less than zero");
@@ -125,12 +88,7 @@ public abstract class AbstractSlideExpandableListAdapter extends WrapperListAdap
 		
 		animationDuration = duration;
 	}
-	/**
-	 * Check's if any position is currently Expanded
-	 * To collapse the open item @see collapseLastOpen
-	 * 
-	 * @return boolean True if there is currently an item expanded, otherwise false
-	 */
+
 	public boolean isAnyItemExpanded() {
 		return (lastOpenPosition != -1) ? true : false;
 	}
@@ -162,58 +120,74 @@ public abstract class AbstractSlideExpandableListAdapter extends WrapperListAdap
 			updateExpandable(target, position);
 		}
 
+		button.setOnLongClickListener(new OnLongClickListener() {
+			
+			@Override
+			public boolean onLongClick(View v) {
+				AbstractSlideExpandableListAdapter.nnsidovrebbefare = false;
+				listener.onLongClick(v,position);
+				return false; 
+			}
+		});
+
+		
 		button.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(final View view) {
 
-				Animation a = target.getAnimation();
+				if(AbstractSlideExpandableListAdapter.nnsidovrebbefare){
+					Log.e("","trololol");
+					Animation a = target.getAnimation();
 
-				if (a != null && a.hasStarted() && !a.hasEnded()) {
+					if (a != null && a.hasStarted() && !a.hasEnded()) {
 
-					a.setAnimationListener(new Animation.AnimationListener() {
-						@Override
-						public void onAnimationStart(Animation animation) {
-						}
-
-						@Override
-						public void onAnimationEnd(Animation animation) {
-							view.performClick();
-						}
-
-						@Override
-						public void onAnimationRepeat(Animation animation) {
-						}
-					});
-
-				} else {
-
-					target.setAnimation(null);
-
-					int type = target.getVisibility() == View.VISIBLE
-							? ExpandCollapseAnimation.COLLAPSE
-							: ExpandCollapseAnimation.EXPAND;
-
-					// remember the state
-					if (type == ExpandCollapseAnimation.EXPAND) {
-						openItems.set(position, true);
-					} else {
-						openItems.set(position, false);
-					}
-					// check if we need to collapse a different view
-					if (type == ExpandCollapseAnimation.EXPAND) {
-						if (lastOpenPosition != -1 && lastOpenPosition != position) {
-							if (lastOpen != null) {
-								animateView(lastOpen, ExpandCollapseAnimation.COLLAPSE);
+						a.setAnimationListener(new Animation.AnimationListener() {
+							@Override
+							public void onAnimationStart(Animation animation) {
 							}
-							openItems.set(lastOpenPosition, false);
+
+							@Override
+							public void onAnimationEnd(Animation animation) {
+								view.performClick();
+							}
+
+							@Override
+							public void onAnimationRepeat(Animation animation) {
+							}
+						});
+
+					} else {
+
+						target.setAnimation(null);
+
+						int type = target.getVisibility() == View.VISIBLE
+								? ExpandCollapseAnimation.COLLAPSE
+								: ExpandCollapseAnimation.EXPAND;
+
+						// remember the state
+						if (type == ExpandCollapseAnimation.EXPAND) {
+							openItems.set(position, true);
+						} else {
+							openItems.set(position, false);
 						}
-						lastOpen = target;
-						lastOpenPosition = position;
-					} else if (lastOpenPosition == position) {
-						lastOpenPosition = -1;
-					}
-					animateView(target, type);
+						// check if we need to collapse a different view
+						if (type == ExpandCollapseAnimation.EXPAND) {
+							if (lastOpenPosition != -1 && lastOpenPosition != position) {
+								if (lastOpen != null) {
+									animateView(lastOpen, ExpandCollapseAnimation.COLLAPSE);
+								}
+								openItems.set(lastOpenPosition, false);
+							}
+							lastOpen = target;
+							lastOpenPosition = position;
+						} else if (lastOpenPosition == position) {
+							lastOpenPosition = -1;
+						}
+						animateView(target, type);
+					}	
 				}
+				AbstractSlideExpandableListAdapter.nnsidovrebbefare = true; 
+				
 			}
 		});
 	}
