@@ -81,4 +81,7 @@ public class ActionSlideExpandableListView extends SlideExpandableListView {
 			}
 		});
 	}
+	public ListAdapter getWrappedListAdapter(){
+		return ((WrapperListAdapterImpl)getAdapter()).getWrappedAdapter();
+	}
 }

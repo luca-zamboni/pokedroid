@@ -5,6 +5,7 @@ import it.pokefundroid.pokedroid.models.Monster;
 import it.pokefundroid.pokedroid.utils.StaticClass;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -19,10 +20,17 @@ import android.widget.TextView;
 public class PersonalMonsterAdapter extends ArrayAdapter<Monster> {
 
 	private Context context;
+	private List mMonsters;
 
 	public PersonalMonsterAdapter(Context context, ArrayList<Monster> monsters) {
 		super(context, R.layout.row_team_pokemon, monsters);
 		this.context = context;
+		mMonsters = monsters;
+	}
+
+	public void remove(int p) {
+		mMonsters.remove(p);
+		notifyDataSetChanged();
 	}
 
 	@Override

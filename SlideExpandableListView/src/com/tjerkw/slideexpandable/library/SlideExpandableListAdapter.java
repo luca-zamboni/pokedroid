@@ -14,12 +14,14 @@ import android.widget.ListAdapter;
 public class SlideExpandableListAdapter extends AbstractSlideExpandableListAdapter {
 	private int toggle_button_id;
 	private int expandable_view_id;
+	private ListAdapter wrapped;
 
 	public SlideExpandableListAdapter(ListAdapter wrapped, int toggle_button_id, int expandable_view_id,OnLongListener listener) {
 		super(wrapped,listener);
 		this.toggle_button_id = toggle_button_id;
 		this.expandable_view_id = expandable_view_id;
 		this.listener = listener;
+		this.wrapped=wrapped;
 	}
 
 	public SlideExpandableListAdapter(ListAdapter wrapped, OnLongListener listener) {
@@ -34,5 +36,9 @@ public class SlideExpandableListAdapter extends AbstractSlideExpandableListAdapt
 	@Override
 	public View getExpandableView(View parent) {
 		return parent.findViewById(expandable_view_id);
+	}
+	
+	public ListAdapter getWrappedListAdapter(){
+		return wrapped;
 	}
 }

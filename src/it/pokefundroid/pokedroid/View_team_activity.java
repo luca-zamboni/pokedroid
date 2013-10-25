@@ -26,6 +26,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ExpandableListAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -251,20 +252,17 @@ public class View_team_activity extends ActionBarActivity implements ILocation,
 								@Override
 								public void onClick(DialogInterface dialog,
 										int which) {
-									Monster temp = StaticClass.sTeam
-											.get(position);
+									PersonalMonsterAdapter adapter = (PersonalMonsterAdapter) ((SlideExpandableListAdapter)mMonstersListView
+											.getWrappedListAdapter()).getWrappedListAdapter();
+									Monster temp = adapter.getItem(position);
+									adapter.remove(position);
 									temp.removeFromDatabase();
-									if (mViewing == VIEW_STATUS.TEAM) {
-										StaticClass.sTeam = Monster
-												.getTeamMonsters(View_team_activity.this);
-										Intent intent = getIntent();
-										finish();
-										startActivity(intent);
-									} else
-										Toast.makeText(
-												View_team_activity.this,
-												getString(R.string.no_exchange_from_box),
-												Toast.LENGTH_SHORT).show();
+									String bye = String.format(
+											getString(R.string.bye_bye),
+											temp.getName());
+									Toast.makeText(View_team_activity.this,
+											bye, Toast.LENGTH_SHORT).show();
+		
 								}
 							}).setNeutralButton(android.R.string.cancel, null);
 			builder.create().show();

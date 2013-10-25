@@ -70,7 +70,8 @@
     <string name="progress_msg_box">Calling all your monsters outside&#8230;</string>
     <string name="not_at_home">You\'re not at home</string>
     <string name="no_exchange_from_box">You can\'t exchange outside monster</string>
-    
+    <string name="bye_bye">Bye-bye %1$s !</string>
+
     <!-- ExchangeActivity -->
     <string name="pokemon_level">lvl. %1$s</string>
     <string name="would_exchange">Would you like to exchange?</string>
