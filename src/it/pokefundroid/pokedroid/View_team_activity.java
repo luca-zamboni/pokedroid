@@ -1,15 +1,16 @@
 package it.pokefundroid.pokedroid;
 
-import java.util.ArrayList;
-
 import it.pokefundroid.pokedroid.models.Monster;
 import it.pokefundroid.pokedroid.utils.LocationUtils;
 import it.pokefundroid.pokedroid.utils.LocationUtils.ErrorType;
+import it.pokefundroid.pokedroid.utils.LocationUtils.ILocation;
 import it.pokefundroid.pokedroid.utils.LocationUtils.LocationType;
 import it.pokefundroid.pokedroid.utils.SharedPreferencesUtilities;
 import it.pokefundroid.pokedroid.utils.StaticClass;
-import it.pokefundroid.pokedroid.utils.LocationUtils.ILocation;
 import it.pokefundroid.pokedroid.viewUtils.PersonalMonsterAdapter;
+
+import java.util.ArrayList;
+
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -18,7 +19,6 @@ import android.content.Intent;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -26,19 +26,16 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tjerkw.slideexpandable.library.ActionSlideExpandableListView;
 import com.tjerkw.slideexpandable.library.ActionSlideExpandableListView.OnActionClickListener;
+import com.tjerkw.slideexpandable.library.OnLongListener;
 import com.tjerkw.slideexpandable.library.SlideExpandableListAdapter;
 
 public class View_team_activity extends ActionBarActivity implements ILocation,
-		OnActionClickListener {
+		OnActionClickListener, OnLongListener {
 
 	private enum VIEW_STATUS {
 		BOX, TEAM
@@ -93,11 +90,13 @@ public class View_team_activity extends ActionBarActivity implements ILocation,
 	}
 
 	private void setTeamAdapter() {
+
+		final View_team_activity temp = this;
 		PersonalMonsterAdapter adapter = new PersonalMonsterAdapter(this,
 				StaticClass.sTeam);
 		mMonstersListView.setAdapter(adapter);
 		mMonstersListView.setAdapter(new SlideExpandableListAdapter(adapter,
-				R.id.expandable_toggle_button, R.id.expandable));
+				R.id.expandable_toggle_button, R.id.expandable,temp));
 
 		mMonstersListView.setItemActionListener(this, R.id.pokemon_exchange,
 				R.id.pokemon_free, R.id.pokemon_stats);
@@ -106,6 +105,7 @@ public class View_team_activity extends ActionBarActivity implements ILocation,
 
 	private void setBoxAdapter() {
 
+		final View_team_activity temp = this;
 		mLoadTask = new AsyncTask<Object, Void, ArrayList<Monster>>() {
 
 			@Override
@@ -132,7 +132,7 @@ public class View_team_activity extends ActionBarActivity implements ILocation,
 					mMonstersListView
 							.setAdapter(new SlideExpandableListAdapter(adapter,
 									R.id.expandable_toggle_button,
-									R.id.expandable));
+									R.id.expandable,temp));
 					mViewing = VIEW_STATUS.BOX;
 				}
 				if (mProgressDialog != null) {
@@ -306,6 +306,11 @@ public class View_team_activity extends ActionBarActivity implements ILocation,
 			builder.setView(v1);
 			builder.create().show();
 		}
+	}
+
+	@Override
+	public void onLongClick(View clickedView, int position) {
+		Log.e("tua madre","Your sister");
 	}
 
 }
