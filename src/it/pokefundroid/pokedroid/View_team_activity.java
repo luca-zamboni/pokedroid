@@ -271,16 +271,21 @@ public class View_team_activity extends ActionBarActivity implements ILocation,
 		}
 
 		if (clickedView.getId() == R.id.pokemon_exchange) {
-			Log.d("position", position + "");
-			Monster m = StaticClass.sTeam.get(position);
-			Intent i = new Intent(View_team_activity.this,
-					ExchangeActivity.class);
-			i.putExtra(ExchangeActivity.PASSED_MONSTER_KEY, m);
-			startActivity(i);
+			if (mViewing == VIEW_STATUS.BOX) {
+				Toast.makeText(View_team_activity.this,
+						getString(R.string.no_exchange_from_box),
+						Toast.LENGTH_SHORT).show();
+			} else {
+				Monster m = StaticClass.sTeam.get(position);
+				Intent i = new Intent(View_team_activity.this,
+						ExchangeActivity.class);
+				i.putExtra(ExchangeActivity.PASSED_MONSTER_KEY, m);
+				startActivity(i);
+			}
 		}
 
 		if (clickedView.getId() == R.id.pokemon_stats) {
-			Monster m = StaticClass.sTeam.get(position);
+			Monster m= (Monster)mMonstersListView.getAdapter().getItem(position);
 			LayoutInflater inflate = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			View v1 = inflate.inflate(R.layout.dialog_stat_viewer, null, false);
 			AlertDialog.Builder builder = new AlertDialog.Builder(

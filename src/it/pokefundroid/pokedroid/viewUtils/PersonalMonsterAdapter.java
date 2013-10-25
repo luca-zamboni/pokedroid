@@ -19,12 +19,15 @@ import android.widget.TextView;
 public class PersonalMonsterAdapter extends ArrayAdapter<Monster> {
 
 	private Context context;
-	private ArrayList<Monster> mMonsters;
 
 	public PersonalMonsterAdapter(Context context, ArrayList<Monster> monsters) {
 		super(context, R.layout.row_team_pokemon, monsters);
 		this.context = context;
-		this.mMonsters = monsters;
+	}
+
+	@Override
+	public Monster getItem(int position) {
+		return super.getItem(position);
 	}
 
 	@Override
@@ -43,7 +46,7 @@ public class PersonalMonsterAdapter extends ArrayAdapter<Monster> {
 		TextView monsterLevel = (TextView) rowView
 				.findViewById(R.id.pokemon_level);
 
-		final Monster mPoke = mMonsters.get(position);
+		final Monster mPoke = getItem(position);
 
 		// // set text of pokemon
 		monsterName.setText(mPoke.getName());
