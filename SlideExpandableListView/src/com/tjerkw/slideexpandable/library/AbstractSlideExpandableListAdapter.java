@@ -12,56 +12,56 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
+import android.widget.ListView;
 
 /**
- * Wraps a ListAdapter to give it expandable list view functionality.
- * The main thing it does is add a listener to the getToggleButton
- * which expands the getExpandableView for each list item.
- *
+ * Wraps a ListAdapter to give it expandable list view functionality. The main
+ * thing it does is add a listener to the getToggleButton which expands the
+ * getExpandableView for each list item.
+ * 
  * @author tjerk
  * @date 6/9/12 4:41 PM
  */
-public abstract class AbstractSlideExpandableListAdapter extends WrapperListAdapterImpl {
-	
+public abstract class AbstractSlideExpandableListAdapter extends
+		WrapperListAdapterImpl {
+
 	static boolean nnsidovrebbefare = true;
-	
+
 	/**
-	 * Reference to the last expanded list item.
-	 * Since lists are recycled this might be null if
-	 * though there is an expanded list item
+	 * Reference to the last expanded list item. Since lists are recycled this
+	 * might be null if though there is an expanded list item
 	 */
 	private View lastOpen = null;
 	/**
-	 * The position of the last expanded list item.
-	 * If -1 there is no list item expanded.
-	 * Otherwise it points to the position of the last expanded list item
+	 * The position of the last expanded list item. If -1 there is no list item
+	 * expanded. Otherwise it points to the position of the last expanded list
+	 * item
 	 */
 	private int lastOpenPosition = -1;
-	
+
 	/**
-	 * Default Animation duration
-	 * Set animation duration with @see setAnimationDuration
+	 * Default Animation duration Set animation duration with @see
+	 * setAnimationDuration
 	 */
 	private int animationDuration = 330;
-	
+
 	/**
-	 * A list of positions of all list items that are expanded.
-	 * Normally only one is expanded. But a mode to expand
-	 * multiple will be added soon.
-	 *
+	 * A list of positions of all list items that are expanded. Normally only
+	 * one is expanded. But a mode to expand multiple will be added soon.
+	 * 
 	 * If an item onj position x is open, its bit is set
 	 */
 	private BitSet openItems = new BitSet();
 	/**
-	 * We remember, for each collapsable view its height.
-	 * So we dont need to recalculate.
-	 * The height is calculated just before the view is drawn.
+	 * We remember, for each collapsable view its height. So we dont need to
+	 * recalculate. The height is calculated just before the view is drawn.
 	 */
 	private final SparseIntArray viewHeights = new SparseIntArray(10);
 
 	public OnLongListener listener;
-	
-	public AbstractSlideExpandableListAdapter(ListAdapter wrapped,OnLongListener listener) {
+
+	public AbstractSlideExpandableListAdapter(ListAdapter wrapped,
+			OnLongListener listener) {
 		super(wrapped);
 		this.listener = listener;
 	}
@@ -80,12 +80,12 @@ public abstract class AbstractSlideExpandableListAdapter extends WrapperListAdap
 	public int getAnimationDuration() {
 		return animationDuration;
 	}
- 
+
 	public void setAnimationDuration(int duration) {
-		if(duration < 0) {
+		if (duration < 0) {
 			throw new IllegalArgumentException("Duration is less than zero");
 		}
-		
+
 		animationDuration = duration;
 	}
 
@@ -101,42 +101,41 @@ public abstract class AbstractSlideExpandableListAdapter extends WrapperListAdap
 		enableFor(more, itemToolbar, position);
 	}
 
-
-	private void enableFor(final View button, final View target, final int position) {
-		if(target == lastOpen && position!=lastOpenPosition) {
+	private void enableFor(final View button, final View target,
+			final int position) {
+		if (target == lastOpen && position != lastOpenPosition) {
 			// lastOpen is recycled, so its reference is false
 			lastOpen = null;
 		}
-		if(position == lastOpenPosition) {
+		if (position == lastOpenPosition) {
 			// re reference to the last view
 			// so when can animate it when collapsed
 			lastOpen = target;
 		}
 		int height = viewHeights.get(position, -1);
-		if(height == -1) {
+		if (height == -1) {
 			viewHeights.put(position, target.getMeasuredHeight());
-			updateExpandable(target,position);
+			updateExpandable(target, position);
 		} else {
 			updateExpandable(target, position);
 		}
 
 		button.setOnLongClickListener(new OnLongClickListener() {
-			
+
 			@Override
 			public boolean onLongClick(View v) {
 				AbstractSlideExpandableListAdapter.nnsidovrebbefare = false;
-				listener.onLongClick(v,position);
-				return false; 
+				listener.onLongClick(v, position);
+				return false;
 			}
 		});
 
-		
 		button.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(final View view) {
 
-				if(AbstractSlideExpandableListAdapter.nnsidovrebbefare){
-					Log.e("","trololol");
+				if (AbstractSlideExpandableListAdapter.nnsidovrebbefare) {
+					Log.e("", "trololol");
 					Animation a = target.getAnimation();
 
 					if (a != null && a.hasStarted() && !a.hasEnded()) {
@@ -160,8 +159,7 @@ public abstract class AbstractSlideExpandableListAdapter extends WrapperListAdap
 
 						target.setAnimation(null);
 
-						int type = target.getVisibility() == View.VISIBLE
-								? ExpandCollapseAnimation.COLLAPSE
+						int type = target.getVisibility() == View.VISIBLE ? ExpandCollapseAnimation.COLLAPSE
 								: ExpandCollapseAnimation.EXPAND;
 
 						// remember the state
@@ -172,59 +170,72 @@ public abstract class AbstractSlideExpandableListAdapter extends WrapperListAdap
 						}
 						// check if we need to collapse a different view
 						if (type == ExpandCollapseAnimation.EXPAND) {
-							if (lastOpenPosition != -1 && lastOpenPosition != position) {
+							if (lastOpenPosition != -1
+									&& lastOpenPosition != position) {
 								if (lastOpen != null) {
-									animateView(lastOpen, ExpandCollapseAnimation.COLLAPSE);
+									animateView(lastOpen,
+											ExpandCollapseAnimation.COLLAPSE);
 								}
 								openItems.set(lastOpenPosition, false);
 							}
 							lastOpen = target;
 							lastOpenPosition = position;
+							//TODO FIX for the last position
+							if (position == getCount() - 1) {
+								((ListView) (view.getParent().getParent()))
+										.scrollTo(-2,viewHeights.get(position));
+							}
 						} else if (lastOpenPosition == position) {
 							lastOpenPosition = -1;
+							//TODO FIX for the last position
+							if (position == getCount() - 1) {
+								((ListView) (view.getParent().getParent()))
+										.scrollTo(-2,-view.getBottom());
+							}
 						}
+						
 						animateView(target, type);
-					}	
+					}
 				}
-				AbstractSlideExpandableListAdapter.nnsidovrebbefare = true; 
-				
+				AbstractSlideExpandableListAdapter.nnsidovrebbefare = true;
+
 			}
 		});
 	}
 
 	private void updateExpandable(View target, int position) {
 
-		final LinearLayout.LayoutParams params = (LinearLayout.LayoutParams)target.getLayoutParams();
-			target.setVisibility(View.GONE);
-			params.bottomMargin = 0-viewHeights.get(position);
+		final LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) target
+				.getLayoutParams();
+		target.setVisibility(View.GONE);
+		params.bottomMargin = 0 - viewHeights.get(position);
 	}
 
 	/**
 	 * Performs either COLLAPSE or EXPAND animation on the target view
-	 * @param target the view to animate
-	 * @param type the animation type, either ExpandCollapseAnimation.COLLAPSE
-	 *			 or ExpandCollapseAnimation.EXPAND
+	 * 
+	 * @param target
+	 *            the view to animate
+	 * @param type
+	 *            the animation type, either ExpandCollapseAnimation.COLLAPSE or
+	 *            ExpandCollapseAnimation.EXPAND
 	 */
 	private void animateView(final View target, final int type) {
-		Animation anim = new ExpandCollapseAnimation(
-				target,
-				type
-		);
+		Animation anim = new ExpandCollapseAnimation(target, type);
 		anim.setDuration(getAnimationDuration());
 		target.startAnimation(anim);
 	}
 
-
 	/**
-	 * Closes the current open item.
-	 * If it is current visible it will be closed with an animation.
-	 *
+	 * Closes the current open item. If it is current visible it will be closed
+	 * with an animation.
+	 * 
 	 * @return true if an item was closed, false otherwise
 	 */
 	public boolean collapseLastOpen() {
-		if(isAnyItemExpanded()) {
+		if (isAnyItemExpanded()) {
 			// if visible animate it out
-			if(lastOpen != null) {
+			if (lastOpen != null) {
 				animateView(lastOpen, ExpandCollapseAnimation.COLLAPSE);
 			}
 			openItems.set(lastOpenPosition, false);
@@ -293,15 +304,15 @@ public abstract class AbstractSlideExpandableListAdapter extends WrapperListAdap
 		public void writeToParcel(Parcel out, int flags) {
 			super.writeToParcel(out, flags);
 			lastOpenPosition = out.readInt();
-			 openItems = readBitSet(out);
+			openItems = readBitSet(out);
 		}
 
-		//required field that makes Parcelables from a Parcel
-		public static final Parcelable.Creator<SavedState> CREATOR =
-		new Parcelable.Creator<SavedState>() {
+		// required field that makes Parcelables from a Parcel
+		public static final Parcelable.Creator<SavedState> CREATOR = new Parcelable.Creator<SavedState>() {
 			public SavedState createFromParcel(Parcel in) {
 				return new SavedState(in);
 			}
+
 			public SavedState[] newArray(int size) {
 				return new SavedState[size];
 			}
