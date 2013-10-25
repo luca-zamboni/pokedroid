@@ -71,7 +71,7 @@ public class Menu_Activity extends Activity implements ILocation {
 				mLocationUtils = new LocationUtils(Menu_Activity.this,
 						Menu_Activity.this, mLocationType);
 				Location lastKonwn = mLocationUtils.getLastKnownLocation();
-				if (StaticClass.DEBUG || lastKonwn != null && !setHome) {
+				if (lastKonwn != null && !setHome) {
 					mLocationUtils.close();
 					onLocationChaged(lastKonwn);
 				} else {
@@ -93,7 +93,7 @@ public class Menu_Activity extends Activity implements ILocation {
 			finish();
 		}
 		Location l = SharedPreferencesUtilities.getHomeLocation(this);
-		if (l == null && !setHome && !isHomeDialogShowing) {
+		if (StaticClass.DEBUG || l == null && !setHome && !isHomeDialogShowing) {
 			displaySetHome();
 			isHomeDialogShowing = true;
 		}
