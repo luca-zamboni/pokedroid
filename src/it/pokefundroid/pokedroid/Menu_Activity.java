@@ -71,7 +71,7 @@ public class Menu_Activity extends Activity implements ILocation {
 				mLocationUtils = new LocationUtils(Menu_Activity.this,
 						Menu_Activity.this, mLocationType);
 				Location lastKonwn = mLocationUtils.getLastKnownLocation();
-				if (lastKonwn != null && !setHome) {
+				if (StaticClass.DEBUG || lastKonwn != null && !setHome) {
 					mLocationUtils.close();
 					onLocationChaged(lastKonwn);
 				} else {
@@ -110,10 +110,7 @@ public class Menu_Activity extends Activity implements ILocation {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (item.getItemId() == R.id.reset_home) {
 			if (SharedPreferencesUtilities.canSetHome(Menu_Activity.this)) {
-				setHome = true;
-				Toast.makeText(Menu_Activity.this,
-						getString(R.string.toast_set_home), Toast.LENGTH_SHORT)
-						.show();
+				displaySetHome();
 				return true;
 			} else
 				displayErrors(R.string.title_dialog_reset_home_err,
@@ -158,6 +155,9 @@ public class Menu_Activity extends Activity implements ILocation {
 									int which) {
 								setHome = true;
 								isHomeDialogShowing = false;
+								Toast.makeText(Menu_Activity.this,
+										getString(R.string.toast_set_home),
+										Toast.LENGTH_SHORT).show();
 								dialog.dismiss();
 							}
 						}).setNeutralButton(getString(android.R.string.cancel),

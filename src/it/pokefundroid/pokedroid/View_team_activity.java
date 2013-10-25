@@ -96,7 +96,7 @@ public class View_team_activity extends ActionBarActivity implements ILocation,
 				StaticClass.sTeam);
 		mMonstersListView.setAdapter(adapter);
 		mMonstersListView.setAdapter(new SlideExpandableListAdapter(adapter,
-				R.id.expandable_toggle_button, R.id.expandable,temp));
+				R.id.expandable_toggle_button, R.id.expandable, temp));
 
 		mMonstersListView.setItemActionListener(this, R.id.pokemon_exchange,
 				R.id.pokemon_free, R.id.pokemon_stats);
@@ -132,7 +132,7 @@ public class View_team_activity extends ActionBarActivity implements ILocation,
 					mMonstersListView
 							.setAdapter(new SlideExpandableListAdapter(adapter,
 									R.id.expandable_toggle_button,
-									R.id.expandable,temp));
+									R.id.expandable, temp));
 					mViewing = VIEW_STATUS.BOX;
 				}
 				if (mProgressDialog != null) {
@@ -285,7 +285,8 @@ public class View_team_activity extends ActionBarActivity implements ILocation,
 		}
 
 		if (clickedView.getId() == R.id.pokemon_stats) {
-			Monster m= (Monster)mMonstersListView.getAdapter().getItem(position);
+			Monster m = (Monster) mMonstersListView.getAdapter().getItem(
+					position);
 			LayoutInflater inflate = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			View v1 = inflate.inflate(R.layout.dialog_stat_viewer, null, false);
 			AlertDialog.Builder builder = new AlertDialog.Builder(
@@ -310,7 +311,7 @@ public class View_team_activity extends ActionBarActivity implements ILocation,
 
 	@Override
 	public void onLongClick(View clickedView, int position) {
-		Log.e("tua madre","Your sister");
+		Log.e("tua madre", "Your sister");
 	}
 
 }
