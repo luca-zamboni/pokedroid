@@ -66,7 +66,9 @@ class SlideExpandableListView extends ListView {
 
 	@Override
 	public Parcelable onSaveInstanceState() {
-		return adapter.onSaveInstanceState(super.onSaveInstanceState());
+		//if adapter is not null save the adapter instance state
+		return adapter == null ? super.onSaveInstanceState() : 
+			adapter.onSaveInstanceState(super.onSaveInstanceState());
 	}
 
 	@Override

@@ -26,7 +26,7 @@ public class Splash_activity extends Activity {
 		mImg.startAnimation(AnimationUtils.loadAnimation(this, R.anim.rotate));
 		mText = (TextView) findViewById(R.id.text);
 		
-		// Connessionae database all' inizio del progrmma nn cancellare
+		// Connessione database all' inizio del progrmma nn cancellare
 		StaticClass.openBatabaseConection(getApplicationContext());
 		StaticClass.sTeam = Monster.getTeamMonsters(this);
 		startActivity(new Intent(Splash_activity.this, Menu_Activity.class));
