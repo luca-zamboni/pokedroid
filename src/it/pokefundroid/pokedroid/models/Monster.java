@@ -5,6 +5,7 @@ import it.pokefundroid.pokedroid.utils.StaticClass;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Random;
 
 import android.content.ContentValues;
@@ -66,6 +67,8 @@ public class Monster implements Serializable {
 	private int sDefIv = 0;
 	private int spdIv = 0;
 
+	private int order = -1;
+
 	public enum PokemonSex {
 		MALE, FEMALE, GENDERLESS
 	}
@@ -91,14 +94,15 @@ public class Monster implements Serializable {
 	// status id (in team or out of team)
 	private final static int TEAM = 10;
 	private final static int BOX = 11;
+	public final static int MAX_TEAM_POKEMON = 6;
 
 	// query by status
 	private final static String TEAMQUERY = "SELECT * FROM "
-			+ BaseHelper.TABLE_PERSONAL_POKEMON + " ORDER BY "
-			+ BaseHelper.ORDER + " LIMIT 6";
+			+ BaseHelper.TABLE_PERSONAL_POKEMON + " WHERE " + BaseHelper.ORDER
+			+ "<=" + MAX_TEAM_POKEMON + " ORDER BY " + BaseHelper.ORDER;
 	private final static String BOXQUERY = "SELECT * FROM "
-			+ BaseHelper.TABLE_PERSONAL_POKEMON + " ORDER BY "
-			+ BaseHelper.ORDER + " LIMIT 6, 100000";
+			+ BaseHelper.TABLE_PERSONAL_POKEMON + " WHERE " + BaseHelper.ORDER
+			+ ">" + (MAX_TEAM_POKEMON + 1) + " ORDER BY " + BaseHelper.ORDER;
 
 	// commento in fondo il numero delle evoluzioni/pokemon seguito dalla prima
 	// forma
@@ -346,7 +350,7 @@ public class Monster implements Serializable {
 			StaticClass.openBatabaseConection(ctx.getApplicationContext());
 		StaticClass.dbpoke.openDataBase();
 		Cursor c = StaticClass.dbpoke.dbpoke.rawQuery(query, null);
-		int id, dbId, sex, found_x, found_y, level;
+		int id, dbId, sex, found_x, found_y, level, order;
 		PokemonSex realSex;
 		String my_name;
 		ArrayList<Monster> mPokemon = new ArrayList<Monster>();
@@ -359,6 +363,7 @@ public class Monster implements Serializable {
 			realSex = intToGender(sex);
 			found_x = c.getInt(c.getColumnIndex(BaseHelper.FOUND_X));
 			found_y = c.getInt(c.getColumnIndex(BaseHelper.FOUND_Y));
+			order = c.getInt(c.getColumnIndex(BaseHelper.ORDER));
 
 			level = c.getInt(c.getColumnIndex(BaseHelper.LEVEL));
 
@@ -367,6 +372,7 @@ public class Monster implements Serializable {
 			// TODO remove hardcoded level
 			Monster nuovo = new Monster(id, my_name, realSex, found_x, found_y,
 					level);
+			nuovo.setOrder(order);
 			nuovo.setSeed(seed);
 			nuovo.setDbId(dbId);
 
@@ -455,7 +461,9 @@ public class Monster implements Serializable {
 		c.put(BaseHelper.SEX, sex);
 		c.put(BaseHelper.FOUND_X, found_x);
 		c.put(BaseHelper.FOUND_Y, found_y);
+		c.put(BaseHelper.SEED, ivSeed);
 		c.put(BaseHelper.LEVEL, level);
+		c.put(BaseHelper.ORDER, order);
 		c.put(BaseHelper.HPEV, hpEv);
 		c.put(BaseHelper.ATKEV, atkEv);
 		c.put(BaseHelper.DEFEV, defEv);
@@ -469,6 +477,7 @@ public class Monster implements Serializable {
 				BaseHelper.TABLE_PERSONAL_POKEMON, null, c);
 		StaticClass.dbpoke.close();
 
+		if (order == -1)
 		StaticClass.dbpoke.executeSQL("UPDATE "
 				+ BaseHelper.TABLE_PERSONAL_POKEMON + " SET "
 				+ BaseHelper.ORDER + "=" + dbId + " WHERE " + BaseHelper.MY_ID
@@ -478,10 +487,22 @@ public class Monster implements Serializable {
 
 	}
 
-	public void removeFromDatabase() {
+	public boolean removeFromDatabase() {
+		String last = "";
+		if (this.order <= 6) {
+			if (StaticClass.sTeam.size() == 1)
+				return false;
+			last = " AND " + BaseHelper.ORDER + " <=" + MAX_TEAM_POKEMON;
+		}
+		String sqlOrder = "UPDATE " + BaseHelper.TABLE_PERSONAL_POKEMON
+				+ " SET " + BaseHelper.ORDER + " = " + BaseHelper.ORDER + "-1"
+				+ " WHERE " + BaseHelper.ORDER + " > " + this.order + last;
+
 		String sql = "DELETE FROM " + BaseHelper.TABLE_PERSONAL_POKEMON
 				+ " WHERE " + BaseHelper.MY_ID + "=" + dbId;
 		StaticClass.dbpoke.executeSQL(sql);
+		StaticClass.dbpoke.executeSQL(sqlOrder);
+		return true;
 	}
 
 	// GETTER AND SETTERS
@@ -607,6 +628,10 @@ public class Monster implements Serializable {
 
 	public short getSpdYield() {
 		return spdYield;
+	}
+
+	public void setOrder(int order) {
+		this.order = order;
 	}
 
 	public void setSeed(int seed) {

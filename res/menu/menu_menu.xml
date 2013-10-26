@@ -2,4 +2,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
     <item android:id="@+id/reset_home"
           android:title="@string/menu_reset_home" />
+    <item android:id="@+id/export_db"
+    	android:title="export db" />
 </menu>

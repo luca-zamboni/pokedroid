@@ -14,7 +14,6 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.location.Location;
 import android.os.Bundle;
 import android.view.Menu;
@@ -105,6 +104,16 @@ public class Menu_Activity extends Activity implements ILocation {
 		inflater.inflate(R.menu.menu_menu, menu);
 		return true;
 	}
+	
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		if (StaticClass.DEBUG) {
+			menu.getItem(1).setVisible(true);
+		} else {
+			menu.getItem(1).setVisible(false);
+		}
+		return true;
+	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -115,6 +124,9 @@ public class Menu_Activity extends Activity implements ILocation {
 			} else
 				displayErrors(R.string.title_dialog_reset_home_err,
 						R.string.title_dialog_reset_home_msg);
+		} else if (item.getItemId() == R.id.export_db) {
+			StaticClass.dbpoke.exportDb();
+			Toast.makeText(this, "Db exported", Toast.LENGTH_SHORT).show();
 		}
 		return super.onOptionsItemSelected(item);
 	}

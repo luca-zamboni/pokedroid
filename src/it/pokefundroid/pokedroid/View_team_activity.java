@@ -252,17 +252,19 @@ public class View_team_activity extends ActionBarActivity implements ILocation,
 								@Override
 								public void onClick(DialogInterface dialog,
 										int which) {
-									PersonalMonsterAdapter adapter = (PersonalMonsterAdapter) ((SlideExpandableListAdapter)mMonstersListView
-											.getWrappedListAdapter()).getWrappedListAdapter();
+									PersonalMonsterAdapter adapter = (PersonalMonsterAdapter) ((SlideExpandableListAdapter) mMonstersListView
+											.getWrappedListAdapter())
+											.getWrappedListAdapter();
 									Monster temp = adapter.getItem(position);
-									adapter.remove(position);
-									temp.removeFromDatabase();
-									String bye = String.format(
-											getString(R.string.bye_bye),
-											temp.getName());
-									Toast.makeText(View_team_activity.this,
-											bye, Toast.LENGTH_SHORT).show();
-		
+									if (temp.removeFromDatabase()) {
+										adapter.remove(position);
+										String bye = String.format(
+												getString(R.string.bye_bye),
+												temp.getName());
+										Toast.makeText(View_team_activity.this,
+												bye, Toast.LENGTH_SHORT).show();
+									}
+
 								}
 							}).setNeutralButton(android.R.string.cancel, null);
 			builder.create().show();

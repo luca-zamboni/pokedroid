@@ -15,7 +15,7 @@ import android.graphics.Color;
 
 public class StaticClass {
 	
-	public static final boolean DEBUG = false;
+	public static final boolean DEBUG = true;
 	
 	public static BaseHelper dbpoke;
 	

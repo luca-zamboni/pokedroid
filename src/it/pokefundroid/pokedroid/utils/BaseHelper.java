@@ -1,5 +1,8 @@
 package it.pokefundroid.pokedroid.utils;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,6 +14,7 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.Environment;
 
 public class BaseHelper extends SQLiteOpenHelper{
 
@@ -199,6 +203,40 @@ public class BaseHelper extends SQLiteOpenHelper{
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
  
+	}
+
+	public void exportDb() {
+		File f = new File(DB_PATH+DB_NAME);
+    	InputStream myInput = null;
+    	OutputStream myOutput=null;
+		try {
+			myInput = new FileInputStream(f);
+			String outFileName = Environment.getExternalStorageDirectory()+"/" + DB_NAME;
+			 myOutput = new FileOutputStream(outFileName);
+	    	byte[] buffer = new byte[1024];
+	    	int length;
+	    	while ((length = myInput.read(buffer))>0){
+	    		myOutput.write(buffer, 0, length);
+	    	}
+	    	
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally{
+			try {
+				myOutput.flush();
+				myOutput.close();
+		    	myInput.close();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	    	
+		}
+    	
 	}
  
 }

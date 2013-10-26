@@ -45,8 +45,11 @@ public class CaptureActivity extends Activity {
 
 			@Override
 			public void onClick(View v) {
+				int size = StaticClass.sTeam.size();
+				if (size != Monster.MAX_TEAM_POKEMON)
+					pm.setOrder(size+1);
 				pm.saveOnDatabase();
-				if(StaticClass.sTeam.size()<6){
+				if (size < Monster.MAX_TEAM_POKEMON){
 					StaticClass.sTeam.clear();
 					StaticClass.sTeam = Monster.getTeamMonsters(CaptureActivity.this);
 				}
