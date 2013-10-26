@@ -5,6 +5,7 @@ import it.pokefundroid.pokedroid.utils.StaticClass;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Currency;
 import java.util.Iterator;
 import java.util.Random;
 
@@ -12,6 +13,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.os.SystemClock;
 
 public class Monster implements Serializable {
 
@@ -454,6 +456,7 @@ public class Monster implements Serializable {
 
 	public void saveOnDatabase() {
 		int sex = Monster.genderToInt(this.sex);
+		this.setSeed((int) SystemClock.uptimeMillis());
 
 		ContentValues c = new ContentValues();
 

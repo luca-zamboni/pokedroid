@@ -2,6 +2,7 @@ package it.pokefundroid.pokedroid.utils;
 
 import it.pokefundroid.pokedroid.models.Monster;
 
+import java.util.Calendar;
 import java.util.Random;
 
 import android.location.Location;
@@ -137,6 +138,10 @@ public class FindingUtilities {
 	private static boolean generateRandoms(double latitude, double longitude) {
 		// quadrati di 0,001 gradi, circa 111 metri all'equatore
 		boolean ret = false;
+		
+		//inserisco la settimana nel seed per trovare i pokemon
+		Calendar c = Calendar.getInstance();
+		int week = c.get(Calendar.WEEK_OF_YEAR);
 
 		// sposto di 3 cifre in sotto la virgola e taglio i decimali castando a
 		// long
@@ -145,8 +150,8 @@ public class FindingUtilities {
 		long lat = (long) latitude;
 		long lon = (long) longitude;
 
-		long tSelectionSeed = ((lat * lon) - (151 * lat));
-		long tSetSeed = ((lat * lon) - (270 * lon));
+		long tSelectionSeed = ((lat * lon) - (151 * lat * week));
+		long tSetSeed = ((lat * lon) - (270 * lon * week));
 
 		if (tSelectionSeed != selectionSeed || tSetSeed != setSeed) {
 			selectionSeed = tSelectionSeed;
