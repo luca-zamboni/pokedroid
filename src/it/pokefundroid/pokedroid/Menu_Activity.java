@@ -6,6 +6,7 @@ import it.pokefundroid.pokedroid.utils.LocationUtils.ILocation;
 import it.pokefundroid.pokedroid.utils.LocationUtils.LocationType;
 import it.pokefundroid.pokedroid.utils.SharedPreferencesUtilities;
 import it.pokefundroid.pokedroid.utils.StaticClass;
+import it.pokefundroid.pokedroidAlpha.R;
 
 import java.io.Serializable;
 

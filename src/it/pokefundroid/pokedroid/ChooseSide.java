@@ -1,6 +1,7 @@
 package it.pokefundroid.pokedroid;
 
 import it.pokefundroid.pokedroid.utils.SharedPreferencesUtilities;
+import it.pokefundroid.pokedroidAlpha.R;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;

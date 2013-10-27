@@ -3,9 +3,9 @@ package it.pokefundroid.pokedroid;
 import it.pokefundroid.pokedroid.models.Monster;
 import it.pokefundroid.pokedroid.utils.StaticClass;
 import it.pokefundroid.pokedroid.viewUtils.ImageAdapter;
+import it.pokefundroid.pokedroidAlpha.R;
 
 import java.io.IOException;
-import java.util.List;
 
 import android.app.Activity;
 import android.content.Intent;

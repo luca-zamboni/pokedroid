@@ -8,6 +8,7 @@ import it.pokefundroid.pokedroid.utils.LocationUtils.LocationType;
 import it.pokefundroid.pokedroid.utils.SharedPreferencesUtilities;
 import it.pokefundroid.pokedroid.utils.StaticClass;
 import it.pokefundroid.pokedroid.viewUtils.PersonalMonsterAdapter;
+import it.pokefundroid.pokedroidAlpha.R;
 
 import java.util.ArrayList;
 
@@ -26,7 +27,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ExpandableListAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
