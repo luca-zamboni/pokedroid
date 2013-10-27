@@ -1,8 +1,8 @@
 package it.pokefundroid.pokedroid.viewUtils;
 
-import it.pokefundroid.pokedroid.R;
 import it.pokefundroid.pokedroid.models.Monster;
 import it.pokefundroid.pokedroid.utils.StaticClass;
+import it.pokefundroid.pokedroidAlpha.R;
 
 import java.util.ArrayList;
 import java.util.List;

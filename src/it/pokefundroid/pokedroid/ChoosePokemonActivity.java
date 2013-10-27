@@ -5,6 +5,7 @@ import it.pokefundroid.pokedroid.models.Monster.PokemonSex;
 import it.pokefundroid.pokedroid.utils.SharedPreferencesUtilities;
 import it.pokefundroid.pokedroid.utils.StaticClass;
 import it.pokefundroid.pokedroid.viewUtils.ImageAdapter;
+import it.pokefundroid.pokedroidAlpha.R;
 
 import java.io.IOException;
 import java.io.InputStream;

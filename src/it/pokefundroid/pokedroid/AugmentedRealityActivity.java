@@ -10,6 +10,7 @@ import it.pokefundroid.pokedroid.utils.LocationUtils.LocationType;
 import it.pokefundroid.pokedroid.utils.StaticClass;
 import it.pokefundroid.pokedroid.viewUtils.ImageAdapter;
 import it.pokefundroid.pokedroid.viewUtils.ImageAdapter.IPokemonSelection;
+import it.pokefundroid.pokedroidAlpha.R;
 
 import java.util.ArrayList;
 import java.util.Iterator;

@@ -1,7 +1,7 @@
 package it.pokefundroid.pokedroid.viewUtils;
 
-import it.pokefundroid.pokedroid.R;
 import it.pokefundroid.pokedroid.models.Monster;
+import it.pokefundroid.pokedroidAlpha.R;
 
 import java.io.IOException;
 import java.util.List;

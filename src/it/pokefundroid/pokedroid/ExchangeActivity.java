@@ -21,6 +21,7 @@ import it.pokefundroid.pokedroid.utils.BluetoothChatService;
 import it.pokefundroid.pokedroid.utils.ExchangeProtocolUtils;
 import it.pokefundroid.pokedroid.utils.StaticClass;
 import it.pokefundroid.pokedroid.viewUtils.ImageAdapter;
+import it.pokefundroid.pokedroidAlpha.R;
 
 import java.io.IOException;
 

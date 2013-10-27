@@ -16,7 +16,7 @@
 
 package it.pokefundroid.pokedroid;
 
-import it.pokefundroid.pokedroid.R;
+import it.pokefundroid.pokedroidAlpha.R;
 
 import java.util.Set;
 
