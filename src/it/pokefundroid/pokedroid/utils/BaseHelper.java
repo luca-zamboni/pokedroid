@@ -19,7 +19,7 @@ import android.os.Environment;
 public class BaseHelper extends SQLiteOpenHelper{
 
     //The Android's default system path of your application database.
-    private static String DB_PATH = "/data/data/it.pokefundroid.pokedroid/databases/";
+    private static String DB_PATH = "/data/data/it.pokefundroid.pokedroidAlpha/databases/";
     private static String DB_NAME = "pokemon";
     public SQLiteDatabase dbpoke;
  
