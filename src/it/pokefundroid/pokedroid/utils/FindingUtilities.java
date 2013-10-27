@@ -11,7 +11,7 @@ import android.util.Log;
 public class FindingUtilities {
 
 	// possibilita' su 1000 elementi di essere selezionati nel set;
-	private final static int[] CHANCE = { 950, 800, 300, 60, 4, 0 };
+	private final static int[] CHANCE = { 950, 700, 250, 60, 4, 0 };
 
 	//possibilita' su 100 di essere pescato
 	private final static int[] FINDINGCHANCE = { 65, 50, 35, 20, 13, 8};

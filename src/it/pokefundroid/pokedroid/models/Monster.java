@@ -150,7 +150,7 @@ public class Monster implements Serializable {
 			SUBRARE,
 			NONPRESENT,
 			VERYCOMMON,
-			COMMON,
+			SUBRARE,
 			COMMON,
 			SUBRARE,
 			NONPRESENT, // 2vulpix, 2jigglypuff, 2zubat D:, 3oddish
