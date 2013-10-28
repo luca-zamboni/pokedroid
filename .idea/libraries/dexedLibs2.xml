@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="dexedLibs">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/bin/dexedLibs/android-support-v4-9e2f96dc910057434c8d88b2fa8a9837.jar!/" />
+      <root url="jar://$PROJECT_DIR$/bin/dexedLibs/android-support-v7-appcompat-8a605d8ced1a3ee41aa5c2c0b8556608.jar!/" />
+      <root url="jar://$PROJECT_DIR$/bin/dexedLibs/android-support-v7-appcompat-f417f420a153290d8af64bc946c53977.jar!/" />
+      <root url="jar://$PROJECT_DIR$/bin/dexedLibs/beyondar_framework-6f3106333782c5e9f8929a5b7846d984.jar!/" />
+      <root url="jar://$PROJECT_DIR$/bin/dexedLibs/slideexpandablelistview-12a77371a4fee35287cec193648692f7.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

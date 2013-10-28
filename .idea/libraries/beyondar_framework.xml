@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="beyondar_framework">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/beyondar/android/BeyondAR_Framework/bin/beyondar_framework.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

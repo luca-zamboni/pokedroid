@@ -2,9 +2,11 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/AndEngine/AndEngine.iml" filepath="$PROJECT_DIR$/AndEngine/AndEngine.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../AndEngine/AndEngine.iml" filepath="$PROJECT_DIR$/../AndEngine/AndEngine.iml" />
+      <module fileurl="file://$PROJECT_DIR$/beyondar/android/BeyondAR_Examples/BeyondAR_Examples.iml" filepath="$PROJECT_DIR$/beyondar/android/BeyondAR_Examples/BeyondAR_Examples.iml" />
+      <module fileurl="file://$PROJECT_DIR$/beyondar/android/BeyondAR_Framework/BeyondAR_Framework.iml" filepath="$PROJECT_DIR$/beyondar/android/BeyondAR_Framework/BeyondAR_Framework.iml" />
       <module fileurl="file://$PROJECT_DIR$/PokeDroid.iml" filepath="$PROJECT_DIR$/PokeDroid.iml" />
+      <module fileurl="file://$PROJECT_DIR$/SlideExpandableListView/SlideExpandableListView.iml" filepath="$PROJECT_DIR$/SlideExpandableListView/SlideExpandableListView.iml" />
+      <module fileurl="file://$USER_HOME$/adt-bundle-mac-x86_64-20130522/sdk/extras/android/support/v7/appcompat/appcompat.iml" filepath="$USER_HOME$/adt-bundle-mac-x86_64-20130522/sdk/extras/android/support/v7/appcompat/appcompat.iml" />
     </modules>
   </component>
 </project>
