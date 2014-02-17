@@ -31,16 +31,16 @@ import android.view.Window;
 import android.widget.GridView;
 import android.widget.Toast;
 
-import com.beyondar.android.opengl.views.BeyondarGLSurfaceView;
-import com.beyondar.android.opengl.views.OnARTouchListener;
-import com.beyondar.android.views.CameraView;
-import com.beyondar.android.views.CameraView.IPictureCallback;
+import com.beyondar.android.view.BeyondarGLSurfaceView;
+import com.beyondar.android.view.CameraView;
+import com.beyondar.android.view.CameraView.BeyondarPictureCallback;
+import com.beyondar.android.view.OnTouchBeyondarViewListener;
+import com.beyondar.android.world.BeyondarObject;
+import com.beyondar.android.world.GeoObject;
 import com.beyondar.android.world.World;
-import com.beyondar.android.world.objects.BeyondarObject;
-import com.beyondar.android.world.objects.GeoObject;
 
 public class AugmentedRealityActivity extends FragmentActivity implements
-		OnARTouchListener, ILocation, IPictureCallback, IPokemonSelection {
+		OnTouchBeyondarViewListener, ILocation, BeyondarPictureCallback, IPokemonSelection {
 
 	public static final String RESULTS = "Results";
 
@@ -76,7 +76,7 @@ public class AugmentedRealityActivity extends FragmentActivity implements
 		mBeyondarGLSurfaceView.setWorld(mWorld);
 		
 		// set listener for the geoObjects
-		mBeyondarGLSurfaceView.setOnARTouchListener(this);
+		mBeyondarGLSurfaceView.setOnTouchBeyondarViewListener(this);
 
 	}
 
@@ -144,9 +144,7 @@ public class AugmentedRealityActivity extends FragmentActivity implements
 	}
 
 	private void fillObj(GeoObject go1, int id, Location loc) {
-		go1.setLatitude(loc.getLatitude());
-		go1.setLongitude(loc.getLongitude());
-		go1.setAltitude(loc.getAltitude());
+		go1.setLocation(loc);
 		go1.setImageUri(getImagUri(id));
 		go1.setName(id + "");
 	}
@@ -213,7 +211,7 @@ public class AugmentedRealityActivity extends FragmentActivity implements
 			mSelected = outMonster.get(0);
 			mSelectedBo = bo.get(0);
 			try {
-				mCameraView.tackePicture(this);
+				mCameraView.takePicture(this);
 			} catch (Exception e) {
 				Log.e(AugmentedRealityActivity.class.getName(), e.toString());
 			}
@@ -221,14 +219,14 @@ public class AugmentedRealityActivity extends FragmentActivity implements
 	}
 
 	@Override
-	public void onTouchARView(MotionEvent event,
+	public void onTouchBeyondarView(MotionEvent event,
 			BeyondarGLSurfaceView beyondarView) {
 		float x = event.getX();
 		float y = event.getY();
 
 		ArrayList<BeyondarObject> geoObjects = new ArrayList<BeyondarObject>();
 
-		beyondarView.getARObjectOnScreenCoordinates(x, y, geoObjects);
+		beyondarView.getBeyondarObjectsOnScreenCoordinates(x, y, geoObjects);
 
 		switch (event.getAction()) {
 		case MotionEvent.ACTION_DOWN:
@@ -299,7 +297,7 @@ public class AugmentedRealityActivity extends FragmentActivity implements
 			bo = null;
 		}
 		mSelected = pm;
-		mCameraView.tackePicture(this);
+		mCameraView.takePicture(this);
 
 	}
 
