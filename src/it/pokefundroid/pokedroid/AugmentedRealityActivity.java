@@ -31,20 +31,23 @@ import android.view.Window;
 import android.widget.GridView;
 import android.widget.Toast;
 
+import com.beyondar.android.fragment.BeyondarFragmentSupport;
 import com.beyondar.android.view.BeyondarGLSurfaceView;
 import com.beyondar.android.view.CameraView;
 import com.beyondar.android.view.CameraView.BeyondarPictureCallback;
-import com.beyondar.android.view.OnTouchBeyondarViewListener;
+import com.beyondar.android.view.OnClickBeyondarObjectListener;
+
 import com.beyondar.android.world.BeyondarObject;
 import com.beyondar.android.world.GeoObject;
 import com.beyondar.android.world.World;
 
 public class AugmentedRealityActivity extends FragmentActivity implements
-		OnTouchBeyondarViewListener, ILocation, BeyondarPictureCallback, IPokemonSelection {
+		OnClickBeyondarObjectListener, ILocation, BeyondarPictureCallback,
+		IPokemonSelection {
 
 	public static final String RESULTS = "Results";
 
-	private BeyondarGLSurfaceView mBeyondarGLSurfaceView;
+	private BeyondarFragmentSupport mBeyondarFragment;
 	private CameraView mCameraView;
 	private World mWorld;
 	private Location mWorldCenter;
@@ -67,33 +70,30 @@ public class AugmentedRealityActivity extends FragmentActivity implements
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_sprite);
 
-		mBeyondarGLSurfaceView = (BeyondarGLSurfaceView) findViewById(R.id.customGLSurface);
-		mCameraView = (CameraView) findViewById(R.id.camera);
-
 		// We create the world and set it in to the view
 		mWorld = new World(this);
-		
-		mBeyondarGLSurfaceView.setWorld(mWorld);
-		
+
+		mBeyondarFragment = (BeyondarFragmentSupport) getSupportFragmentManager()
+				.findFragmentById(R.id.beyondarFragment);
+
+		mBeyondarFragment.setWorld(mWorld);
+
+		mCameraView = mBeyondarFragment.getCameraView();
 		// set listener for the geoObjects
-		mBeyondarGLSurfaceView.setOnTouchBeyondarViewListener(this);
+		mBeyondarFragment.setOnClickBeyondarObjectListener(this);
 
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		mBeyondarGLSurfaceView.onResume();
-		mLocationUtils = new LocationUtils(this, this, LocationType.GPS);
-		// This is needed, sometimes pokemons are behind the camera...
-		mCameraView.setVisibility(View.VISIBLE);
+		mLocationUtils = new LocationUtils(this, this, LocationType.NETWORK);
 		createWorld();
 	}
 
 	@Override
 	protected void onPause() {
 		super.onPause();
-		mBeyondarGLSurfaceView.onPause();
 		mLocationUtils.close();
 	}
 
@@ -108,8 +108,8 @@ public class AugmentedRealityActivity extends FragmentActivity implements
 		mWorldCenter.setAccuracy((float) loc[3]);
 
 		setWorldAltitude(loc[2]);
-		
-		fillPkmn(mWorldCenter.getLatitude(), mWorldCenter.getLongitude(),
+
+		fillPkmn(3,mWorldCenter.getLatitude(), mWorldCenter.getLongitude(),
 				mWorldCenter.getAltitude(), mWorldCenter.getAccuracy());
 
 		mWorld.setLocation(mWorldCenter);
@@ -117,9 +117,8 @@ public class AugmentedRealityActivity extends FragmentActivity implements
 		mWorld.setDefaultBitmap(R.drawable.creature_6);
 	}
 
-	private void fillPkmn(double... loc) {
+	private void fillPkmn(int many,double... loc) {
 
-		int many = FindingUtilities.generateHowManyPokemonInRange(loc[3]);
 
 		// tmp.setAltitude(loc[2]);
 		Monster[] id = FindingUtilities.findInPosition(loc[0], loc[1], loc[3],
@@ -219,27 +218,8 @@ public class AugmentedRealityActivity extends FragmentActivity implements
 	}
 
 	@Override
-	public void onTouchBeyondarView(MotionEvent event,
-			BeyondarGLSurfaceView beyondarView) {
-		float x = event.getX();
-		float y = event.getY();
-
-		ArrayList<BeyondarObject> geoObjects = new ArrayList<BeyondarObject>();
-
-		beyondarView.getBeyondarObjectsOnScreenCoordinates(x, y, geoObjects);
-
-		switch (event.getAction()) {
-		case MotionEvent.ACTION_DOWN:
-			break;
-		case MotionEvent.ACTION_UP:
-			doAction(geoObjects);
-			break;
-		case MotionEvent.ACTION_MOVE:
-			break;
-		default:
-			break;
-		}
-
+	public void onClickBeyondarObject(ArrayList<BeyondarObject> geoObjects) {
+		doAction(geoObjects);
 	}
 
 	@Override
@@ -250,7 +230,7 @@ public class AugmentedRealityActivity extends FragmentActivity implements
 				mWorldCenter.getLongitude(), location.getLatitude(),
 				location.getLongitude(), results);
 		if (results[0] > mWorldCenter.getAccuracy() / 2)
-			fillPkmn(location.getLatitude(), location.getLongitude(),
+			fillPkmn(FindingUtilities.generateHowManyPokemonInRange(mWorldCenter.getAccuracy()),location.getLatitude(), location.getLongitude(),
 					location.getAltitude(), location.getAccuracy());
 		mWorldCenter = location;
 		mWorld.setLocation(mWorldCenter);

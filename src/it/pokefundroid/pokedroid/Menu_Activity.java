@@ -43,7 +43,7 @@ public class Menu_Activity extends Activity implements ILocation {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_menu);
 
-		mLocationType = LocationType.GPS;
+		mLocationType = LocationType.NETWORK;
 
 		if (StaticClass.sTeam == null || StaticClass.dbpoke == null) {
 			startActivity(new Intent(this, Splash_activity.class));

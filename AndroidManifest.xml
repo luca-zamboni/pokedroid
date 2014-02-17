@@ -59,11 +59,11 @@
             android:configChanges="orientation|keyboardHidden|screenSize" >
         </activity>
         <activity
-            android:name=".ExchangeActivity"
+            android:name="it.pokefundroid.pokedroid.ExchangeActivity"
             android:configChanges="orientation|keyboardHidden|screenSize" >
         </activity>
         <activity
-            android:name=".DeviceListActivity"
+            android:name="it.pokefundroid.pokedroid.DeviceListActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:theme="@android:style/Theme.Dialog" />
         <activity android:name="it.pokefundroid.pokedroid.ChooseSide" />

@@ -3,14 +3,9 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <com.beyondar.android.views.CameraView
-        android:id="@+id/camera"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="invisible" />
-
-    <com.beyondar.android.opengl.views.BeyondarGLSurfaceView
-        android:id="@+id/customGLSurface"
+    <fragment
+        android:id="@+id/beyondarFragment"
+        android:name="com.beyondar.android.fragment.BeyondarFragmentSupport"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
