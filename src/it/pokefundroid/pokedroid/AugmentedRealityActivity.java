@@ -21,6 +21,7 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.location.Location;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
@@ -76,6 +77,8 @@ public class AugmentedRealityActivity extends FragmentActivity implements
 		mBeyondarFragment = (BeyondarFragmentSupport) getSupportFragmentManager()
 				.findFragmentById(R.id.beyondarFragment);
 
+		createWorld();
+
 		mBeyondarFragment.setWorld(mWorld);
 
 		mCameraView = mBeyondarFragment.getCameraView();
@@ -88,7 +91,16 @@ public class AugmentedRealityActivity extends FragmentActivity implements
 	protected void onResume() {
 		super.onResume();
 		mLocationUtils = new LocationUtils(this, this, LocationType.NETWORK);
-		createWorld();
+		new AsyncTask<Void, Void, Void>() {
+
+			@Override
+			protected Void doInBackground(Void... params) {
+				fillPkmn(mWorldCenter.getLatitude(),
+						mWorldCenter.getLongitude(),
+						mWorldCenter.getAltitude(), mWorldCenter.getAccuracy());
+				return null;
+			}
+		}.execute();
 	}
 
 	@Override
@@ -109,16 +121,14 @@ public class AugmentedRealityActivity extends FragmentActivity implements
 
 		setWorldAltitude(loc[2]);
 
-		fillPkmn(3,mWorldCenter.getLatitude(), mWorldCenter.getLongitude(),
-				mWorldCenter.getAltitude(), mWorldCenter.getAccuracy());
-
 		mWorld.setLocation(mWorldCenter);
 
 		mWorld.setDefaultBitmap(R.drawable.creature_6);
 	}
 
-	private void fillPkmn(int many,double... loc) {
+	private void fillPkmn(double... loc) {
 
+		int many = FindingUtilities.generateHowManyPokemonInRange(loc[3]);
 
 		// tmp.setAltitude(loc[2]);
 		Monster[] id = FindingUtilities.findInPosition(loc[0], loc[1], loc[3],
@@ -230,7 +240,7 @@ public class AugmentedRealityActivity extends FragmentActivity implements
 				mWorldCenter.getLongitude(), location.getLatitude(),
 				location.getLongitude(), results);
 		if (results[0] > mWorldCenter.getAccuracy() / 2)
-			fillPkmn(FindingUtilities.generateHowManyPokemonInRange(mWorldCenter.getAccuracy()),location.getLatitude(), location.getLongitude(),
+			fillPkmn(location.getLatitude(), location.getLongitude(),
 					location.getAltitude(), location.getAccuracy());
 		mWorldCenter = location;
 		mWorld.setLocation(mWorldCenter);
