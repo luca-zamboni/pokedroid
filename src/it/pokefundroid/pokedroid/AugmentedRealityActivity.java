@@ -26,18 +26,15 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.widget.GridView;
 import android.widget.Toast;
 
 import com.beyondar.android.fragment.BeyondarFragmentSupport;
-import com.beyondar.android.view.BeyondarGLSurfaceView;
 import com.beyondar.android.view.CameraView;
 import com.beyondar.android.view.CameraView.BeyondarPictureCallback;
 import com.beyondar.android.view.OnClickBeyondarObjectListener;
-
 import com.beyondar.android.world.BeyondarObject;
 import com.beyondar.android.world.GeoObject;
 import com.beyondar.android.world.World;
@@ -84,6 +81,8 @@ public class AugmentedRealityActivity extends FragmentActivity implements
 		mCameraView = mBeyondarFragment.getCameraView();
 		// set listener for the geoObjects
 		mBeyondarFragment.setOnClickBeyondarObjectListener(this);
+		
+		new GeneratePokemonAsyncTask().execute(mWorldCenter);
 
 	}
 
@@ -91,16 +90,7 @@ public class AugmentedRealityActivity extends FragmentActivity implements
 	protected void onResume() {
 		super.onResume();
 		mLocationUtils = new LocationUtils(this, this, LocationType.NETWORK);
-		new AsyncTask<Void, Void, Void>() {
 
-			@Override
-			protected Void doInBackground(Void... params) {
-				fillPkmn(mWorldCenter.getLatitude(),
-						mWorldCenter.getLongitude(),
-						mWorldCenter.getAltitude(), mWorldCenter.getAccuracy());
-				return null;
-			}
-		}.execute();
 	}
 
 	@Override
@@ -126,36 +116,11 @@ public class AugmentedRealityActivity extends FragmentActivity implements
 		mWorld.setDefaultBitmap(R.drawable.creature_6);
 	}
 
-	private void fillPkmn(double... loc) {
-
-		int many = FindingUtilities.generateHowManyPokemonInRange(loc[3]);
-
-		// tmp.setAltitude(loc[2]);
-		Monster[] id = FindingUtilities.findInPosition(loc[0], loc[1], loc[3],
-				many);
-
-		for (int i = 0; i < many; i++) {
-			if (id[i] != null) {
-				Location tmp = FindingUtilities.getRandomLocation(loc[0],
-						loc[1], loc[3]);
-				GeoObject go = new GeoObject(i);
-				fillObj(go, id[i].getId(), tmp);
-				mWorld.addBeyondarObject(go);
-			}
-		}
-	}
-
 	private void setWorldAltitude(double d) {
 		// TODO DEBUG
 		// double teoalt= d-SharedPreferencesUtilities.getUserHeight(this)*2;
 		double teoalt = d;
 		mWorldCenter.setAltitude((teoalt > 0) ? teoalt : d);
-	}
-
-	private void fillObj(GeoObject go1, int id, Location loc) {
-		go1.setLocation(loc);
-		go1.setImageUri(getImagUri(id));
-		go1.setName(id + "");
 	}
 
 	public static String getImagUri(int id) {
@@ -240,8 +205,7 @@ public class AugmentedRealityActivity extends FragmentActivity implements
 				mWorldCenter.getLongitude(), location.getLatitude(),
 				location.getLongitude(), results);
 		if (results[0] > mWorldCenter.getAccuracy() / 2)
-			fillPkmn(location.getLatitude(), location.getLongitude(),
-					location.getAltitude(), location.getAccuracy());
+			new GeneratePokemonAsyncTask().execute(location);
 		mWorldCenter = location;
 		mWorld.setLocation(mWorldCenter);
 	}
@@ -305,6 +269,45 @@ public class AugmentedRealityActivity extends FragmentActivity implements
 				}
 			}
 		}
+	}
+
+	private class GeneratePokemonAsyncTask extends
+			AsyncTask<Location, GeoObject, Void> {
+
+		@Override
+		protected Void doInBackground(Location... locs) {
+			Location loc = locs[0];
+			int many = FindingUtilities.generateHowManyPokemonInRange(loc
+					.getAccuracy());
+
+			Monster[] id = FindingUtilities.findInPosition(loc.getLatitude(),
+					loc.getLongitude(), loc.getAccuracy(), many);
+
+			for (int i = 0; i < many; i++) {
+				if (id[i] != null) {
+					Location tmp = FindingUtilities.getRandomLocation(
+							loc.getLatitude(), loc.getLongitude(),
+							loc.getAccuracy());
+					GeoObject go = new GeoObject(i);
+					fillObj(go, id[i].getId(), tmp);
+					publishProgress(go);
+				}
+			}
+			return null;
+		}
+
+		@Override
+		protected void onProgressUpdate(GeoObject... values) {
+			super.onProgressUpdate(values);
+			mWorld.addBeyondarObject(values[0]);
+		}
+
+		private void fillObj(GeoObject go1, int id, Location loc) {
+			go1.setLocation(loc);
+			go1.setImageUri(getImagUri(id));
+			go1.setName(id + "");
+		}
+
 	}
 
 }
