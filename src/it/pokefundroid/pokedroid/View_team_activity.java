@@ -91,13 +91,11 @@ public class View_team_activity extends ActionBarActivity implements ILocation,
 	}
 
 	private void setTeamAdapter() {
-
-		final View_team_activity temp = this;
 		PersonalMonsterAdapter adapter = new PersonalMonsterAdapter(this,
 				StaticClass.sTeam);
 		mMonstersListView.setAdapter(adapter);
 		mMonstersListView.setAdapter(new SlideExpandableListAdapter(adapter,
-				R.id.expandable_toggle_button, R.id.expandable, temp));
+				R.id.expandable_toggle_button, R.id.expandable, this));
 
 		mMonstersListView.setItemActionListener(this, R.id.pokemon_exchange,
 				R.id.pokemon_free, R.id.pokemon_stats);
@@ -106,7 +104,6 @@ public class View_team_activity extends ActionBarActivity implements ILocation,
 
 	private void setBoxAdapter() {
 
-		final View_team_activity temp = this;
 		mLoadTask = new AsyncTask<Object, Void, ArrayList<Monster>>() {
 
 			@Override
@@ -133,7 +130,7 @@ public class View_team_activity extends ActionBarActivity implements ILocation,
 					mMonstersListView
 							.setAdapter(new SlideExpandableListAdapter(adapter,
 									R.id.expandable_toggle_button,
-									R.id.expandable, temp));
+									R.id.expandable, View_team_activity.this));
 					mViewing = VIEW_STATUS.BOX;
 				}
 				if (mProgressDialog != null) {
